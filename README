@@ -1,0 +1,12 @@
+=== PREPARING ===
+a) You need to install the "beigelist" on your ATV (if you installed the Plex-Plugin using apt, it is already there )
+b) Set up a password-less ssh connection to your ATV (http://oreilly.com/pub/h/66)
+c) You need the iPhone 4.2 SDK installed on your machine!
+d) You need to get transcoder keys from the plex team in order to make playback work.
+
+=== BUILDING ===
+1. Open PlexATV/atvTwo.xcodeproj
+2. Make sure you are building 4.2|Release|atvTwo|armv6
+3. Make sure your appleTV is turned on and that you can log in using root@appletv.local (without using a password)
+4. Set the transcoder keys in PlexATV/Classes/HWAppliance.mm
+5. Hit [cmd]+B in Xcode. The plugin is build and copied to the ATV and. After that Lowtide is restarted
