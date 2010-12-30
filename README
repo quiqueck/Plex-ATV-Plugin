@@ -3,6 +3,10 @@ a) You need to install the "beigelist" on your ATV (if you installed the Plex-Pl
 b) Set up a password-less ssh connection to your ATV (http://oreilly.com/pub/h/66)
 c) You need the iPhone 4.2 SDK installed on your machine!
 d) You need to get transcoder keys from the plex team in order to make playback work.
+e) Install the plex-client on your ATV (prepares the correct skeletons)
+		echo "deb http://www.ambertation.de ./downloads/PLEX/" > /etc/apt/sources.list.d/plex.list
+		apt-get update
+		apt-get install com.plex.client-plugin
 
 === BUILDING ===
 1. Open PlexATV/atvTwo.xcodeproj
