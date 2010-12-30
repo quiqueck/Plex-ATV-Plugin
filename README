@@ -9,4 +9,4 @@ d) You need to get transcoder keys from the plex team in order to make playback 
 2. Make sure you are building 4.2|Release|atvTwo|armv6
 3. Make sure your appleTV is turned on and that you can log in using root@appletv.local (without using a password)
 4. Set the transcoder keys in PlexATV/Classes/HWAppliance.mm
-5. Hit [cmd]+B in Xcode. The plugin is build and copied to the ATV and. After that Lowtide is restarted
+5. Hit [cmd]+B in Xcode. The plugin is build and copied to the ATV and. After that AppleTV.app is restarted

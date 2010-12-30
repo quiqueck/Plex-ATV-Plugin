@@ -33,6 +33,7 @@
 }
 - (void)selectCategoryWithIdentifier:(id)identifier;
 - (id)topShelfView;
+- (void)refresh;
 @end
 
 @implementation TopShelfController
@@ -59,7 +60,9 @@
 	//[menuController autorelease];
 }
 
-
+- (void)refresh{
+  NSLog(@"Called Refresh");
+}
 
 
 - (BRTopShelfView *)topShelfView {
@@ -92,8 +95,9 @@
 
 - (id)init {
 	if((self = [super init]) != nil) {
+
 		[UIDevice preloadCurrentForMacros];
-    #warning Please check http://elan.plexapp.com/2010/12/24/happy-holidays-from-plex/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+osxbmc+%28Plex%29 to get a set of transcoder keys
+    #warning Please check elan.plexapp.com/2010/12/24/happy-holidays-from-plex/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+osxbmc+%28Plex%29 to get a set of transcoder keys
     [PlexRequest setStreamingKey:@"Get Your Keys From" forPublicKey:@"plexapp.com"];
 		//instrumentObjcMessageSends(YES);
 		

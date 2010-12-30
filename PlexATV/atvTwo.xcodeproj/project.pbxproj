@@ -1215,7 +1215,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp \"${CODESIGNING_FOLDER_PATH}/plex\" \"${BUILD_DIR}/../_deb/PLEX.frapplication/Applications/Lowtide.app/Appliances/PLEX.frappliance/\"\nscp \"${CODESIGNING_FOLDER_PATH}/plex\" root@apple-tv.local:/Applications/Lowtide.app/Appliances/PLEX.frappliance\nssh root@apple-tv.local 'killall Lowtide'\n";
+			shellScript = "cp \"${CODESIGNING_FOLDER_PATH}/plex\" \"${BUILD_DIR}/../_deb/PLEX.frapplication/Applications/AppleTV.app/Appliances/PLEX.frappliance/\"\nscp \"${CODESIGNING_FOLDER_PATH}/plex\" root@apple-tv.local:/Applications/AppleTV.app/Appliances/PLEX.frappliance\nscp \"${BUILD_DIR}/../_deb/PLEX.frapplication/Applications/AppleTV.app/Appliances/PLEX.frappliance/Info.plist\" root@apple-tv.local:/Applications/AppleTV.app/Appliances/PLEX.frappliance\nssh root@apple-tv.local 'killall AppleTV'\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1250,6 +1250,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_MODEL_TUNING = G5;
@@ -1269,14 +1270,16 @@
 					"\"$(SRCROOT)/theos/include\"",
 					"\"$(SRCROOT)/../_Contrib/lib\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
+					"-lPLEX-OSS",
 					"-undefined",
 					dynamic_lookup,
 					"-weak_lBackRow",
 					"-all_load",
-					"-lPLEX-OSS",
 				);
 				PRODUCT_NAME = plex;
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;
