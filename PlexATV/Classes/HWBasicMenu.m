@@ -16,11 +16,9 @@
 		
 		[self setListTitle:@"Local Servers"];
 		
-		//NSString *settingsPng = [[NSBundle bundleForClass:[HWBasicMenu class]] pathForResource:@"picture" ofType:@"png"];
-		//BRImage *sp = [BRImage imageWithPath:settingsPng];
 		BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		
-	[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
+    [self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		
 		_names = [[NSMutableArray alloc] init];
 		
@@ -63,15 +61,24 @@
 
 
 
-- (void)itemSelected:(long)selected; {
-	
+- (void)itemSelected:(long)selected {
+  	NSLog(@"0");
+  if (selected<0 || selected>=_names.count) return;
+	NSLog(@"1");
+  NSLog(@"%@, %ld", _names, selected);
 	Machine* m = [_names objectAtIndex:selected];
 	NSLog(@"item selected: %@", m);
 	
 	HWPlexDir* menuController = [[HWPlexDir alloc] init];
+  NSLog(@"2");
+  NSLog(@"%@", m.request);
+  NSLog(@"%@", [m.request rootLevel]);
 	menuController.rootContainer = [m.request rootLevel];
+  NSLog(@"3");
 	[[[BRApplicationStackManager singleton] stack] pushController:menuController];
+  NSLog(@"4");
 	[menuController autorelease];
+  NSLog(@"5");
 }
 
 - (float)heightForRow:(long)row {
@@ -117,6 +124,13 @@
 }
 
 -(void)machineStateDidChange:(Machine*)m{
+  if (m==nil) return;
+  
+  if (![_names containsObject:m]){
+    [self machineWasAdded:m];
+    return;
+  }
+  
 	NSLog(@"Changed %@", m);
 	[self updatePreviewController];
 	[self refreshControllerForModelUpdate];
