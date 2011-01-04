@@ -49,7 +49,6 @@ enum
 
 - (void) dealloc
 {
-  NSLog(@"PMP dealloc instance: %p", self);
 	[prov release];
     [super dealloc];
 }

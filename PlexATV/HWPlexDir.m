@@ -85,11 +85,11 @@ PlexMediaProvider* __provider = nil;
 {
 	if(item<0 || item>=rootContainer.directories.count) return nil;
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:item];
-	
+	/*
 	[[PlexPrefs defaultPreferences] setEnableCaching:NO];
 	PlexImage* pi = pmo.thumb;
 	if (!pi.hasImage) pi = pmo.art;
-	[pi setMaxImageSize:CGSizeMake(768, 768)];
+	[pi setMaxImageSize:CGSizeMake(768, 500)];
 	[pi _loadImage];
 	if (pi.image==nil) return nil;
 	
@@ -99,7 +99,14 @@ PlexMediaProvider* __provider = nil;
 	[obj setImage:img];
 	[img release];	
 	return [obj autorelease];
-	
+	*/
+  NSURL* mediaURL = [pmo mediaStreamURL];
+  PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+  BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
+  [preview setShowsMetadataImmediately:YES];
+  [preview setAsset:pma];	
+  
+  return [preview autorelease];
 }
 
 
@@ -155,6 +162,7 @@ PlexMediaProvider* __provider = nil;
 		NSLog(@"pma=%@, prov=%@, mgm=%@, play=%@, err=%@", pma, __provider, mgm, player, error);
 
 		if ( error != nil ){
+      NSLog(@"b0bben: error in brmediaplayer, aborting");
 			[pma release];
 			return ;
 		}
@@ -202,6 +210,11 @@ PlexMediaProvider* __provider = nil;
 			playbackItem = nil;
 		}
 		
+    
+      //stop the transcoding on PMS
+    [rootContainer.request stopTranscoder];
+    NSLog(@"stopping transcoder");
+    
 		return;
 	}
 	NSLog(@"Elapsed: %f, %i", __player.elapsedTime, __player.playerState);

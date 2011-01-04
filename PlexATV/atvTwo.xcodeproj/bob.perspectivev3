@@ -267,17 +267,17 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>089C166AFE841209C02AAC07</string>
+								<string>018CF3F8128732DD00645193</string>
 								<string>08FB77AFFE84173DC02AAC07</string>
 								<string>1C37FBAC04509CD000000102</string>
-								<string>C4ADA70C12D28C19002DA507</string>
 								<string>1C37FAAC04509CD000000102</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>9</integer>
-									<integer>6</integer>
+									<integer>34</integer>
+									<integer>27</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -317,7 +317,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>C4ADA6DA12D289D7002DA507</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>HWAppliance.mm</string>
+								<string>HWPlexDir.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -325,11 +325,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>C4ADA6DB12D289D7002DA507</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>HWAppliance.mm</string>
+										<string>HWPlexDir.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>C4ADA73612D2A93E002DA507</string>
+										<string>C4ADAF0312D3D9CD002DA507</string>
 										<key>history</key>
 										<array>
 											<string>C4ADA70E12D28C19002DA507</string>
@@ -339,7 +339,11 @@
 											<string>C4ADA72F12D2A44D002DA507</string>
 											<string>C4ADA73012D2A44D002DA507</string>
 											<string>C4ADA73112D2A44D002DA507</string>
-											<string>C4ADA73212D2A44D002DA507</string>
+											<string>C4ADA74112D3B5EB002DA507</string>
+											<string>C4ADA74212D3B5EB002DA507</string>
+											<string>C4ADA74312D3B5EB002DA507</string>
+											<string>C4ADA74412D3B5EB002DA507</string>
+											<string>C4ADA74612D3B5EB002DA507</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -434,7 +438,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {995, -27}}</string>
+										<string>{{0, 0}, {568, 405}}</string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -462,11 +466,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>C4ADA6DE12D289D7002DA507</string>
+				<string>C4ADAF0412D3D9CD002DA507</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>C4ADA6DF12D289D7002DA507</string>
+				<string>C4ADAF0512D3D9CD002DA507</string>
 				<string>C4ADA6DA12D289D7002DA507</string>
-				<string>C4ADA6E012D289D7002DA507</string>
+				<string>C4ADAF0612D3D9CD002DA507</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -636,7 +640,7 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>/Users/bob/dev/cocoa/diverse/atv-plex/Plex-ATV-Plugin/PlexATV/atvTwo.xcodeproj</string>
+		<string>/Users/bob/dev/cocoa/diverse/AppleTV/Plex-ATV-Plugin/PlexATV/atvTwo.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>0 107 1280 671 0 0 1280 778 </string>
