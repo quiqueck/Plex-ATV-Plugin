@@ -26,21 +26,24 @@
 #import "BackRow/BRMediaAsset.h"
 #import "PlexMediaAsset.h"
 #import <plex-oss/PlexMediaObject.h>
+#import <plex-oss/PlexRequest.h>
+#import <plex-oss/Machine.h>
 #import <ambertation-plex/Ambertation.h>
 
 @implementation PlexMediaAsset
+@synthesize pmo;
+
 - (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
 {
 	pmo = [o retain];
-	self = [super initWithMediaProvider:mediaProvider];
-    //self = [super init];
+    //self = [super initWithMediaProvider:mediaProvider];
+  self = [super init];
 	//self = [super initWithMediaItem:s];
 	if (self != nil) {
 		url = [u retain];
 		NSLog(@"PMO attrs: %@", pmo.attributes);
     PlexRequest *req = pmo.request;
     NSLog(@"PMO request attrs: %@", req);
-      //NSLog(@"PMO machine attrs: %@", pmo.request.machine);    
       //NSLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
@@ -48,9 +51,8 @@
 
 - (void) dealloc
 {
-  NSLog(@"b0bben: PMA dealloc!");
-    //[pmo release];
-    //[url release];
+    [pmo release];
+    [url release];
 	[super dealloc];
 }
 
@@ -164,7 +166,11 @@
 
 -(id)title {
   NSLog(@"title");
-  return pmo.name;
+  
+  if (pmo.hasMedia)
+    return pmo.name;
+  
+  return nil;
 }
 
 - (id)artist {
@@ -235,8 +241,8 @@
 - (id)imageProxy {
     NSLog(@"imageProxy");
     //NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
-  NSString *thumbURL = [NSString stringWithFormat:@"%@%@",@"http://Mini-TV.local.:32400", [pmo.attributes valueForKey:@"art"]];
-  NSLog(@"thumbURL: %@",thumbURL);
+  NSString *thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
+  NSLog(@"thumbURL: %@",pmo.request.base);
   return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
 };
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
@@ -245,7 +251,10 @@
   return nil;//	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:[pmo.thumb.imagePath]]];
 };
 - (BOOL)hasCoverArt {
-	return YES;
+  if (pmo.art)
+    return YES;
+  
+  return NO;
 };
 
 - (id)playbackRightsOwner {
@@ -396,7 +405,10 @@
 	return nil;
 };
 - (id)mediaSummary {
-	return pmo.summary;
+  if ([@"Video" isEqualToString:pmo.containerType])
+    return pmo.summary;
+  
+  return nil;
 };
 - (id)primaryGenre {
 	return nil;
