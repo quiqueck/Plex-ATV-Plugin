@@ -9,3 +9,5 @@
 
 #import <plex-oss/Preferences.h>
 #endif
+
+#define DEBUG 1

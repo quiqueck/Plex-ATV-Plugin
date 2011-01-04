@@ -98,7 +98,7 @@
 
 		[UIDevice preloadCurrentForMacros];
     #warning Please check elan.plexapp.com/2010/12/24/happy-holidays-from-plex/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+osxbmc+%28Plex%29 to get a set of transcoder keys
-    [PlexRequest setStreamingKey:@"" forPublicKey:@""];
+    [PlexRequest setStreamingKey:@"k3U6GLkZOoNIoSgjDshPErvqMIFdE0xMTx8kgsrhnC0" forPublicKey:@"KQMIY6GATPC63AIMC4R2="];
 		//instrumentObjcMessageSends(YES);
 		
 		NSString *logPath = @"/tmp/PLEX.txt"; 

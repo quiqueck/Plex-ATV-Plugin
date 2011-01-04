@@ -43,6 +43,9 @@
 
 - (void) dealloc
 {
+  NSLog(@"PMA dealloc instance self: %p", self);
+  NSLog(@"PMA dealloc instance pmo: %p", pmo);
+    NSLog(@"PMA dealloc instance url: %p", url);
 	[pmo release];
 	[url release];
 	[super dealloc];
