@@ -224,8 +224,16 @@ PlexMediaProvider* __provider = nil;
 	[playbackItem postMediaProgress: __player.elapsedTime];
 }
 
-- (float)heightForRow:(long)row {
-	return 70.0f;
+- (float)heightForRow:(long)row {	
+	float height;
+	
+	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
+	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]) {
+		height = 70.0f;
+	} else {
+		height = 0.0f;
+	}
+	return height;
 }
 
 - (long)itemCount {
@@ -236,10 +244,11 @@ PlexMediaProvider* __provider = nil;
 	if(row > [rootContainer.directories count])
 		return nil;
 	
-	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
+	id result;
 	
+	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
 	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]) {
-		BRComboMenuItemLayer *result = [[BRComboMenuItemLayer alloc] init];
+		BRComboMenuItemLayer *menuItem = [[BRComboMenuItemLayer alloc] init];
 		
 		id image;
 		if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
@@ -249,24 +258,26 @@ PlexMediaProvider* __provider = nil;
 		} else {
 			image = nil;
 		}
-		[result setThumbnailImage:image];
+		[menuItem setThumbnailImage:image];
 
-		[result setTitle:[pmo name]];
+		[menuItem setTitle:[pmo name]];
 		
-		int durationInMinutes = [pmo duration] / 60;
+		int durationInMinutes = (int)([pmo duration] / 60);
+
 		NSString *duration = [[NSString alloc] initWithFormat:@"%d minutes", durationInMinutes];
-		[result setSubtitle:duration];
+		[menuItem setSubtitle:duration];
 		[duration release];
 		
-		return [result autorelease];
+		result = [menuItem autorelease];
 	} else {
-		BRMenuItem * result = [[BRMenuItem alloc] init];
+		BRMenuItem * menuItem = [[BRMenuItem alloc] init];
 		
-		[result setText:[pmo name] withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+		[menuItem setText:[pmo name] withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 		
-		[result addAccessoryOfType:1];
-		return [result autorelease];
+		[menuItem addAccessoryOfType:1];
+		result = [menuItem autorelease];
 	}
+	return result;
 }
 
 - (BOOL)rowSelectable:(long)selectable {
