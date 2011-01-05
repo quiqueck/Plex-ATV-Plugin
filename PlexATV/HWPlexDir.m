@@ -223,7 +223,7 @@ PlexMediaProvider* __provider = nil;
 }
 
 - (float)heightForRow:(long)row {
-	return 0.0f;
+	return 70.0f;
 }
 
 - (long)itemCount {
@@ -234,12 +234,10 @@ PlexMediaProvider* __provider = nil;
 	if(row > [rootContainer.directories count])
 		return nil;
 	
-	BRMenuItem * result = [[BRMenuItem alloc] init];
 	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
-	[result setText:[pmo name] withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];	
 	
 	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]) {
-		[result addAccessoryOfType:0];
+		BRComboMenuItemLayer *result = [[BRComboMenuItemLayer alloc] init];
 		
 		id image;
 		if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
@@ -249,13 +247,24 @@ PlexMediaProvider* __provider = nil;
 		} else {
 			image = nil;
 		}
+		[result setThumbnailImage:image];
+
+		[result setTitle:[pmo name]];
 		
-		[result setImage:image];
+		int durationInMinutes = [pmo duration] / 60;
+		NSString *duration = [[NSString alloc] initWithFormat:@"%d minutes", durationInMinutes];
+		[result setSubtitle:duration];
+		[duration release];
+		
+		return [result autorelease];
 	} else {
+		BRMenuItem * result = [[BRMenuItem alloc] init];
+		
+		[result setText:[pmo name] withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+		
 		[result addAccessoryOfType:1];
+		return [result autorelease];
 	}
-	
-	return [result autorelease];
 }
 
 - (BOOL)rowSelectable:(long)selectable {
