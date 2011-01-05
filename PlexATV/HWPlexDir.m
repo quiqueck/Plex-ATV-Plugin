@@ -238,10 +238,22 @@ PlexMediaProvider* __provider = nil;
 	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
 	[result setText:[pmo name] withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];	
 	
-	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType])
+	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]) {
 		[result addAccessoryOfType:0];
-	else
+		
+		id image;
+		if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
+			image = [[BRThemeInfo sharedTheme] unplayedVideoImage];			
+		} else if ([pmo seenState] == PlexMediaObjectSeenStateInProgress) {
+			image = [[BRThemeInfo sharedTheme] partiallyplayedVideoImage];
+		} else {
+			image = nil;
+		}
+		
+		[result setImage:image];
+	} else {
 		[result addAccessoryOfType:1];
+	}
 	
 	return [result autorelease];
 }
