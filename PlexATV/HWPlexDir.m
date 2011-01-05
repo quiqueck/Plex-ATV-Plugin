@@ -223,7 +223,15 @@ PlexMediaProvider* __provider = nil;
 }
 
 - (float)heightForRow:(long)row {
-	return 70.0f;
+	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
+	
+	float height;
+	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]) {
+		height = 70.0f;
+	} else {
+		height = 0.0f;
+	}
+	return height;
 }
 
 - (long)itemCount {
