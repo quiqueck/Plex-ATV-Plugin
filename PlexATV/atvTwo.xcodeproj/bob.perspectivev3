@@ -282,7 +282,7 @@
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {263, 612}}</string>
+							<string>{{0, 470}, {263, 612}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -329,21 +329,47 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>C4ADAF0312D3D9CD002DA507</string>
+										<string>C4ADAF9D12D40046002DA507</string>
 										<key>history</key>
 										<array>
 											<string>C4ADA70E12D28C19002DA507</string>
 											<string>C4ADA70F12D28C19002DA507</string>
 											<string>C4ADA71012D28C19002DA507</string>
 											<string>C4ADA72E12D2A44D002DA507</string>
-											<string>C4ADA72F12D2A44D002DA507</string>
 											<string>C4ADA73012D2A44D002DA507</string>
-											<string>C4ADA73112D2A44D002DA507</string>
 											<string>C4ADA74112D3B5EB002DA507</string>
 											<string>C4ADA74212D3B5EB002DA507</string>
 											<string>C4ADA74312D3B5EB002DA507</string>
 											<string>C4ADA74412D3B5EB002DA507</string>
-											<string>C4ADA74612D3B5EB002DA507</string>
+											<string>C4ADAF2B12D3EAC3002DA507</string>
+											<string>C4ADAF5D12D3F477002DA507</string>
+											<string>C4ADAF6712D3FE29002DA507</string>
+											<string>C4ADAF6812D3FE29002DA507</string>
+											<string>C4ADAF6912D3FE29002DA507</string>
+											<string>C4ADAF6A12D3FE29002DA507</string>
+											<string>C4ADAF6B12D3FE29002DA507</string>
+											<string>C4ADAF6C12D3FE29002DA507</string>
+											<string>C4ADAF6D12D3FE29002DA507</string>
+											<string>C4ADAF6E12D3FE29002DA507</string>
+											<string>C4ADAF7012D3FE29002DA507</string>
+											<string>C4ADAF7112D3FE29002DA507</string>
+											<string>C4ADAF7212D3FE29002DA507</string>
+											<string>C4ADAF7312D3FE29002DA507</string>
+											<string>C4ADAF7812D3FE29002DA507</string>
+											<string>C4ADAF7912D3FE29002DA507</string>
+											<string>C4ADAF7A12D3FE29002DA507</string>
+											<string>C4ADAF7C12D3FE29002DA507</string>
+											<string>C4ADAF7D12D3FE29002DA507</string>
+											<string>C4ADAF7E12D3FE29002DA507</string>
+											<string>C4ADAF9012D3FF8E002DA507</string>
+											<string>C4ADAF9512D40046002DA507</string>
+											<string>C4ADAF9612D40046002DA507</string>
+											<string>C4ADAF9712D40046002DA507</string>
+											<string>C4ADAF9812D40046002DA507</string>
+											<string>C4ADAF9912D40046002DA507</string>
+											<string>C4ADAF9A12D40046002DA507</string>
+											<string>C4ADAF9B12D40046002DA507</string>
+											<string>C4ADAF9C12D40046002DA507</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -357,18 +383,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {995, 625}}</string>
+								<string>{{0, 0}, {995, 438}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 107 1280 671 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>625pt</string>
+							<string>438pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>0pt</string>
+							<string>188pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -382,7 +408,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {995, -27}}</string>
+										<string>{{10, 27}, {995, 161}}</string>
 										<key>RubberWindowFrame</key>
 										<string>0 107 1280 671 0 0 1280 778 </string>
 									</dict>
@@ -438,7 +464,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{0, 0}, {568, 405}}</string>
+										<string>{{10, 27}, {995, -27}}</string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>

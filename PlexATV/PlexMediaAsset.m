@@ -36,8 +36,8 @@
 - (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
 {
 	pmo = [o retain];
-    //self = [super initWithMediaProvider:mediaProvider];
-  self = [super init];
+    self = [super initWithMediaProvider:mediaProvider];
+    //self = [super init];
 	//self = [super initWithMediaItem:s];
 	if (self != nil) {
 		url = [u retain];
@@ -69,7 +69,7 @@
 -(id)playbackMetadata{
 	NSLog(@"Metadata");
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithInt:60], @"duration",
+			[NSNumber numberWithLong:self.duration], @"duration",
 			self.mediaURL, @"mediaURL",
 			self.assetID, @"id",
 			nil];
@@ -81,76 +81,8 @@
 }
 
 -(long int)duration{
-	NSLog(@"Duration");
+	NSLog(@"Duration: %d",[pmo.attributes integerForKey:@"duration"]/1000);
 	return [pmo.attributes integerForKey:@"duration"]/1000;
-}
-
-- (BOOL)hasVideoContent{
-	NSLog(@"Video Content?");
-	return YES;
-}
-
-- (BOOL)isAvailable{
-	NSLog(@"Avail?");
-	return YES;
-}
-
-- (BOOL)isCheckedOut{
-	NSLog(@"CheckedOut?");
-	return YES;
-}
-
-- (BOOL)isDisabled{
-	NSLog(@"Disabled?");
-	return NO;
-}
-
-- (BOOL)isExplicit{
-	NSLog(@"Explicit?");
-	return NO;
-}
-
-- (BOOL)isHD{
-	NSLog(@"HD?");
-	return YES;
-}
-
-- (BOOL)isInappropriate{
-	NSLog(@"Inapprop?");
-	return NO;
-}
-
-- (BOOL)isLocal{
-	NSLog(@"Local?");
-	return NO;
-}
-
-- (BOOL)isPlaying{
-	NSLog(@"Playing = %i", [super isPlaying]);
-	return [super isPlaying];
-}
-
-- (BOOL)isPlayingOrPaused{
-	NSLog(@"PlayingOrPause = %i", [super isPlayingOrPaused]);
-	return [super isPlayingOrPaused];
-}
-- (BOOL)isProtectedContent{
-	NSLog(@"Protected?");
-	return NO;
-}
-
-- (BOOL)isWidescreen{
-	NSLog(@"Widescreen?");
-	return YES;
-}
-
-#pragma mark BRMediaPreviewFactoryDelegate
-
-- (BOOL)mediaPreviewShouldShowMetadata{ 
-	return YES;
-}
-- (BOOL)mediaPreviewShouldShowMetadataImmediately{ 
-	return YES;
 }
 
 
@@ -167,11 +99,49 @@
 -(id)title {
   NSLog(@"title");
   
-  if (pmo.hasMedia)
+    if (pmo.hasMedia)
     return pmo.name;
   
-  return nil;
+    return nil;
 }
+
+
+- (id)previewURL {
+	[super previewURL];
+	  NSLog(@"previewURL");
+  return nil;//[[NSURL fileURLWithPath:[pmo.thumb imagePath]] absoluteString];
+};
+
+- (id)imageProxy {
+    NSLog(@"imageProxy");
+
+  NSString *thumbURL = @"";
+  
+  if ([pmo.attributes valueForKey:@"art"])
+    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
+  else if ([pmo.attributes valueForKey:@"thumb"])
+    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
+  
+  NSLog(@"thumbURL: %@", thumbURL);
+  
+  return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+};
+- (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
+    NSLog(@"imageProxyWithBookMarkTimeInMS");
+    //	NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
+  return nil;//	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:[pmo.thumb.imagePath]]];
+};
+- (BOOL)hasCoverArt {
+  NSLog(@"art: %@ . thumb: %@",pmo.art,pmo.thumb);
+  if (pmo.art || pmo.thumb)
+    return YES;
+  
+  return NO;
+};
+
+- (id)trickPlayURL {
+	return nil;
+};
 
 - (id)artist {
 	return nil;
@@ -227,34 +197,6 @@
 };
 - (void)setHasBeenPlayed:(BOOL)fp8 {
 	
-};
-
-- (id)previewURL {
-	[super previewURL];
-    //NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
-	  NSLog(@"previewURL");
-  return nil;//[[NSURL fileURLWithPath:[pmo.thumb imagePath]] absoluteString];
-};
-- (id)trickPlayURL {
-	return nil;
-};
-- (id)imageProxy {
-    NSLog(@"imageProxy");
-    //NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
-  NSString *thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
-  NSLog(@"thumbURL: %@",pmo.request.base);
-  return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-};
-- (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
-    NSLog(@"imageProxyWithBookMarkTimeInMS");
-    //	NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
-  return nil;//	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:[pmo.thumb.imagePath]]];
-};
-- (BOOL)hasCoverArt {
-  if (pmo.art)
-    return YES;
-  
-  return NO;
 };
 
 - (id)playbackRightsOwner {
@@ -319,18 +261,6 @@
 	return 1;
 };
 - (unsigned int)bookmarkTimeInSeconds {
-	return 1;
-};
-- (unsigned int)startTimeInMS {
-	return 1;
-};
-- (unsigned int)startTimeInSeconds {
-	return 1;
-};
-- (unsigned int)stopTimeInMS {
-	return 1;
-};
-- (unsigned int)stopTimeInSeconds {
 	return 1;
 };
 - (id)lastPlayed {
@@ -402,13 +332,15 @@
 	return nil;
 };
 - (id)mediaDescription {
-	return nil;
+	return pmo.summary;
 };
 - (id)mediaSummary {
-  if ([@"Video" isEqualToString:pmo.containerType])
+  NSLog(@"mediaSummary: %@",pmo.summary);
+  
+    if (pmo.summary)
     return pmo.summary;
   
-  return nil;
+    return nil;
 };
 - (id)primaryGenre {
 	return nil;
@@ -428,6 +360,74 @@
 - (id)producers {
 	return nil;
 };
+
+- (BOOL)hasVideoContent{
+	NSLog(@"Video Content?");
+	return YES;
+}
+
+- (BOOL)isAvailable{
+	NSLog(@"Avail?");
+	return YES;
+}
+
+- (BOOL)isCheckedOut{
+	NSLog(@"CheckedOut?");
+	return YES;
+}
+
+- (BOOL)isDisabled{
+	NSLog(@"Disabled?");
+	return NO;
+}
+
+- (BOOL)isExplicit{
+	NSLog(@"Explicit?");
+	return NO;
+}
+
+- (BOOL)isHD{
+	NSLog(@"HD?");
+	return YES;
+}
+
+- (BOOL)isInappropriate{
+	NSLog(@"Inapprop?");
+	return NO;
+}
+
+- (BOOL)isLocal{
+	NSLog(@"Local?");
+	return NO;
+}
+
+- (BOOL)isPlaying{
+	NSLog(@"Playing = %i", [super isPlaying]);
+	return [super isPlaying];
+}
+
+- (BOOL)isPlayingOrPaused{
+	NSLog(@"PlayingOrPause = %i", [super isPlayingOrPaused]);
+	return [super isPlayingOrPaused];
+}
+- (BOOL)isProtectedContent{
+	NSLog(@"Protected?");
+	return NO;
+}
+
+- (BOOL)isWidescreen{
+	NSLog(@"Widescreen?");
+	return YES;
+}
+
+#pragma mark BRMediaPreviewFactoryDelegate
+
+- (BOOL)mediaPreviewShouldShowMetadata{ 
+	return YES;
+}
+- (BOOL)mediaPreviewShouldShowMetadataImmediately{ 
+	return YES;
+}
 
 
 
