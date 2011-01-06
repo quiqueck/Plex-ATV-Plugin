@@ -131,7 +131,7 @@
 	menuController.rootContainer = [m.request rootLevel];
 	NSLog(@"request rootlevel: %@", menuController.rootContainer);
 	
-	return nil;
+	return menuController;
 }
 
 - (id)localizedSearchTitle { return @"Plex"; }
