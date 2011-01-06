@@ -18,6 +18,7 @@ VersionX-revision.h
 # build products
 build/
 *.[oa]
+obj/
 
 # Other source repository archive directories (protects when importing)
 .hg
