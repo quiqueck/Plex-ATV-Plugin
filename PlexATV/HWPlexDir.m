@@ -86,27 +86,27 @@ PlexMediaProvider* __provider = nil;
 	if(item<0 || item>=rootContainer.directories.count) return nil;
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:item];
 	/*
-	[[PlexPrefs defaultPreferences] setEnableCaching:NO];
-	PlexImage* pi = pmo.thumb;
-	if (!pi.hasImage) pi = pmo.art;
-	[pi setMaxImageSize:CGSizeMake(768, 500)];
-	[pi _loadImage];
-	if (pi.image==nil) return nil;
+	 [[PlexPrefs defaultPreferences] setEnableCaching:NO];
+	 PlexImage* pi = pmo.thumb;
+	 if (!pi.hasImage) pi = pmo.art;
+	 [pi setMaxImageSize:CGSizeMake(768, 500)];
+	 [pi _loadImage];
+	 if (pi.image==nil) return nil;
+	 
+	 BRImageAndSyncingPreviewController *obj = [[BRImageAndSyncingPreviewController alloc] init];
+	 
+	 BRImage* img = [[BRImage alloc] initWithCGImageRef:[pi.image CGImage]];
+	 [obj setImage:img];
+	 [img release];	
+	 return [obj autorelease];
+	 */
+	NSURL* mediaURL = [pmo mediaStreamURL];
+	PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+	BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
+	[preview setShowsMetadataImmediately:YES];
+	[preview setAsset:pma];	
 	
-	BRImageAndSyncingPreviewController *obj = [[BRImageAndSyncingPreviewController alloc] init];
-
-	BRImage* img = [[BRImage alloc] initWithCGImageRef:[pi.image CGImage]];
-	[obj setImage:img];
-	[img release];	
-	return [obj autorelease];
-	*/
-  NSURL* mediaURL = [pmo mediaStreamURL];
-  PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
-  BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
-  [preview setShowsMetadataImmediately:YES];
-  [preview setAsset:pma];	
-  
-  return [preview autorelease];
+	return [preview autorelease];
 }
 
 
@@ -117,12 +117,12 @@ PlexMediaProvider* __provider = nil;
 	NSLog(@"Item Selected: %@", pmo);
 	
 	
-	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
+	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]) {
 		[pmo.attributes setObject:[NSNumber numberWithInt:0] forKey:@"viewOffset"];
 		pmo.request.machine.streamQuality = PlexStreamingQuality720p_1500;
 		NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
 		NSURL* mediaURL = [pmo mediaStreamURL];
-    BOOL didTimeOut = NO;
+		BOOL didTimeOut = NO;
 		[pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
 		
 		if (__provider==nil){
@@ -131,7 +131,7 @@ PlexMediaProvider* __provider = nil;
 			[mh addMediaProvider:__provider];
 			
 		}
-	
+		
 		if (playProgressTimer){
 			[playProgressTimer invalidate];
 			[playProgressTimer release];
@@ -149,20 +149,20 @@ PlexMediaProvider* __provider = nil;
 		}
 		
 		
-    PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+		PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
 		BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
 		NSError * error = nil;
 		BRMediaPlayer * player = [mgm playerForMediaAsset: pma error: &error];
-
-
+		
+		
 		//[pma setValue:[NSNumber numberWithInt:70] forKey:@"duration"];
 		//player.stopTime = 2920;
 		//player.startTime = 0;
-    
+		
 		NSLog(@"pma=%@, prov=%@, mgm=%@, play=%@, err=%@", pma, __provider, mgm, player, error);
-
+		
 		if ( error != nil ){
-      NSLog(@"b0bben: error in brmediaplayer, aborting");
+			NSLog(@"b0bben: error in brmediaplayer, aborting");
 			[pma release];
 			return ;
 		}
@@ -210,15 +210,15 @@ PlexMediaProvider* __provider = nil;
 			playbackItem = nil;
 		}
 		
-    
-      //stop the transcoding on PMS
-    [rootContainer.request stopTranscoder];
-    NSLog(@"stopping transcoder");
-    
+		
+		//stop the transcoding on PMS
+		[rootContainer.request stopTranscoder];
+		NSLog(@"stopping transcoder");
+		
 		return;
 	}
-  BRMediaPlayer *playa = [[BRMediaPlayerManager singleton] activePlayer];
-  NSLog(@"bob: duration %f", playa.duration);
+	BRMediaPlayer *playa = [[BRMediaPlayerManager singleton] activePlayer];
+	NSLog(@"bob: duration %f", playa.duration);
 	NSLog(@"Elapsed: %f, %i", __player.elapsedTime, __player.playerState);
 	
 	[playbackItem postMediaProgress: __player.elapsedTime];
@@ -259,11 +259,11 @@ PlexMediaProvider* __provider = nil;
 			image = nil;
 		}
 		[menuItem setThumbnailImage:image];
-
+		
 		[menuItem setTitle:[pmo name]];
 		
 		int durationInMinutes = (int)([pmo duration] / 60);
-
+		
 		NSString *duration = [[NSString alloc] initWithFormat:@"%d minutes", durationInMinutes];
 		[menuItem setSubtitle:duration];
 		[duration release];

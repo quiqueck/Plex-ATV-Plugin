@@ -42,9 +42,9 @@
 	if (self != nil) {
 		url = [u retain];
 		NSLog(@"PMO attrs: %@", pmo.attributes);
-    PlexRequest *req = pmo.request;
-    NSLog(@"PMO request attrs: %@", req);
-      //NSLog(@"Ref = %x", [self mediaItemRef]);
+		PlexRequest *req = pmo.request;
+		NSLog(@"PMO request attrs: %@", req);
+		//NSLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
 }
@@ -92,51 +92,52 @@
 }
 
 - (id)titleForSorting {
-  NSLog(@"titleForSorting");
+	NSLog(@"titleForSorting");
 	return pmo.name;
 };
 
 -(id)title {
-  NSLog(@"title");
-  
+	NSLog(@"title");
+#pragma mark HACK to enable metadata on tv show level
+	return pmo.name;
     if (pmo.hasMedia)
-    return pmo.name;
-  
-    return nil;
+		return pmo.name;
+	else
+		return nil;
 }
 
 
 - (id)previewURL {
 	[super previewURL];
-	  NSLog(@"previewURL");
-  return nil;//[[NSURL fileURLWithPath:[pmo.thumb imagePath]] absoluteString];
+	NSLog(@"previewURL");
+	return nil;//[[NSURL fileURLWithPath:[pmo.thumb imagePath]] absoluteString];
 };
 
 - (id)imageProxy {
     NSLog(@"imageProxy");
-
-  NSString *thumbURL = @"";
-  
-  if ([pmo.attributes valueForKey:@"art"])
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
-  else if ([pmo.attributes valueForKey:@"thumb"])
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
-  
-  NSLog(@"thumbURL: %@", thumbURL);
-  
-  return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	
+	NSString *thumbURL = @"";
+	
+	if ([pmo.attributes valueForKey:@"art"])
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
+	else if ([pmo.attributes valueForKey:@"thumb"])
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
+	
+	NSLog(@"thumbURL: %@", thumbURL);
+	
+	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
 };
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
     NSLog(@"imageProxyWithBookMarkTimeInMS");
     //	NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
-  return nil;//	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:[pmo.thumb.imagePath]]];
+	return nil;//	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:[pmo.thumb.imagePath]]];
 };
 - (BOOL)hasCoverArt {
-  NSLog(@"art: %@ . thumb: %@",pmo.art,pmo.thumb);
-  if (pmo.art || pmo.thumb)
-    return YES;
-  
-  return NO;
+	NSLog(@"art: %@ . thumb: %@",pmo.art,pmo.thumb);
+	if (pmo.art || pmo.thumb)
+		return YES;
+	
+	return NO;
 };
 
 - (id)trickPlayURL {
@@ -267,7 +268,7 @@
 	return nil;
 };
 - (void)setLastPlayed:(id)fp8 {
-  
+	
 };
 - (id)resolution {
 	return nil;
@@ -335,11 +336,11 @@
 	return pmo.summary;
 };
 - (id)mediaSummary {
-  NSLog(@"mediaSummary: %@",pmo.summary);
-  
+	NSLog(@"mediaSummary: %@",pmo.summary);
+	
     if (pmo.summary)
-    return pmo.summary;
-  
+		return pmo.summary;
+	
     return nil;
 };
 - (id)primaryGenre {
