@@ -149,16 +149,16 @@ PlexMediaProvider* __provider = nil;
 		}
 		
 		
-		
-		PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+    PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
 		BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
 		NSError * error = nil;
 		BRMediaPlayer * player = [mgm playerForMediaAsset: pma error: &error];
 
+
 		//[pma setValue:[NSNumber numberWithInt:70] forKey:@"duration"];
-		//player.duration = pmo.duration;
-		player.stopTime = pmo.duration;
-		player.startTime = 0;
+		//player.stopTime = 2920;
+		//player.startTime = 0;
+    
 		NSLog(@"pma=%@, prov=%@, mgm=%@, play=%@, err=%@", pma, __provider, mgm, player, error);
 
 		if ( error != nil ){
@@ -217,6 +217,8 @@ PlexMediaProvider* __provider = nil;
     
 		return;
 	}
+  BRMediaPlayer *playa = [[BRMediaPlayerManager singleton] activePlayer];
+  NSLog(@"bob: duration %f", playa.duration);
 	NSLog(@"Elapsed: %f, %i", __player.elapsedTime, __player.playerState);
 	
 	[playbackItem postMediaProgress: __player.elapsedTime];
