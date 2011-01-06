@@ -16,6 +16,10 @@ echo ""
 
 make stage
 
+echo "Make Package"
+
+make package
+
 echo "Make Install..."
 
 make install
