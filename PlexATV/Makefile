@@ -14,3 +14,4 @@ include $(FW_MAKEDIR)/bundle.mk
 after-install::
 	echo $(FW_PROJECT_DIR)
 	install.exec "killall -9 Lowtide"
+	install.exec "killall -9 AppleTV"
