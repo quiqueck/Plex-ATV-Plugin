@@ -1,26 +1,26 @@
-//
-//  PlexMediaAsset.m
-//  atvTwo
-//
-//  Created by Frank Bauer on 27.10.10.
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//  
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//  
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//  
+  //
+  //  PlexMediaAsset.m
+  //  atvTwo
+  //
+  //  Created by Frank Bauer on 27.10.10.
+  //  Permission is hereby granted, free of charge, to any person obtaining a copy
+  //  of this software and associated documentation files (the "Software"), to deal
+  //  in the Software without restriction, including without limitation the rights
+  //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  //  copies of the Software, and to permit persons to whom the Software is
+  //  furnished to do so, subject to the following conditions:
+  //  
+  //  The above copyright notice and this permission notice shall be included in
+  //  all copies or substantial portions of the Software.
+  //  
+  //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  //  THE SOFTWARE.
+  //  
 #import "BackRow/BRBaseMediaAsset.h"
 #import <BackRow/BRImageManager.h>
 #import "BackRow/BRMediaAsset.h"
@@ -36,9 +36,9 @@
 - (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
 {
 	pmo = [o retain];
-    self = [super initWithMediaProvider:mediaProvider];
-    //self = [super init];
-	//self = [super initWithMediaItem:s];
+    //self = [super initWithMediaProvider:mediaProvider];
+  self = [super init];
+    //self = [super initWithMediaItem:s];
 	if (self != nil) {
 		url = [u retain];
 		NSLog(@"PMO attrs: %@", pmo.attributes);
@@ -51,8 +51,8 @@
 
 - (void) dealloc
 {
-    [pmo release];
-    [url release];
+  [pmo release];
+  [url release];
 	[super dealloc];
 }
 
@@ -69,15 +69,27 @@
 -(id)playbackMetadata{
 	NSLog(@"Metadata");
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithLong:self.duration], @"duration",
-			self.mediaURL, @"mediaURL",
-			self.assetID, @"id",
-			nil];
+          [NSNumber numberWithLong:self.duration], @"duration",
+          self.mediaURL, @"mediaURL",
+          self.assetID, @"id",
+          nil];
 }
 
 - (id)mediaType{
-	NSLog(@"Checked Type");
-	return [BRMediaType movie];
+  
+  NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
+	NSLog(@"Checked Type: %@", plexMediaType);  
+  
+  if ([@"movie" isEqualToString:plexMediaType])
+    return [BRMediaType movie];
+  else if ([@"track" isEqualToString:plexMediaType])
+    return [BRMediaType song];
+  else if ([@"show" isEqualToString:plexMediaType])
+    return [BRMediaType movie]; 
+  else if ([@"episode" isEqualToString:plexMediaType])
+    return [BRMediaType TVShow]; 
+  else
+    return nil;
 }
 
 -(long int)duration{
@@ -98,40 +110,64 @@
 
 -(id)title {
   NSLog(@"title");
+  NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
+  NSString *agentAttr = [pmo.attributes valueForKey:@"agent"];
+#if DEBUG
+  NSLog(@"title");
+  NSLog(@"agentAttr: %@", agentAttr);
+  NSLog(@"plexMediaType: %@", plexMediaType);
+#endif
   
-    if (pmo.hasMedia)
+    //  if ([@"movie" isEqualToString:plexMediaType] || [@"show" isEqualToString:plexMediaType] || [@"episode" isEqualToString:plexMediaType] && [agentAttr empty])
+  if (agentAttr != nil)
+    return nil;
+  else
     return pmo.name;
   
-    return nil;
 }
 
+- (id)mediaDescription {
+  NSLog(@"mediaDescription: %@",pmo.summary);
+	return pmo.summary;
+};
+
+- (id)mediaSummary {
+  NSLog(@"mediaSummary: %@",pmo.summary);
+  
+  if (pmo.summary)
+    return pmo.summary;
+  
+  return nil;
+};
 
 - (id)previewURL {
 	[super previewURL];
-	  NSLog(@"previewURL");
+  NSLog(@"previewURL");
   return nil;//[[NSURL fileURLWithPath:[pmo.thumb imagePath]] absoluteString];
 };
 
 
 - (id)imageProxy {
-    NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
-
+  NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
+  
   NSString *thumbURL=@"";
   
-  if ([pmo.attributes valueForKey:@"art"] != nil)
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
-  else if ([pmo.attributes valueForKey:@"thumb"] != nil)
+  if ([pmo.attributes valueForKey:@"thumb"] != nil){
     thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
-  
-  
-  if ([thumbURL empty])
+    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+  }
+  else if ([pmo.attributes valueForKey:@"art"] != nil) {
+    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
+    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+  }  
+  else
     return nil;
   
-  return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+  
 };
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
-    NSLog(@"imageProxyWithBookMarkTimeInMS");
+  NSLog(@"imageProxyWithBookMarkTimeInMS");
     //	NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
   return nil;//	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:[pmo.thumb.imagePath]]];
 };
@@ -228,13 +264,13 @@
 	return 0;
 };
 - (id)seriesName {
-	return @"seriesName";
+	return pmo.name;
 };
 - (id)seriesNameForSorting {
-	return nil;
+	return pmo.name;
 };
 - (id)broadcaster {
-	return nil;
+	return [pmo.attributes valueForKey:@"studio"];
 };
 
 - (id)genres {
@@ -247,10 +283,11 @@
 	return nil;
 };
 - (id)dateCreated {
-	return nil;
+  NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];  
+	return [dateFormatter dateFromString:[pmo.attributes valueForKey:@"originallyAvailableAt"]];
 };
 - (id)dateCreatedString {
-	return nil;
+	return [pmo.attributes valueForKey:@"originallyAvailableAt"];
 };
 - (id)datePublishedString {
 	return nil;
@@ -335,17 +372,7 @@
 - (id)rating {
 	return nil;
 };
-- (id)mediaDescription {
-	return pmo.summary;
-};
-- (id)mediaSummary {
-  NSLog(@"mediaSummary: %@",pmo.summary);
-  
-    if (pmo.summary)
-    return pmo.summary;
-  
-    return nil;
-};
+
 - (id)primaryGenre {
 	return nil;
 };
