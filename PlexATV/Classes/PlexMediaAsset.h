@@ -26,7 +26,7 @@
 #import "BRXMLMediaAsset.h"
 
 @class PlexMediaObject;
-@interface PlexMediaAsset : BRStreamingMediaAsset {
+@interface PlexMediaAsset : BRBaseMediaAsset<BRMediaAsset> {
 	//BRBaseMediaAsset* bma;
 	NSURL* url;
 	PlexMediaObject* pmo;
