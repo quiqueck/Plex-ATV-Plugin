@@ -66,7 +66,8 @@ enum
 	
     // types handled by MEITunesMediaProvider
     [types addObject: [BRMediaType movie]];
-    //[types addObject: [BRMediaType TVShow]];
+    [types addObject: [BRMediaType TVShow]];
+    [types addObject: [BRMediaType song]];
 	
     NSSet * result = [NSSet setWithArray: types];
     [types release];

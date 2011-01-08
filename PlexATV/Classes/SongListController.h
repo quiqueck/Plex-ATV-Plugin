@@ -45,12 +45,13 @@
 
 @interface SongListController : BRMediaMenuController {
  	PlexMediaContainer* rootContainer;
-	NSArray *songs;
+	NSMutableArray *songs;
 }
 
-@property (nonatomic, retain) NSArray *songs;
+@property (nonatomic, retain) NSMutableArray *songs;
 @property (nonatomic, retain) PlexMediaContainer* rootContainer;
-- (id)initWithSongs:(NSArray *)songs title:(NSString *)title;
+- (id)initWithPlexContainer:(PlexMediaContainer *)container title:(NSString *)title;
+- (void)convertDirToSongAssets:(NSArray*)plexDirectories;
 - (void)playAtIndex:(NSInteger)index withArray:(NSArray *)songList;
 
 - (float)heightForRow:(long)row;

@@ -24,27 +24,26 @@
 #import "BackRow/BRBaseMediaAsset.h"
 #import <BackRow/BRImageManager.h>
 #import "BackRow/BRMediaAsset.h"
-#import "PlexMediaAsset.h"
+#import "PlexSongAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexRequest.h>
 #import <plex-oss/Machine.h>
 #import <ambertation-plex/Ambertation.h>
 
-@implementation PlexMediaAsset
+@implementation PlexSongAsset
 @synthesize pmo;
 
 - (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
 {
 	pmo = [o retain];
-    //self = [super initWithMediaProvider:mediaProvider];
-    //self = [super streamingMediaAssetWithMediaItem:o];
-  self = [super initWithMediaProvider:mediaProvider];
+  self = [super init];
 	if (self != nil) {
 		url = [u retain];
 		NSLog(@"PMO attrs: %@", pmo.attributes);
     PlexRequest *req = pmo.request;
     NSLog(@"PMO request attrs: %@", req);
+    NSLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
       //NSLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
@@ -52,23 +51,19 @@
 
 - (void) dealloc
 {
+  NSLog(@"deallocing song asset for %@", pmo.name);
   [pmo release];
   [url release];
 	[super dealloc];
 }
 
 - (NSString*)assetID{
-	NSLog(@"Asset: %@", pmo.key);
+    //NSLog(@"Asset: %@", pmo.key);
 	return pmo.key;
 }
 
 - (NSString*)mediaURL{
-	NSLog(@"Wanted URL %@", [url description]);
-  if ([@"track" isEqualToString:[pmo.attributes valueForKey:@"type"]]) {
-    NSLog(@"track url: %@", [url parameterString]);
-    return [url description];
-  }
-  else
+    NSLog(@"track url: %@", [url description]);
     return [url description];
 }
 
@@ -82,20 +77,7 @@
 }
 
 - (id)mediaType{
-  
-  NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
-	NSLog(@"Checked Type: %@", plexMediaType);  
-  
-  if ([@"movie" isEqualToString:plexMediaType])
-    return [BRMediaType movie];
-  else if ([@"track" isEqualToString:plexMediaType])
-    return [BRMediaType song];
-  else if ([@"show" isEqualToString:plexMediaType])
-    return [BRMediaType movie]; 
-  else if ([@"episode" isEqualToString:plexMediaType])
-    return [BRMediaType TVShow]; 
-  else
-    return nil;
+  return [BRMediaType song];
 }
 
 -(long int)duration{
@@ -115,34 +97,14 @@
 };
 
 -(id)title {
-  NSLog(@"title");
-  NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
-  NSString *agentAttr = [pmo.attributes valueForKey:@"agent"];
-#if DEBUG
-  NSLog(@"title");
-  NSLog(@"agentAttr: %@", agentAttr);
-  NSLog(@"plexMediaType: %@", plexMediaType);
-#endif
-  
-    //  if ([@"movie" isEqualToString:plexMediaType] || [@"show" isEqualToString:plexMediaType] || [@"episode" isEqualToString:plexMediaType] && [agentAttr empty])
-  if (agentAttr != nil)
-    return nil;
-  else
-    return pmo.name;
-  
+  return pmo.name;  
 }
 
 - (id)mediaDescription {
-  NSLog(@"mediaDescription: %@",pmo.summary);
-	return pmo.summary;
+  return nil;
 };
 
 - (id)mediaSummary {
-  NSLog(@"mediaSummary: %@",pmo.summary);
-  
-  if (pmo.summary)
-    return pmo.summary;
-  
   return nil;
 };
 
@@ -154,35 +116,50 @@
 
 
 - (id)imageProxy {
-  NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
+  NSLog(@"imageproxy");
+
+
+  NSLog(@"imageproxy.pmo_mediacontainer.attrs: %@", pmo.mediaContainer.attributes);
+  NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.mediaContainer.attributes valueForKey:@"art"], [pmo.mediaContainer.attributes valueForKey:@"thumb"] );
   
   NSString *thumbURL=@"";
   
-  if ([pmo.attributes valueForKey:@"thumb"] != nil){
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
+  if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil){
+    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
     return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-  }
-  else if ([pmo.attributes valueForKey:@"art"] != nil) {
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
+  } 
+  else if ([pmo.mediaContainer.attributes valueForKey:@"art"] != nil){
+    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
     return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-  }  
+  } 
+  
   else
     return nil;
-  
-  
 };
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
   NSLog(@"imageProxyWithBookMarkTimeInMS");
-    //	NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
-  return nil;//	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:[pmo.thumb.imagePath]]];
+  NSString *thumbURL=@"";
+  
+  if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil){
+    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
+    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+  } 
+  else if ([pmo.mediaContainer.attributes valueForKey:@"art"] != nil){
+    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
+    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+  } 
+  
+  else
+    return nil;
 };
 - (BOOL)hasCoverArt {
   NSLog(@"art: %@ . thumb: %@",pmo.art,pmo.thumb);
-  if (pmo.art || pmo.thumb)
-    return YES;
   
-  return NO;
+  if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil || [pmo.mediaContainer.attributes valueForKey:@"art"] != nil)
+  return YES;
+  else
+    return NO;
 };
 
 - (id)trickPlayURL {
@@ -190,17 +167,21 @@
 };
 
 - (id)artist {
+  NSLog(@"artist");
 	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 };
 - (id)artistForSorting {
+    NSLog(@"artistForSorting");
 	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 };
 
 - (id)AlbumName {
+    NSLog(@"AlbumNAme");
 	return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 };
 
 - (id)primaryCollectionTitle {
+    NSLog(@"primaryCollectionTitle");
 	return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 };
 
@@ -209,7 +190,8 @@
 }
 
 - (id)TrackNum {
-	return nil;
+    NSLog(@"TrackNum");
+	return [pmo.attributes valueForKey:@"index"];
 };
 - (id)composer {
 	return nil;
@@ -401,11 +383,7 @@
 };
 
 - (BOOL)hasVideoContent{
-	NSLog(@"Video Content?");
-  if (self.mediaType == [BRMediaType song])
     return NO;
-  else
-    return YES;
 }
 
 - (BOOL)isAvailable{
@@ -430,7 +408,7 @@
 
 - (BOOL)isHD{
 	NSLog(@"HD?");
-	return YES;
+	return NO;
 }
 
 - (BOOL)isInappropriate{

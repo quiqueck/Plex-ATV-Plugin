@@ -1,26 +1,26 @@
-//
-//  HWPlexDir.m
-//  atvTwo
-//
-//  Created by Frank Bauer on 22.10.10.
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//  
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//  
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//  
+  //
+  //  HWPlexDir.m
+  //  atvTwo
+  //
+  //  Created by Frank Bauer on 22.10.10.
+  //  Permission is hereby granted, free of charge, to any person obtaining a copy
+  //  of this software and associated documentation files (the "Software"), to deal
+  //  in the Software without restriction, including without limitation the rights
+  //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  //  copies of the Software, and to permit persons to whom the Software is
+  //  furnished to do so, subject to the following conditions:
+  //  
+  //  The above copyright notice and this permission notice shall be included in
+  //  all copies or substantial portions of the Software.
+  //  
+  //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  //  THE SOFTWARE.
+  //  
 
 #import "HWPlexDir.h"
 #import <plex-oss/PlexMediaObject.h>
@@ -30,6 +30,7 @@
 #import <plex-oss/Preferences.h>
 #import "PlexMediaProvider.h"
 #import "PlexMediaAsset.h"
+#import "PlexSongAsset.h"
 #import "SongListController.h"
 
 BRMediaPlayer* __player = nil;
@@ -45,7 +46,7 @@ PlexMediaProvider* __provider = nil;
 		
 		NSString *settingsPng = [[NSBundle bundleForClass:[HWPlexDir class]] pathForResource:@"PlexIcon" ofType:@"png"];
 		BRImage *sp = [BRImage imageWithPath:settingsPng];
-		//BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
+      //BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		
@@ -87,7 +88,7 @@ PlexMediaProvider* __provider = nil;
   NSLog(@"previewControlForItem");
 #endif
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:item];
-
+  
   NSURL* mediaURL = [pmo mediaStreamURL];
   PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
   BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
@@ -97,18 +98,16 @@ PlexMediaProvider* __provider = nil;
   return [preview autorelease];
 }
 
-
-
 - (void)itemSelected:(long)selected; {
 	
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:selected];
 	NSLog(@"Item Selected: %@, type:%@", pmo, [pmo.attributes valueForKey:@"type"]);
 	
   if ([@"album" isEqualToString:[pmo.attributes valueForKey:@"type"]]) {
-      SongListController *songlist = [[SongListController alloc] initWithSongs:pmo.contents.directories title:pmo.name];
-    songlist.rootContainer = [pmo contents];
-      [[[BRApplicationStackManager singleton] stack] pushController:songlist];
-      [songlist autorelease];
+    SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
+      //songlist.rootContainer = [pmo contents];
+    [[[BRApplicationStackManager singleton] stack] pushController:songlist];
+    [songlist autorelease];
   }
 	
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
@@ -149,9 +148,9 @@ PlexMediaProvider* __provider = nil;
 		BRMediaPlayer * player = [mgm playerForMediaAsset: pma error: &error];
 		
 		
-		//[pma setValue:[NSNumber numberWithInt:70] forKey:@"duration"];
-		//player.stopTime = 2920;
-		//player.startTime = 0;
+      //[pma setValue:[NSNumber numberWithInt:70] forKey:@"duration"];
+      //player.stopTime = 2920;
+      //player.startTime = 0;
 		
 		NSLog(@"pma=%@, prov=%@, mgm=%@, play=%@, err=%@", pma, __provider, mgm, player, error);
 		
@@ -162,16 +161,16 @@ PlexMediaProvider* __provider = nil;
 		}
 		
 		
-		//[mgm presentMediaAsset:pma options:0];
+      //[mgm presentMediaAsset:pma options:0];
 		[mgm presentPlayer:player options:0];
 		[pma release];
-		//__player = [player retain];
+      //__player = [player retain];
 		playbackItem = [pmo retain];
 		playProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:10.0f 
-															  target:self 
-															selector:@selector(reportProgress:) 
-															userInfo:nil 
-															 repeats:YES] retain];
+                                                          target:self 
+                                                        selector:@selector(reportProgress:) 
+                                                        userInfo:nil 
+                                                         repeats:YES] retain];
 		
 		
 		return;
@@ -184,7 +183,7 @@ PlexMediaProvider* __provider = nil;
     [menuController autorelease];
   }
 	
-
+  
 }
 
 -(void)reportProgress:(NSTimer*)tm{
@@ -209,17 +208,17 @@ PlexMediaProvider* __provider = nil;
 		}
 		
 		
-		//stop the transcoding on PMS
+      //stop the transcoding on PMS
 		[rootContainer.request stopTranscoder];
 		NSLog(@"stopping transcoder");
 		
 		return;
 	}
-
+  
 	NSLog(@"Elapsed: %f, %i", __player.elapsedTime, __player.playerState);
 	
     //TODO: uncomment once we have duration working
-	//[playbackItem postMediaProgress: __player.elapsedTime];
+    //[playbackItem postMediaProgress: __player.elapsedTime];
 }
 
 - (float)heightForRow:(long)row {	
