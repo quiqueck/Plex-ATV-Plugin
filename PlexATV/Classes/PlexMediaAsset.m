@@ -42,9 +42,9 @@
   self = [super initWithMediaProvider:mediaProvider];
 	if (self != nil) {
 		url = [u retain];
-		NSLog(@"PMO attrs: %@", pmo.attributes);
-    PlexRequest *req = pmo.request;
-    NSLog(@"PMO request attrs: %@", req);
+      NSLog(@"PMO attrs: %@", pmo.attributes);
+      //PlexRequest *req = pmo.request;
+      //NSLog(@"PMO request attrs: %@", req);
       //NSLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
@@ -63,6 +63,8 @@
 }
 
 - (NSString*)mediaURL{
+    //url = [NSURL URLWithString:@"http://mini-tv.local.:32400/library/parts/1602/Tingeling%202.mp4"];
+
 	NSLog(@"Wanted URL %@", [url description]);
   if ([@"track" isEqualToString:[pmo.attributes valueForKey:@"type"]]) {
     NSLog(@"track url: %@", [url parameterString]);
@@ -70,6 +72,7 @@
   }
   else
     return [url description];
+ 
 }
 
 -(id)playbackMetadata{
@@ -94,6 +97,8 @@
     return [BRMediaType movie]; 
   else if ([@"episode" isEqualToString:plexMediaType])
     return [BRMediaType TVShow]; 
+  else if ([@"artist" isEqualToString:plexMediaType]) //need this to show artist summary, and movie type seems the best
+    return [BRMediaType movie];
   else
     return nil;
 }
@@ -140,8 +145,10 @@
 - (id)mediaSummary {
   NSLog(@"mediaSummary: %@",pmo.summary);
   
-  if (pmo.summary)
+  if (![pmo.summary empty])
     return pmo.summary;
+  else if (pmo.mediaContainer != nil)
+    return [pmo.mediaContainer.attributes valueForKey:@"summary"];
   
   return nil;
 };

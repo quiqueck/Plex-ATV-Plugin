@@ -85,15 +85,17 @@ PlexMediaProvider* __provider = nil;
 - (id)previewControlForItem:(long)item
 {
 #if DEBUG
-  NSLog(@"previewControlForItem");
+  NSLog(@"HWPlexDir_previewControlForItem");
 #endif
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:item];
+  [pmo retain];
   
   NSURL* mediaURL = [pmo mediaStreamURL];
   PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
   BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
   [preview setShowsMetadataImmediately:YES];
   [preview setAsset:pma];	
+  [pmo release];
   
   return [preview autorelease];
 }
@@ -102,10 +104,12 @@ PlexMediaProvider* __provider = nil;
 	
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:selected];
 	NSLog(@"Item Selected: %@, type:%@", pmo, [pmo.attributes valueForKey:@"type"]);
-	
-  if ([@"album" isEqualToString:[pmo.attributes valueForKey:@"type"]]) {
+	NSLog(@"Item Selected_PMO: %@", pmo.attributes);
+  
+  BOOL isArtistDir = [pmo.attributes objectForKey:@"agent"] == nil && [@"artist" isEqualToString:[pmo.attributes valueForKey:@"type"]];
+
+  if (isArtistDir) {
     SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
-      //songlist.rootContainer = [pmo contents];
     [[[BRApplicationStackManager singleton] stack] pushController:songlist];
     [songlist autorelease];
   }
@@ -115,11 +119,14 @@ PlexMediaProvider* __provider = nil;
 		pmo.request.machine.streamQuality = PlexStreamingQuality720p_1500;
     
 		NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
-		NSURL* mediaURL = [pmo mediaURL];
+    NSURL* mediaURL = [pmo mediaURL];
+    
     NSLog(@"Starting Playback of %@", mediaURL);
     
 		BOOL didTimeOut = NO;
-		[pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
+    [pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
+
+      
 		
 		if (__provider==nil){
 			__provider = [[PlexMediaProvider alloc] init];
@@ -148,7 +155,7 @@ PlexMediaProvider* __provider = nil;
 		PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
 		BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
 		NSError * error = nil;
-		BRMediaPlayer * player = [mgm playerForMediaAsset: pma error: &error];
+		BRMediaPlayer * player = [mgm playerForMediaAsset:pma error: &error];
 		
 		
       //[pma setValue:[NSNumber numberWithInt:70] forKey:@"duration"];
