@@ -113,8 +113,11 @@ PlexMediaProvider* __provider = nil;
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
 		[pmo.attributes setObject:[NSNumber numberWithInt:0] forKey:@"viewOffset"];
 		pmo.request.machine.streamQuality = PlexStreamingQuality720p_1500;
+    
 		NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
-		NSURL* mediaURL = [pmo mediaStreamURL];
+		NSURL* mediaURL = [pmo mediaURL];
+    NSLog(@"Starting Playback of %@", mediaURL);
+    
 		BOOL didTimeOut = NO;
 		[pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
 		

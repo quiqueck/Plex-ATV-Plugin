@@ -79,6 +79,9 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 
 -(BOOL)canPlayOnDevice;
 -(BOOL)canPlayOnPlex;
+-(BOOL)canPlayWithoutTranscoder;
+-(BOOL)localFile;
+-(NSURL*)mediaURL;
 -(NSURL*)mediaStreamURL;
 -(int)rating;
 -(PlexMediaObjectSeenState)seenState;
