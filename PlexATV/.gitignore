@@ -19,6 +19,7 @@ VersionX-revision.h
 build/
 *.[oa]
 obj/
+PlexATV/_deb/PLEX.frapplication/Applications/AppleTV.app/Appliances/PLEX.frappliance/plex
 
 # Other source repository archive directories (protects when importing)
 .hg
