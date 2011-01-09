@@ -156,20 +156,20 @@
 - (id)imageProxy {
   NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
   
-  NSString *thumbURL=@"";
+  NSString *thumbURL = nil;
   
   if ([pmo.attributes valueForKey:@"thumb"] != nil){
     thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
-    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
   }
   else if ([pmo.attributes valueForKey:@"art"] != nil) {
     thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
-    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
   }  
-  else
+  
+  if (thumbURL==nil)
     return nil;
   
-  
+  NSURL* turl = [pmo.request pathForScaledImage:thumbURL ofSize:CGSizeMake(512, 512)];
+  return [BRURLImageProxy proxyWithURL:turl];
 };
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {

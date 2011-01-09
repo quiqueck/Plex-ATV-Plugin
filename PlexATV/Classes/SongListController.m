@@ -85,6 +85,7 @@
 }
 
 - (void)convertDirToSongAssets:(NSArray*)plexDirectories {
+  NSLog(@"convertDirToSongAssets %@", plexDirectories);
   self.songs = [[NSMutableArray alloc] initWithCapacity:5];
   
   

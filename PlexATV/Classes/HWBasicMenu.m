@@ -22,7 +22,16 @@
 		
 		_names = [[NSMutableArray alloc] init];
 		
-		[[MachineManager sharedMachineManager] setDelegate:self];
+    //make sure we are the delegate
+    [[MachineManager sharedMachineManager] setDelegate:self];
+    
+    //add all available servers
+    for (Machine* m in [[MachineManager sharedMachineManager] machines]){
+      if (runsServer(m.role))
+        [_names addObject:m];
+    }
+    
+    //start the auto detection
 		[[MachineManager sharedMachineManager] startAutoDetection];
 		
 		[[self list] setDatasource:self];
@@ -59,34 +68,27 @@
 	
 }
 
-
+- (BOOL)shouldRefreshForUpdateToObject:(id)object{
+  return YES;
+}
 
 - (void)itemSelected:(long)selected {
-  	NSLog(@"0");
   if (selected<0 || selected>=_names.count) return;
-	NSLog(@"1");
-  NSLog(@"%@, %ld", _names, selected);
 	Machine* m = [_names objectAtIndex:selected];
 	NSLog(@"item selected: %@", m);
 	
 	HWPlexDir* menuController = [[HWPlexDir alloc] init];
-  NSLog(@"2");
-  NSLog(@"%@", m.request);
-  NSLog(@"%@", [m.request rootLevel]);
-	menuController.rootContainer = [m.request rootLevel];
-  NSLog(@"3");
-	[[[BRApplicationStackManager singleton] stack] pushController:menuController];
-  NSLog(@"4");
-	[menuController autorelease];
-  NSLog(@"5");
+  menuController.rootContainer = [m.request rootLevel];
+  [[[BRApplicationStackManager singleton] stack] pushController:menuController];
+  [menuController autorelease];
 }
 
 - (float)heightForRow:(long)row {
-	return 0.0f;
+	return 50.0f;
 }
 
 - (long)itemCount {
-	return [_names count];
+	return _names.count;
 }
 
 - (id)itemForRow:(long)row {
@@ -113,27 +115,39 @@
 	return m.serverName;
 }
 
+-(void)setNeedsUpdate{
+  NSLog(@"Updating UI");
+//  [self updatePreviewController];
+//	[self refreshControllerForModelUpdate];
+  [self.list reload];
+}
 
+#pragma mark
+#pragma mark Machine Manager Delegate
 -(void)machineWasAdded:(Machine*)m{
+  if (!runsServer(m.role)) return;
+  
 	[_names addObject:m];
 	NSLog(@"Added %@", m);
 	
 	[m resolveAndNotify:self];
-	[self updatePreviewController];
-	[self refreshControllerForModelUpdate];
+	[self setNeedsUpdate];
 }
 
 -(void)machineStateDidChange:(Machine*)m{
   if (m==nil) return;
   
-  if (![_names containsObject:m]){
+  if (runsServer(m.role) && ![_names containsObject:m]){
     [self machineWasAdded:m];
     return;
+  } else if (!runsServer(m.role) && [_names containsObject:m]){
+    [_names removeObject:m];
+    NSLog(@"Removed %@", m);
+  } else {
+    NSLog(@"Changed %@", m);
   }
-  
-	NSLog(@"Changed %@", m);
-	[self updatePreviewController];
-	[self refreshControllerForModelUpdate];
+	
+	[self setNeedsUpdate];
 }
 
 -(void)machineResolved:(Machine*)m{

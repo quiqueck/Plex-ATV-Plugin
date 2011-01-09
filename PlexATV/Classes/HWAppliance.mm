@@ -8,7 +8,7 @@
 #define INFO_ID @"hwInfo"
 
 #define HELLO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Servers", @"Servers") identifier:HELLO_ID preferredOrder:0]
-#define INFO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Version: 0.6.2", @"Info") identifier:INFO_ID preferredOrder:1]
+#define INFO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Version: 0.6.3", @"Info") identifier:INFO_ID preferredOrder:1]
 
 @interface UIDevice (ATV)
 +(void)preloadCurrentForMacros;
