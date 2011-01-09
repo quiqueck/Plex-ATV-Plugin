@@ -5,8 +5,10 @@
 #import <Foundation/Foundation.h>
 #import <plex-oss/PlexRequest + Security.h>
 #define HELLO_ID @"hwHello"
+#define INFO_ID @"hwInfo"
 
 #define HELLO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Servers", @"Servers") identifier:HELLO_ID preferredOrder:0]
+#define INFO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Version: 0.6.2", @"Info") identifier:INFO_ID preferredOrder:1]
 
 @interface UIDevice (ATV)
 +(void)preloadCurrentForMacros;
@@ -46,6 +48,10 @@
 - (void)selectCategoryWithIdentifier:(id)identifier {
 	
 	static id menuController = nil;
+  
+  if ([identifier isEqualToString:INFO_ID]){
+    return;
+  }
 	
 	if ([identifier isEqualToString:HELLO_ID])
 	{
@@ -112,7 +118,7 @@
 		
 		_topShelfController = [[TopShelfController alloc] init];
 		
-		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,nil];
+		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,INFO_CAT,nil];
 	
 	} return self;
 }
