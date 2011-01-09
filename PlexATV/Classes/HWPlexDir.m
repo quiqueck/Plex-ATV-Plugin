@@ -103,17 +103,20 @@ PlexMediaProvider* __provider = nil;
 - (void)itemSelected:(long)selected; {
 	
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:selected];
-	NSLog(@"Item Selected: %@, type:%@", pmo, [pmo.attributes valueForKey:@"type"]);
-	NSLog(@"Item Selected_PMO: %@", pmo.attributes);
+  NSString* type = [pmo.attributes stringForKey:@"type"];
+  if ([type empty]) type = pmo.containerType;
+  type = [type lowercaseString];
   
-  BOOL isArtistDir = [pmo.attributes objectForKey:@"agent"] == nil && [@"artist" isEqualToString:[pmo.attributes valueForKey:@"type"]];
+	NSLog(@"Item Selected: %@, type:%@", pmo, type);
+  
+  BOOL isArtistDir = [pmo.attributes objectForKey:@"agent"] == nil && [@"artist" isEqualToString:type];
 
   if (isArtistDir) {
+    NSLog(@"Accessing Album %@", pmo);
     SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
     [[[BRApplicationStackManager singleton] stack] pushController:songlist];
     [songlist autorelease];
   }
-	
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
 		[pmo.attributes setObject:[NSNumber numberWithInt:0] forKey:@"viewOffset"];
 		pmo.request.machine.streamQuality = PlexStreamingQuality720p_1500;

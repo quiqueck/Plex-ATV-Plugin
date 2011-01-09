@@ -83,18 +83,25 @@
 }
 
 - (void)convertDirToSongAssets:(NSArray*)plexDirectories {
+  NSLog(@"convertDirToSongAssets %@", plexDirectories);
   self.songs = [[NSMutableArray alloc] initWithCapacity:5];
-  NSLog(@"rootcontainer: %@", plexDirectories);
   
-  for (int i=0; i < [plexDirectories count]; i++) {
-    PlexMediaObject *track = [plexDirectories objectAtIndex:i];
-    NSLog(@"track dirs: %@", [track contents].directories);
-    PlexDirectory* pmd = [track mediaResource];
-    NSArray* parts = [pmd.subObjects objectForKey:@"Part"];
-
-    PlexMediaObject* pmo = [parts objectAtIndex:0];
-    NSURL *mediaURL =[NSURL URLWithString:[track.request buildAbsoluteKey:pmo.key]];
+  for (int i=0; i < [rootContainer.directories count]; i++) {
+    PlexMediaObject *track = [rootContainer.directories objectAtIndex:i];
     
+    NSString* ipod = [track.attributes objectForKey:@"ipod"];
+    NSString* duration = [track.attributes objectForKey:@"duration"];
+    NSString* key = ipod!=nil?ipod:[track.request buildAbsoluteKey:track.key];
+    if (!ipod && duration){
+      PlexDirectory* pmd = [track mediaResource];
+      NSArray* parts = [pmd.subObjects objectForKey:@"Part"];
+      if (parts && parts.count>0){
+        PlexMediaObject* pmo = [parts objectAtIndex:0];
+        key = [track.request buildAbsoluteKey:pmo.key];
+      }
+    }
+    
+    NSURL* mediaURL = [NSURL URLWithString:key];
     PlexSongAsset *song = [[[PlexSongAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:track] autorelease];
     
     [self.songs addObject:song];
@@ -108,6 +115,7 @@
 - (float)heightForRow:(long)row{
 	return 0.0f;
 }
+
 - (long)itemCount {
 	return [self.songs count] + 2;
 }
@@ -141,7 +149,7 @@
 	NSLog(@"itemSelected - SongListController");
 	if(selected == 0) {
       // Play All
-		[self playAll:rootContainer.directories];
+		[self playAtIndex:0 withArray:self.songs];
 	} else if (selected == 1) {
       // Shuffle
 		[self playAtIndex:0 withArray:[self.songs shuffledArray]];
@@ -159,18 +167,6 @@
     }
 	}
 	
-}
-
-- (void)playAll:(NSArray *)songContainers {
-  NSMutableArray *songList = [[NSMutableArray alloc] initWithCapacity:5];
-  
-  for (PlexMediaObject *mediaObj in songContainers) {
-    if ([[songContainers contents].directories count] > 1) {
-      NSLog(@"going subfolder");
-      [self convertDirToSongAssets:[mediaObject contents].directories];    
-    } 
-    
-  }
 }
 
 - (void)playAtIndex:(NSInteger)index withArray:(NSArray *)songList {

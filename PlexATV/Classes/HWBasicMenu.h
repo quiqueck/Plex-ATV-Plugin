@@ -11,5 +11,6 @@
 - (id)itemForRow:(long)row;
 - (BOOL)rowSelectable:(long)selectable;
 - (id)titleForRow:(long)row;
+- (void)setNeedsUpdate;
 
 @end
