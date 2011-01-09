@@ -87,29 +87,17 @@
 - (void)convertDirToSongAssets:(NSArray*)plexDirectories {
   self.songs = [[NSMutableArray alloc] initWithCapacity:5];
   
+  
   for (int i=0; i < [rootContainer.directories count]; i++) {
-    PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:i];
+    PlexMediaObject *track = [rootContainer.directories objectAtIndex:i];
+    PlexDirectory* pmd = [track mediaResource];
+    NSArray* parts = [pmd.subObjects objectForKey:@"Part"];
+    PlexMediaObject* pmo = [parts objectAtIndex:0];
+    NSURL *mediaURL =[NSURL URLWithString:[track.request buildAbsoluteKey:pmo.key]];
     
-      //HACK: Talk to Frank about how to get music of PMS.
-      //this hack is just ridicolus
-    NSURL *mediaStreamURL = [pmo mediaStreamURL];
-    NSLog(@"converting PMO to song list= %@", pmo);
-    
-    NSString *myString = [mediaStreamURL description];
-    NSArray *myWords = [myString componentsSeparatedByString:@"&"];
-    NSString *realUrl = [myWords objectAtIndex:4];
-    realUrl = [realUrl substringFromIndex:34];
-    realUrl = [realUrl stringByReplacingOccurrencesOfString:@"%2F"
-                                                 withString:@"/"];
-    NSLog(@"stringArray: %@", realUrl);
-    
-    NSURL *mediaURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",pmo.request.base,realUrl]];  
-    
-    
-    PlexSongAsset *song = [[PlexSongAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:pmo];
+    PlexSongAsset *song = [[[PlexSongAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:track] autorelease];
     
     [self.songs addObject:song];
-    [song release];
   }
   
 }
