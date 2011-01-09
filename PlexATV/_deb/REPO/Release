@@ -1,0 +1,9 @@
+Origin: PLEX Repository
+Label: PLEX
+Suite: stable
+Version: 0.9
+Codename: plex
+Architectures: iphoneos-arm
+Components: main
+Description: A Repository for the ATV PLEX Plugins
+Icon: http://www.saurik.com/repo.png

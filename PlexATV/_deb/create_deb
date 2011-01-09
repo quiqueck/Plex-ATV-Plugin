@@ -1,0 +1,12 @@
+#!/bin/bash
+export COPYFILE_DISABLE=1
+export COPY_EXTENDED_ATTRIBUTES_DISABLE=1
+find PLEX.frapplication -name .svn -exec rm -rf {} \;
+find PLEX.frapplication -name .DS_Store -exec rm -rf {} \;
+find . -name "._*" -exec rm -rf {} \;
+dpkg-deb -b PLEX.frapplication
+mv PLEX.frapplication.deb REPO/PLEX.frapplication${1}.deb
+cd REPO
+./dpkg-scanpackages.pl -m . /dev/null /downloads/PLEX/ >Packages
+rm Packages.bz2
+bzip2 Packages
