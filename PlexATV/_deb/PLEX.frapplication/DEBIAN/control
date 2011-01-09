@@ -1,0 +1,20 @@
+Package: com.plex.client-plugin
+Name: Lowtide PLEX Plugin
+Version: 0.6.1
+Priority: optional
+Size: 1083178
+Installed-Size: 2662
+Depends: com.nito
+Replaces: plex-client-plugin
+Architecture: iphoneos-arm
+Description: A PLEX Client for Lowtide (experimental)
+ This Lowtide Plugin allows you to browse your local PMS Libraries 
+ and play back videos.
+ added by b0bben:
+   - Details-Display while browsing 
+Changes: More details when browsing the library (Added by b0bben)
+Homepage: http://plexapp.com/
+Maintainer: Quiqueck <quiqueck@ambertation.de>
+Author: Quiqueck <quiqueck@ambertation.de>
+Section: Multimedia
+Icon: file:///Applications/Lowtide.app/Appliances/PLEX.frappliance/PlexIcon.png
