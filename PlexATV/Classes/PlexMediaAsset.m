@@ -138,12 +138,12 @@
 }
 
 - (id)mediaDescription {
-  NSLog(@"mediaDescription: %@",pmo.summary);
+  NSLog(@"mediaDescription");
 	return pmo.summary;
 };
 
 - (id)mediaSummary {
-  NSLog(@"mediaSummary: %@",pmo.summary);
+  NSLog(@"mediaSummary");
   
   if (![pmo.summary empty])
     return pmo.summary;

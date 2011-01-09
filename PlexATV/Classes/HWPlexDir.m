@@ -101,18 +101,19 @@ PlexMediaProvider* __provider = nil;
 }
 
 - (void)itemSelected:(long)selected; {
-	
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:selected];
+  
   NSString* type = [pmo.attributes stringForKey:@"type"];
   if ([type empty]) type = pmo.containerType;
   type = [type lowercaseString];
   
 	NSLog(@"Item Selected: %@, type:%@", pmo, type);
   
-  BOOL isArtistDir = [pmo.attributes objectForKey:@"agent"] == nil && [@"artist" isEqualToString:type];
-
-  if (isArtistDir) {
-    NSLog(@"Accessing Album %@", pmo);
+  NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, PlexViewGroupArtist );
+  
+    //WTF: cant do pmo.mediaContainer.viewGroup == PlexViewGroupArtist for some reason?
+  if ([pmo.mediaContainer.viewGroup isEqualToString:PlexViewGroupArtist] || [@"album" isEqualToString:type]) {
+    NSLog(@"Accessing Artist/Album %@", pmo);
     SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
     [[[BRApplicationStackManager singleton] stack] pushController:songlist];
     [songlist autorelease];
