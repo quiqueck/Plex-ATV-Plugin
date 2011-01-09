@@ -75,7 +75,7 @@
 - (void)itemSelected:(long)selected {
   if (selected<0 || selected>=_names.count) return;
 	Machine* m = [_names objectAtIndex:selected];
-	NSLog(@"item selected: %@", m);
+	NSLog(@"machine selected: %@", m);
 	
 	HWPlexDir* menuController = [[HWPlexDir alloc] init];
   menuController.rootContainer = [m.request rootLevel];

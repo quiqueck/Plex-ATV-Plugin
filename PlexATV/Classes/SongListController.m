@@ -91,11 +91,20 @@
   
   for (int i=0; i < [rootContainer.directories count]; i++) {
     PlexMediaObject *track = [rootContainer.directories objectAtIndex:i];
-    PlexDirectory* pmd = [track mediaResource];
-    NSArray* parts = [pmd.subObjects objectForKey:@"Part"];
-    PlexMediaObject* pmo = [parts objectAtIndex:0];
-    NSURL *mediaURL =[NSURL URLWithString:[track.request buildAbsoluteKey:pmo.key]];
     
+    NSString* ipod = [track.attributes objectForKey:@"ipod"];
+    NSString* duration = [track.attributes objectForKey:@"duration"];
+    NSString* key = ipod!=nil?ipod:[track.request buildAbsoluteKey:track.key];
+    if (!ipod && duration){
+      PlexDirectory* pmd = [track mediaResource];
+      NSArray* parts = [pmd.subObjects objectForKey:@"Part"];
+      if (parts && parts.count>0){
+        PlexMediaObject* pmo = [parts objectAtIndex:0];
+        key = [track.request buildAbsoluteKey:pmo.key];
+      }
+    }
+    
+    NSURL* mediaURL = [NSURL URLWithString:key];
     PlexSongAsset *song = [[[PlexSongAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:track] autorelease];
     
     [self.songs addObject:song];
@@ -109,6 +118,7 @@
 - (float)heightForRow:(long)row{
 	return 0.0f;
 }
+
 - (long)itemCount {
 	return [self.songs count] + 2;
 }
