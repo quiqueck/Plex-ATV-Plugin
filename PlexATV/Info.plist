@@ -38,7 +38,7 @@
 	<key>FRRemoteAppliance</key>
 	<true/>
 	<key>FRPrimaryAppliance</key>
-	<true/>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<string>1</string>
 	<key>MinimumOSVersion</key>

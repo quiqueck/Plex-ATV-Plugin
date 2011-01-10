@@ -3,7 +3,7 @@ export SDKVERSION=4.2
 FW_DEVICE_IP=apple-tv.local
 include theos/makefiles/common.mk
 
-BUNDLE_NAME = PlexATV
+BUNDLE_NAME = plex
 PlexATV_FILES = Classes/HWAppliance.mm Classes/HWBasicMenu.m Classes/HWPlexDir.m Classes/PlexMediaAsset.m Classes/PlexMediaProvider.m
 PlexATV_INSTALL_PATH = /Applications/AppleTV.app/Appliances
 PlexATV_BUNDLE_EXTENSION = frappliance
