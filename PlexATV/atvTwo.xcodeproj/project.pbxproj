@@ -14,7 +14,6 @@
 		01A0EE601272224C007A60B5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */; };
 		01A0EE621272224C007A60B5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE611272224C007A60B5 /* UIKit.framework */; };
 		01A0F56D12722804007A60B5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F56C12722804007A60B5 /* AudioToolbox.framework */; };
-		01A0F56F12722804007A60B5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F56E12722804007A60B5 /* AVFoundation.framework */; };
 		01A0F57112722804007A60B5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57012722804007A60B5 /* MediaPlayer.framework */; };
 		01A0F57312722804007A60B5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57212722804007A60B5 /* libsqlite3.dylib */; };
 		01A0F57D12722827007A60B5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57C12722827007A60B5 /* SystemConfiguration.framework */; };
@@ -507,7 +506,6 @@
 		01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		01A0EE611272224C007A60B5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01A0F56C12722804007A60B5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		01A0F56E12722804007A60B5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		01A0F57012722804007A60B5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		01A0F57212722804007A60B5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		01A0F57C12722827007A60B5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -556,7 +554,6 @@
 				01A0EE601272224C007A60B5 /* CoreGraphics.framework in Frameworks */,
 				01A0EE621272224C007A60B5 /* UIKit.framework in Frameworks */,
 				01A0F56D12722804007A60B5 /* AudioToolbox.framework in Frameworks */,
-				01A0F56F12722804007A60B5 /* AVFoundation.framework in Frameworks */,
 				01A0F57112722804007A60B5 /* MediaPlayer.framework in Frameworks */,
 				01A0F57312722804007A60B5 /* libsqlite3.dylib in Frameworks */,
 				01A0F57D12722827007A60B5 /* SystemConfiguration.framework in Frameworks */,
@@ -1128,7 +1125,6 @@
 				01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */,
 				01A0EE611272224C007A60B5 /* UIKit.framework */,
 				01A0F56C12722804007A60B5 /* AudioToolbox.framework */,
-				01A0F56E12722804007A60B5 /* AVFoundation.framework */,
 				01A0F57012722804007A60B5 /* MediaPlayer.framework */,
 				01A0F57212722804007A60B5 /* libsqlite3.dylib */,
 				01A0F57C12722827007A60B5 /* SystemConfiguration.framework */,
@@ -1274,7 +1270,11 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../../Downloads/Jasper8C154.K66OS/System/Library/PrivateFrameworks\"",
+					"\"$(SRCROOT)/../../../../../../Downloads/Jasper8C154.K66OS/System/Library/Frameworks\"",
+				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = atvTwo_Prefix.pch;

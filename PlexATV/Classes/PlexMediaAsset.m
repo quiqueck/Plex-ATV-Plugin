@@ -42,7 +42,7 @@
   self = [super initWithMediaProvider:mediaProvider];
 	if (self != nil) {
 		url = [u retain];
-      NSLog(@"PMO attrs: %@", pmo.attributes);
+      //NSLog(@"PMO attrs: %@", pmo.attributes);
       //PlexRequest *req = pmo.request;
       //NSLog(@"PMO request attrs: %@", req);
       //NSLog(@"Ref = %x", [self mediaItemRef]);
@@ -63,16 +63,10 @@
 }
 
 - (NSString*)mediaURL{
-    //url = [NSURL URLWithString:@"http://mini-tv.local.:32400/library/parts/1602/Tingeling%202.mp4"];
-
-	NSLog(@"Wanted URL %@", [url description]);
-  if ([@"track" isEqualToString:[pmo.attributes valueForKey:@"type"]]) {
-    NSLog(@"track url: %@", [url parameterString]);
-    return [url description];
-  }
-  else
-    return [url description];
- 
+    //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+  NSLog(@"Wanted URL %@", [url description]);
+  
+  return [url description];
 }
 
 -(id)playbackMetadata{
@@ -81,6 +75,8 @@
           [NSNumber numberWithLong:self.duration], @"duration",
           self.mediaURL, @"mediaURL",
           self.assetID, @"id",
+          self.mediaSummary, @"mediaSummary",
+          self.mediaDescription, @"mediaDescription",
           nil];
 }
 
@@ -90,13 +86,13 @@
 	NSLog(@"Checked Type: %@", plexMediaType);  
   
   if ([@"movie" isEqualToString:plexMediaType])
-    return [BRMediaType movie];
+    return [BRMediaType streamingVideo];
   else if ([@"track" isEqualToString:plexMediaType])
     return [BRMediaType song];
   else if ([@"show" isEqualToString:plexMediaType])
-    return [BRMediaType movie]; 
-  else if ([@"episode" isEqualToString:plexMediaType])
     return [BRMediaType TVShow]; 
+  else if ([@"episode" isEqualToString:plexMediaType])
+    return [BRMediaType streamingVideo]; 
   else if ([@"artist" isEqualToString:plexMediaType]) //need this to show artist summary, and movie type seems the best
     return [BRMediaType movie];
   else
@@ -135,6 +131,10 @@
   else
     return pmo.name;
   
+}
+
+- (unsigned)startTimeInMS {
+  return 1;
 }
 
 - (id)mediaDescription {
