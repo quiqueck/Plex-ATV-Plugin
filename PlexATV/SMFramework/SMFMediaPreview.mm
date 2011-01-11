@@ -9,7 +9,7 @@
 
 #import "SMFMediaPreview.h"
 #import "SMFBaseAsset.h"
-#import "Classes/BackRowExtras.h"
+#import "BackRowExtras.h"
 @interface BRCoverArtImageLayer (compat)
 -(id)texture;
 @end

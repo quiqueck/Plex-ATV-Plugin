@@ -2,13 +2,16 @@
 
 #import "BackRowExtras.h"
 #import "HWBasicMenu.h"
+#import "HWSettingsController.h"
 #import <Foundation/Foundation.h>
 #import <plex-oss/PlexRequest + Security.h>
 #define HELLO_ID @"hwHello"
 #define INFO_ID @"hwInfo"
+#define SETTINGS_ID @"hwSettings"
 
 #define HELLO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Servers", @"Servers") identifier:HELLO_ID preferredOrder:0]
 #define INFO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Version: 0.6.3", @"Info") identifier:INFO_ID preferredOrder:1]
+#define SETTINGS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Settings", @"Settings") identifier:SETTINGS_ID preferredOrder:99]
 
 @interface UIDevice (ATV)
 +(void)preloadCurrentForMacros;
@@ -40,7 +43,7 @@
 
 @implementation TopShelfController
 - (void)initWithApplianceController:(id)applianceController {
-
+	
 	
 	
 }
@@ -48,18 +51,23 @@
 - (void)selectCategoryWithIdentifier:(id)identifier {
 	
 	static id menuController = nil;
-  
-  if ([identifier isEqualToString:INFO_ID]){
-    return;
-  }
+	
+	if ([identifier isEqualToString:INFO_ID]){
+		return;
+	}
 	
 	if ([identifier isEqualToString:HELLO_ID])
 	{
-
+		
 		if (menuController==nil)
 			menuController = [[HWBasicMenu alloc] init];
 		
-	} 
+	} else if ([identifier isEqualToString:SETTINGS_ID]) {
+		
+		if (menuController==nil)
+			menuController = [[HWSettingsController alloc] init];
+		
+	}
 	
 	
 	[[[BRApplicationStackManager singleton] stack] pushController:menuController];
@@ -67,7 +75,7 @@
 }
 
 - (void)refresh{
-  NSLog(@"Called Refresh");
+	NSLog(@"Called Refresh");
 }
 
 
@@ -101,25 +109,25 @@
 
 - (id)init {
 	if((self = [super init]) != nil) {
-
+		
 		[UIDevice preloadCurrentForMacros];
-    #warning Please check elan.plexapp.com/2010/12/24/happy-holidays-from-plex/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+osxbmc+%28Plex%29 to get a set of transcoder keys
-    [PlexRequest setStreamingKey:@"k3U6GLkZOoNIoSgjDshPErvqMIFdE0xMTx8kgsrhnC0=" forPublicKey:@"KQMIY6GATPC63AIMC4R2"];
+		//#warning Please check elan.plexapp.com/2010/12/24/happy-holidays-from-plex/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+osxbmc+%28Plex%29 to get a set of transcoder keys
+		[PlexRequest setStreamingKey:@"k3U6GLkZOoNIoSgjDshPErvqMIFdE0xMTx8kgsrhnC0=" forPublicKey:@"KQMIY6GATPC63AIMC4R2"];
 		//instrumentObjcMessageSends(YES);
 		
 		NSString *logPath = @"/tmp/PLEX.txt"; 
 		NSLog(@"Redirecting Log to %@", logPath);
 		
-/*		FILE fl1 = fopen([logPath fileSystemRepresentation], "a+");
-		fclose(fl1);*/
+		/*		FILE fl1 = fopen([logPath fileSystemRepresentation], "a+");
+		 fclose(fl1);*/
 		freopen([logPath fileSystemRepresentation], "a+", stderr);
 		freopen([logPath fileSystemRepresentation], "a+", stdout);
 		
 		
 		_topShelfController = [[TopShelfController alloc] init];
 		
-		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,INFO_CAT,nil];
-	
+		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,INFO_CAT,SETTINGS_CAT,nil];
+		
 	} return self;
 }
 
