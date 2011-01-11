@@ -30,6 +30,7 @@
 #import <plex-oss/Preferences.h>
 #import "PlexMediaProvider.h"
 #import "PlexMediaAsset.h"
+#import "PlexPreviewAsset.h"
 #import "PlexSongAsset.h"
 #import "SongListController.h"
 
@@ -91,7 +92,7 @@ PlexMediaProvider* __provider = nil;
   [pmo retain];
   
   NSURL* mediaURL = [pmo mediaStreamURL];
-  PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+  PlexPreviewAsset* pma = [[PlexPreviewAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
   BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
   [preview setShowsMetadataImmediately:YES];
   [preview setAsset:pma];	
@@ -112,7 +113,7 @@ PlexMediaProvider* __provider = nil;
   NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, PlexViewGroupArtist );
   
     //WTF: cant do pmo.mediaContainer.viewGroup == PlexViewGroupArtist for some reason?
-  if ([pmo.mediaContainer.viewGroup isEqualToString:PlexViewGroupArtist] || [@"album" isEqualToString:type]) {
+  if ([pmo.mediaContainer viewGroup] == PlexViewGroupArtist || [@"album" isEqualToString:type]) {
     NSLog(@"Accessing Artist/Album %@", pmo);
     SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
     [[[BRApplicationStackManager singleton] stack] pushController:songlist];
@@ -255,7 +256,6 @@ PlexMediaProvider* __provider = nil;
 	
 	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
   NSString *mediaType = [pmo.attributes valueForKey:@"type"];
-  NSLog(@"itemForRow-mediaType: %@", mediaType);
   
 	if (pmo.hasMedia || [@"Video" isEqualToString:mediaType]) {
 		BRComboMenuItemLayer *menuItem = [[BRComboMenuItemLayer alloc] init];
@@ -272,11 +272,12 @@ PlexMediaProvider* __provider = nil;
 		
 		[menuItem setTitle:[pmo name]];
 		
-		int durationInMinutes = (int)([pmo duration] / 60);
-		
-		NSString *duration = [[NSString alloc] initWithFormat:@"%d minutes", durationInMinutes];
-		[menuItem setSubtitle:duration];
-		[duration release];
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy"];
+    NSString *dateString = [dateFormatter stringFromDate:pmo.originallyAvailableAt];
+		[menuItem setSubtitle:dateString];
+    [dateFormatter release];
+
 		
 		result = [menuItem autorelease];
 	} else {

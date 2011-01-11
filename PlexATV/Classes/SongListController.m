@@ -45,6 +45,7 @@
 #import "SongListController.h"
 #import "PlexMediaProvider.h"
 #import "PlexSongAsset.h"
+#import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexRequest.h>
@@ -197,7 +198,7 @@
     NSLog(@"rootContainer: %@, dirs: %@", rootContainer, rootContainer.directories);
     PlexMediaObject *mediaObj = [rootContainer.directories objectAtIndex:item -2];
     if ([@"album" isEqualToString:mediaObj.type]) {
-      PlexMediaAsset *album = [[PlexMediaAsset alloc] initWithURL:mediaObj.mediaStreamURL mediaProvider:nil mediaObject:mediaObj];
+      PlexPreviewAsset *album = [[PlexPreviewAsset alloc] initWithURL:mediaObj.mediaStreamURL mediaProvider:nil mediaObject:mediaObj];
       BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
       [preview setShowsMetadataImmediately:YES];
       [preview setAsset:album];	

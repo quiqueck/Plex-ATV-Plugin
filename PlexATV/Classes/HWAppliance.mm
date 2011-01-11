@@ -49,29 +49,7 @@
 }
 
 - (void)selectCategoryWithIdentifier:(id)identifier {
-	
-	static id menuController = nil;
-	
-	if ([identifier isEqualToString:INFO_ID]){
-		return;
-	}
-	
-	if ([identifier isEqualToString:HELLO_ID])
-	{
-		
-		if (menuController==nil)
-			menuController = [[HWBasicMenu alloc] init];
-		
-	} else if ([identifier isEqualToString:SETTINGS_ID]) {
-		
-		if (menuController==nil)
-			menuController = [[HWSettingsController alloc] init];
-		
-	}
-	
-	
-	[[[BRApplicationStackManager singleton] stack] pushController:menuController];
-	//[menuController autorelease];
+
 }
 
 - (void)refresh{
@@ -129,6 +107,24 @@
 		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,INFO_CAT,SETTINGS_CAT,nil];
 		
 	} return self;
+}
+
+- (id)controllerForIdentifier:(id)identifier args:(id)args {
+  id menuController = nil;
+	
+	if ([identifier isEqualToString:INFO_ID]){
+		return nil;
+	}
+	
+	if ([identifier isEqualToString:HELLO_ID])
+	{
+    menuController = [[HWBasicMenu alloc] init];
+		
+	} else if ([identifier isEqualToString:SETTINGS_ID]) {
+    menuController = [[HWSettingsController alloc] init];
+	}
+	
+  return menuController;
 }
 
 - (id)applianceCategories {
