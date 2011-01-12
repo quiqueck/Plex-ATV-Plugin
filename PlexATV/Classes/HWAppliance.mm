@@ -10,7 +10,7 @@
 #define SETTINGS_ID @"hwSettings"
 
 #define HELLO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Servers", @"Servers") identifier:HELLO_ID preferredOrder:0]
-#define INFO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Version: 0.6.3", @"Info") identifier:INFO_ID preferredOrder:1]
+#define INFO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Version: 0.6.4", @"Info") identifier:INFO_ID preferredOrder:1]
 #define SETTINGS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Settings", @"Settings") identifier:SETTINGS_ID preferredOrder:99]
 
 @interface UIDevice (ATV)
