@@ -89,7 +89,7 @@
   
   for (int i=0; i < [rootContainer.directories count]; i++) {
     PlexMediaObject *track = [rootContainer.directories objectAtIndex:i];
-    
+    NSLog(@"lastkeyComponent: %@",[track lastKeyComponent]);
     NSString* ipod = [track.attributes objectForKey:@"ipod"];
     NSString* duration = [track.attributes objectForKey:@"duration"];
     NSString* key = ipod!=nil?ipod:[track.request buildAbsoluteKey:track.key];

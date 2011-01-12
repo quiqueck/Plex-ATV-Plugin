@@ -104,7 +104,7 @@
 		
 		_topShelfController = [[TopShelfController alloc] init];
 		
-		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,INFO_CAT,SETTINGS_CAT,nil];
+		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,INFO_CAT,nil];
 		
 	} return self;
 }
