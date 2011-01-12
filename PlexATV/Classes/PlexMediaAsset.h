@@ -35,4 +35,5 @@
 
 - (id) initWithURL:(NSURL*)url mediaProvider:(id)mediaProvider mediaObject:(PlexMediaObject*)pmo;
 - (NSString*)mediaURL;
+
 @end
