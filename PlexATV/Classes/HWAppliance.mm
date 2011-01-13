@@ -98,6 +98,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		
 		_topShelfController = [[TopShelfController alloc] init];
+		//preload the main menu with the settings menu item
 		_applianceCategories = [[NSMutableArray alloc] initWithObjects:SETTINGS_CAT,nil];
 		_machines = [[NSMutableArray alloc] init];
 		
@@ -114,6 +115,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		menuController = [[HWSettingsController alloc] init];
 	} else {
 		// ====== get the name of the category and identifier of the machine selected ======
+		// compoundIdentifier has format:
+		// Example: "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies"
+		// or       "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies (Office)"
 		NSArray *compoundIdentifierComponents = [(NSString *)identifier componentsSeparatedByString:CompoundIdentifierDelimiter];
 		if ([compoundIdentifierComponents count] != 2) {
 			NSLog(@"incorrect number of components in compoundIdentifier: [%@]", identifier);
@@ -132,8 +136,13 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		Machine *machineWhoCategoryBelongsTo = [matchingMachines objectAtIndex:0];
 		
 		// ====== find the category selected ======
+		// If this category name was a duplicate of another (ie 2x"Movies", then
+		// the machine name has been appended to it (ie "Movies (Office)") which needs
+		// to be removed so we can find the right entry in the machine's rootlists'
+		//directory
 		NSString *machineNameToPotentiallyRemove = [[NSString alloc] initWithFormat:@" (%@)", machineWhoCategoryBelongsTo.serverName];
 		[categoryName replaceOccurrencesOfString:machineNameToPotentiallyRemove withString:@"" options:nil range:NSMakeRange(0, [categoryName length])];
+
 		NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name == %@", categoryName];
 		NSArray *categories = [[machineWhoCategoryBelongsTo.request rootLevel] directories];
 		NSArray *matchingCategories = [categories filteredArrayUsingPredicate:categoryPredicate];
@@ -141,6 +150,8 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 			NSLog(@"incorrect number of category matches to selected appliance with name [%@]", categoryName);
 			return nil;
 		}
+		
+		//HAZAA! we found it! Push new view
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
 		HWPlexDir* menuController = [[HWPlexDir alloc] init];
 		menuController.rootContainer = [matchingCategory contents];
@@ -151,18 +162,26 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 }
 
 - (id)applianceCategories {
-	//sort the array
+	//sort the array alphabetically
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
 	[self.applianceCat sortUsingDescriptors:sortDescriptors];
 	[sortDescriptor release];
 	[sortDescriptors release];
 	
-	//update the appliance ordering variable
+	//update the appliance ordering variable so they are listed in alphabetically order in the menu.
+	//this is done and saved to the mutuable array, so should be pretty fast as only the recently added
+	//items (which are appended to the end of the array) will need to be moved.
 	BRApplianceCategory *appliance;
 	for (int i = 0; i<[self.applianceCat count]; i++) {
 		appliance = [self.applianceCat objectAtIndex:i];
-		[appliance setPreferredOrder:i];
+		if ([appliance.identifier isEqualToString:SETTINGS_ID]) {
+			//if settings appliance category, set it to the end of the list
+			[appliance setPreferredOrder:[self.applianceCat count]];
+		} else {
+			[appliance setPreferredOrder:i];
+		}
+
 	}
 	return self.applianceCat;
 }
@@ -183,6 +202,7 @@ NSString * const ApplianceNameKey = @"PlexApplianceName";
 NSString * const MachineUIDKey = @"PlexMachineUID";
 
 - (void)retrieveNewPlexCategories:(Machine *)m {
+	//autorelease pool to avoid memory leaks
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSLog(@"Retrieving categories for machine %@", m);
 	PlexMediaContainer *rootContainer = [m.request rootLevel];
@@ -208,18 +228,23 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 }
 								
 - (void)addNewApplianceWithName:(NSString *)name identifier:(id)ident {
+	// creates a compoundIdentifier to help us find back to the right machine and category.
+	// Example: "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies"
 	NSString *compoundIdentifier = [[NSString alloc] initWithFormat:@"%@%@%@", (NSString *)ident, CompoundIdentifierDelimiter, name];
 	
+	//the appliance order will be the highest number (ie it will be put at the end of the menu.
+	//this will be readjusted when the array is sorted in the (id)applianceCategories
 	float applianceOrder = [self.applianceCat count];
 	NSLog(@"Adding appliance with name [%@] with identifier [%@]", name, compoundIdentifier);
 	BRApplianceCategory *appliance = [BRApplianceCategory categoryWithName:name identifier:compoundIdentifier preferredOrder:applianceOrder];
 	[self.applianceCat addObject:appliance];
 	
-	//find duplicate names, and append pms name to them
+	// find any duplicate names of the one currently being added.
+	// if found, append pms name to them all
 	NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name == %@", name];
 	NSArray *duplicateNameCategories = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
 	if ([duplicateNameCategories count] > 1) {
-		//found duplicates
+		//found duplicates, iterate over all of them updating their names
 		for (BRApplianceCategory *appl in duplicateNameCategories) {
 			//vvv needs refactoring vvv
 			NSArray *compoundIdentifierComponents = [appl.identifier componentsSeparatedByString:CompoundIdentifierDelimiter];
@@ -238,12 +263,16 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 			Machine *machineWhoCategoryBelongsTo = [matchingMachines objectAtIndex:0];
 			//^^^ needs refactoring ^^^
 			
-			//update the name
+			// update the name
+			// name had format:       "Movies"
+			// now changing it to be: "Movies (Office)"
 			NSString *nameWithPms = [[NSString alloc] initWithFormat:@"%@ (%@)", name, machineWhoCategoryBelongsTo.serverName];
 			[appl setName:nameWithPms];
 			[nameWithPms release];
 			
-			//update the CompoundIdentifier to match the new name
+			//update the compoundIdentifier to match the new name
+			// compoundIdentifier had format: "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies"
+			// now changing it to be:         "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies (Office)"
 			NSString *compoundIdentifier = [[NSString alloc] initWithFormat:@"%@%@%@", ident, CompoundIdentifierDelimiter, nameWithPms];
 			[appl setIdentifier:compoundIdentifier];
 			[compoundIdentifier release];
@@ -254,7 +283,10 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 }
 
 - (void)removeAppliancesWithIdentifier:(id)ident {
+	// called with actual UID (ie. "45E13AB3-E11C-44DD-B4F8-8A0DE1111990") of the
+	// machine rather than the compoundIdentifier's used for the categories
 	NSLog(@"Removing appliances with identifier [%@]", (NSString *)ident);
+	
 	//these appliances belongs to this machine
 	NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
 	NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
@@ -264,11 +296,20 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 	}
 	Machine *machineWhosCategoriesAreBeingRemoved = [matchingMachines objectAtIndex:0];
 	
-	//remove all items matching id
+	// find and remove all the appliances who's compoundIdentifers begin with the uid of this machine.
+	// this will be all the appliances who "belong" to this machine
+	// "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies"
 	NSPredicate *appliancePredicate = [NSPredicate predicateWithFormat:@"identifier BEGINSWITH %@", ident];
 	NSArray *appliancesToRemove = [self.applianceCat filteredArrayUsingPredicate:appliancePredicate];
 	[self.applianceCat removeObjectsInArray:appliancesToRemove];
 	
+	// now they have been removed from the main menu. 
+	// Must check if any of these items had the machine name appended because then there might
+	// not be duplicates with that name left (ie we have gone from having 2x"Movies" to 1x"Movies)
+	// and the remaining "Movies" item no longer need the pms name appended.
+	// This means we go from "Movies (Office)" to just "Movies". Though we must check that there only
+	// is 1x"Movies", cause the case could have been that we had 3x"Movies", and now have 2x"Movies"
+	// and the pms name must remain.
 	for (BRApplianceCategory *appliance in appliancesToRemove) {
 		NSMutableString *categoryName = [appliance.name mutableCopy];
 		NSString *machineNameToPotentiallyRemove = [[NSString alloc] initWithFormat:@" (%@)", machineWhosCategoriesAreBeingRemoved.serverName];
@@ -277,6 +318,7 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 		
 		NSArray *matchingAppliances = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
 		if ([matchingAppliances count] == 1) {
+			//there is now only 1x"Movies" left, remove the pms suffix
 			BRApplianceCategory *singleMatch = [matchingAppliances objectAtIndex:0];
 			[singleMatch setName:categoryName];
 		}
@@ -308,7 +350,6 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 	} else {
 		NSLog(@"Changed %@", m);
 	}
-	
 	[self reloadCategories];
 }
 
