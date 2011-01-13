@@ -54,6 +54,7 @@
 		72B2BF8812DBD95500E23F8E /* SMFThemeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF6A12DBD95500E23F8E /* SMFThemeInfo.m */; };
 		72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */; };
 		72B2C71512DC1F0E00E23F8E /* HWPmsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */; };
+		72EA80F712DEB49B00138F7D /* PlexSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 72EA80F612DEB49B00138F7D /* PlexSettings.png */; };
 		875A824D126FFF1F00ECADC2 /* HWAppliance.mm in Sources */ = {isa = PBXBuildFile; fileRef = 875A824A126FFF1F00ECADC2 /* HWAppliance.mm */; };
 		875A824E126FFF1F00ECADC2 /* HWBasicMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */; };
 		875A873412704ACC00ECADC2 /* theos in Resources */ = {isa = PBXBuildFile; fileRef = 875A86EB12704ACC00ECADC2 /* theos */; };
@@ -621,6 +622,8 @@
 		72B2C52112DBE55800E23F8E /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		72B2C71312DC1F0E00E23F8E /* HWPmsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HWPmsListController.h; sourceTree = "<group>"; };
 		72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HWPmsListController.m; sourceTree = "<group>"; };
+		72EA80F612DEB49B00138F7D /* PlexSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PlexSettings.png; sourceTree = "<group>"; };
+		72EA810712DEB6B500138F7D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		875A824A126FFF1F00ECADC2 /* HWAppliance.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = HWAppliance.mm; path = Classes/HWAppliance.mm; sourceTree = "<group>"; };
 		875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWBasicMenu.h; path = Classes/HWBasicMenu.h; sourceTree = "<group>"; };
 		875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWBasicMenu.m; path = Classes/HWBasicMenu.m; sourceTree = "<group>"; };
@@ -1182,6 +1185,7 @@
 			children = (
 				0133123B127C26D70067A5FE /* PlexLogo.png */,
 				013310FC127C09FD0067A5FE /* PlexIcon.png */,
+				72EA80F612DEB49B00138F7D /* PlexSettings.png */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
 			);
@@ -1199,6 +1203,7 @@
 				C4ADAFAC12D46CA9002DA507 /* PlexMediaProvider.h */,
 				C4ADAFAD12D46CA9002DA507 /* PlexMediaProvider.m */,
 				01F4DD2D12C3875500A0A0B5 /* BackRowExtras.h */,
+				72EA810712DEB6B500138F7D /* Constants.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1417,6 +1422,7 @@
 				013310FD127C09FD0067A5FE /* PlexIcon.png in Resources */,
 				0133123C127C26D70067A5FE /* PlexLogo.png in Resources */,
 				72B2BF8212DBD95500E23F8E /* SMFPopup.xm in Resources */,
+				72EA80F712DEB49B00138F7D /* PlexSettings.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
