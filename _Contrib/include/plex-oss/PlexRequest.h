@@ -102,8 +102,13 @@ extern const NSString* plexClientsKey ;
 -(void)stopTranscoder;
 +(void)stopTranscodersSync;
 -(void)stopTranscoderSync;
+
+//sends an alive signal to the transcoder
++(void)pingTranscoders;
+-(void)pingTranscoder;
+-(void)pingTranscoderSync;
+
 +(void)freeCache;
--(void)wakeIfSleeping;
 
 -(PlexImage*)flagForKey:(NSString*)key;
 -(PlexMediaContainer*)rootLevel;
