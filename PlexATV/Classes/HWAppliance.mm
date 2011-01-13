@@ -6,11 +6,9 @@
 #import <Foundation/Foundation.h>
 #import <plex-oss/PlexRequest + Security.h>
 #define HELLO_ID @"hwHello"
-#define INFO_ID @"hwInfo"
 #define SETTINGS_ID @"hwSettings"
 
 #define HELLO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Servers", @"Servers") identifier:HELLO_ID preferredOrder:0]
-#define INFO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Version: 0.6.3", @"Info") identifier:INFO_ID preferredOrder:1]
 #define SETTINGS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Settings", @"Settings") identifier:SETTINGS_ID preferredOrder:99]
 
 @interface UIDevice (ATV)
@@ -104,17 +102,13 @@
 		
 		_topShelfController = [[TopShelfController alloc] init];
 		
-		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,INFO_CAT,nil];
+		_applianceCategories = [[NSArray alloc] initWithObjects:HELLO_CAT,SETTINGS_CAT,nil];
 		
 	} return self;
 }
 
 - (id)controllerForIdentifier:(id)identifier args:(id)args {
   id menuController = nil;
-	
-	if ([identifier isEqualToString:INFO_ID]){
-		return nil;
-	}
 	
 	if ([identifier isEqualToString:HELLO_ID])
 	{
