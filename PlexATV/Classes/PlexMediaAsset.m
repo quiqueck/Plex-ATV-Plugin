@@ -57,6 +57,7 @@
 	[super dealloc];
 }
 
+
 - (NSString*)assetID{
 	NSLog(@"Asset: %@", pmo.key);
 	return pmo.key;
@@ -119,7 +120,8 @@
 }
 
 - (unsigned)startTimeInMS {
-  return 1;
+  NSLog(@"startTimeInMS");
+  return [[pmo.attributes valueForKey:@"viewOffset"] intValue];
 }
 
 - (id)mediaDescription {

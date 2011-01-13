@@ -8,11 +8,9 @@
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
 #define HELLO_ID @"hwHello"
-#define INFO_ID @"hwInfo"
 #define SETTINGS_ID @"hwSettings"
 
 #define HELLO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Servers", @"Servers") identifier:HELLO_ID preferredOrder:0]
-#define INFO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Version: 0.6.3", @"Info") identifier:INFO_ID preferredOrder:1]
 #define SETTINGS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Settings", @"Settings") identifier:SETTINGS_ID preferredOrder:99]
 
 @interface UIDevice (ATV)
