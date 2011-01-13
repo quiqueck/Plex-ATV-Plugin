@@ -120,23 +120,25 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 			return nil;
 		}
 		NSString *ident = [compoundIdentifierComponents objectAtIndex:0];
-		NSString *categoryName = [compoundIdentifierComponents objectAtIndex:1];
+		NSMutableString *categoryName = [[compoundIdentifierComponents objectAtIndex:1] mutableCopy];
 		
 		// ====== find the machine using the identifer (uid) ======
 		NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
 		NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
 		if ([matchingMachines count] != 1) {
-			NSLog(@"incorrect number of machine matches to selected appliance");
+			NSLog(@"incorrect number of machine matches to selected appliance with uid [%@]", ident);
 			return nil;
 		}
 		Machine *machineWhoCategoryBelongsTo = [matchingMachines objectAtIndex:0];
 		
 		// ====== find the category selected ======
+		NSString *machineNameToPotentiallyRemove = [[NSString alloc] initWithFormat:@" (%@)", machineWhoCategoryBelongsTo.serverName];
+		[categoryName replaceOccurrencesOfString:machineNameToPotentiallyRemove withString:@"" options:nil range:NSMakeRange(0, [categoryName length])];
 		NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name == %@", categoryName];
 		NSArray *categories = [[machineWhoCategoryBelongsTo.request rootLevel] directories];
 		NSArray *matchingCategories = [categories filteredArrayUsingPredicate:categoryPredicate];
 		if ([matchingCategories count] != 1) {
-			NSLog(@"incorrect number of category matches to selected appliance");
+			NSLog(@"incorrect number of category matches to selected appliance with name [%@]", categoryName);
 			return nil;
 		}
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
@@ -145,10 +147,23 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		[[[BRApplicationStackManager singleton] stack] pushController:menuController];		
 	}
 	
-	return [menuController autorelease];;
+	return [menuController autorelease];
 }
 
 - (id)applianceCategories {
+	//sort the array
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+	[self.applianceCat sortUsingDescriptors:sortDescriptors];
+	[sortDescriptor release];
+	[sortDescriptors release];
+	
+	//update the appliance ordering variable
+	BRApplianceCategory *appliance;
+	for (int i = 0; i<[self.applianceCat count]; i++) {
+		appliance = [self.applianceCat objectAtIndex:i];
+		[appliance setPreferredOrder:i];
+	}
 	return self.applianceCat;
 }
 
@@ -180,8 +195,8 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 		[self performSelectorOnMainThread:@selector(addNewApplianceWithDict:) withObject:dict waitUntilDone:NO];
 		NSLog(@"Adding category [%@] for machine uid [%@]", pmo.name, m.uid);
 	}
-	[pool drain];
 	[m release];
+	[pool drain];
 }
 
 - (void)addNewApplianceWithDict:(NSDictionary *)dict {
@@ -199,14 +214,73 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 	NSLog(@"Adding appliance with name [%@] with identifier [%@]", name, compoundIdentifier);
 	BRApplianceCategory *appliance = [BRApplianceCategory categoryWithName:name identifier:compoundIdentifier preferredOrder:applianceOrder];
 	[self.applianceCat addObject:appliance];
+	
+	//find duplicate names, and append pms name to them
+	NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name == %@", name];
+	NSArray *duplicateNameCategories = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
+	if ([duplicateNameCategories count] > 1) {
+		//found duplicates
+		for (BRApplianceCategory *appl in duplicateNameCategories) {
+			//vvv needs refactoring vvv
+			NSArray *compoundIdentifierComponents = [appl.identifier componentsSeparatedByString:CompoundIdentifierDelimiter];
+			if ([compoundIdentifierComponents count] != 2) {
+				NSLog(@"incorrect number of components in compoundIdentifier: [%@]", appl.identifier);
+				break;
+			}
+			NSString *ident = [compoundIdentifierComponents objectAtIndex:0];
+			// ====== find the machine using the identifer (uid) ======
+			NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
+			NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
+			if ([matchingMachines count] != 1) {
+				NSLog(@"incorrect number of machine matches to selected appliance");
+				break;
+			}
+			Machine *machineWhoCategoryBelongsTo = [matchingMachines objectAtIndex:0];
+			//^^^ needs refactoring ^^^
+			
+			//update the name
+			NSString *nameWithPms = [[NSString alloc] initWithFormat:@"%@ (%@)", name, machineWhoCategoryBelongsTo.serverName];
+			[appl setName:nameWithPms];
+			[nameWithPms release];
+			
+			//update the CompoundIdentifier to match the new name
+			NSString *compoundIdentifier = [[NSString alloc] initWithFormat:@"%@%@%@", ident, CompoundIdentifierDelimiter, nameWithPms];
+			[appl setIdentifier:compoundIdentifier];
+			[compoundIdentifier release];
+		}
+	}
+	
 	[self reloadCategories];
 }
 
 - (void)removeAppliancesWithIdentifier:(id)ident {
 	NSLog(@"Removing appliances with identifier [%@]", (NSString *)ident);
-	//keep all items whose identifer does not the id
-	NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"identifier != %@", ident];
-	[self.applianceCat filterUsingPredicate:machinePredicate];
+	//these appliances belongs to this machine
+	NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
+	NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
+	if ([matchingMachines count] != 1) {
+		NSLog(@"incorrect number of machine matches to selected appliance with uid [%@]", ident);
+		return;
+	}
+	Machine *machineWhosCategoriesAreBeingRemoved = [matchingMachines objectAtIndex:0];
+	
+	//remove all items matching id
+	NSPredicate *appliancePredicate = [NSPredicate predicateWithFormat:@"identifier BEGINSWITH %@", ident];
+	NSArray *appliancesToRemove = [self.applianceCat filteredArrayUsingPredicate:appliancePredicate];
+	[self.applianceCat removeObjectsInArray:appliancesToRemove];
+	
+	for (BRApplianceCategory *appliance in appliancesToRemove) {
+		NSMutableString *categoryName = [appliance.name mutableCopy];
+		NSString *machineNameToPotentiallyRemove = [[NSString alloc] initWithFormat:@" (%@)", machineWhosCategoriesAreBeingRemoved.serverName];
+		[categoryName replaceOccurrencesOfString:machineNameToPotentiallyRemove withString:@"" options:nil range:NSMakeRange(0, [categoryName length])];
+		NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name BEGINSWITH %@", categoryName];
+		
+		NSArray *matchingAppliances = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
+		if ([matchingAppliances count] == 1) {
+			BRApplianceCategory *singleMatch = [matchingAppliances objectAtIndex:0];
+			[singleMatch setName:categoryName];
+		}
+	}
 }
 
 #pragma mark -
@@ -228,9 +302,9 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 		[self machineWasAdded:m];
 		return;
 	} else if (!runsServer(m.role) && [self.machines containsObject:m]){
-		[self.machines removeObject:m];
+		[self removeAppliancesWithIdentifier:m.uid];
 		NSLog(@"Removed %@", m);
-		//[self removeAppliancesWithIdentifier:m.uid];
+		[self.machines removeObject:m];
 	} else {
 		NSLog(@"Changed %@", m);
 	}
