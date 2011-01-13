@@ -335,6 +335,8 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 	
 	//retrieve new categories
 	[self performSelectorInBackground:@selector(retrieveNewPlexCategories:) withObject:[m retain]];
+	//does not reload at this time as the background thread will tell the main thread to refresh
+	//once it has finished its work
 }
 
 -(void)machineStateDidChange:(Machine*)m{
