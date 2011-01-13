@@ -7,9 +7,9 @@
 #import <plex-oss/PlexRequest + Security.h>
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
+
 #define HELLO_ID @"hwHello"
 #define SETTINGS_ID @"hwSettings"
-
 #define HELLO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Servers", @"Servers") identifier:HELLO_ID preferredOrder:0]
 #define SETTINGS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Settings", @"Settings") identifier:SETTINGS_ID preferredOrder:99]
 
@@ -120,7 +120,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		// or       "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies (Office)"
 		NSArray *compoundIdentifierComponents = [(NSString *)identifier componentsSeparatedByString:CompoundIdentifierDelimiter];
 		if ([compoundIdentifierComponents count] != 2) {
-			NSLog(@"incorrect number of components in compoundIdentifier: [%@]", identifier);
+			NSLog(@"ERROR: incorrect number of components in compoundIdentifier: [%@]", identifier);
 			return nil;
 		}
 		NSString *ident = [compoundIdentifierComponents objectAtIndex:0];
@@ -130,7 +130,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
 		NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
 		if ([matchingMachines count] != 1) {
-			NSLog(@"incorrect number of machine matches to selected appliance with uid [%@]", ident);
+			NSLog(@"ERROR: incorrect number of machine matches to selected appliance with uid [%@]", ident);
 			return nil;
 		}
 		Machine *machineWhoCategoryBelongsTo = [matchingMachines objectAtIndex:0];
@@ -147,7 +147,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		NSArray *categories = [[machineWhoCategoryBelongsTo.request rootLevel] directories];
 		NSArray *matchingCategories = [categories filteredArrayUsingPredicate:categoryPredicate];
 		if ([matchingCategories count] != 1) {
-			NSLog(@"incorrect number of category matches to selected appliance with name [%@]", categoryName);
+			NSLog(@"ERROR: incorrect number of category matches to selected appliance with name [%@]", categoryName);
 			return nil;
 		}
 		
@@ -249,7 +249,7 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 			//vvv needs refactoring vvv
 			NSArray *compoundIdentifierComponents = [appl.identifier componentsSeparatedByString:CompoundIdentifierDelimiter];
 			if ([compoundIdentifierComponents count] != 2) {
-				NSLog(@"incorrect number of components in compoundIdentifier: [%@]", appl.identifier);
+				NSLog(@"ERROR: incorrect number of components in compoundIdentifier: [%@]", appl.identifier);
 				break;
 			}
 			NSString *ident = [compoundIdentifierComponents objectAtIndex:0];
@@ -257,7 +257,7 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 			NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
 			NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
 			if ([matchingMachines count] != 1) {
-				NSLog(@"incorrect number of machine matches to selected appliance");
+				NSLog(@"ERROR: incorrect number of machine matches to selected appliance");
 				break;
 			}
 			Machine *machineWhoCategoryBelongsTo = [matchingMachines objectAtIndex:0];
@@ -291,7 +291,7 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 	NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
 	NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
 	if ([matchingMachines count] != 1) {
-		NSLog(@"incorrect number of machine matches to selected appliance with uid [%@]", ident);
+		NSLog(@"ERROR: incorrect number of machine matches to selected appliance with uid [%@]", ident);
 		return;
 	}
 	Machine *machineWhosCategoriesAreBeingRemoved = [matchingMachines objectAtIndex:0];
@@ -323,48 +323,60 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 			[singleMatch setName:categoryName];
 		}
 	}
+	[self reloadCategories];
 }
 
 #pragma mark -
 #pragma mark Machine Delegate Methods
--(void)machineWasAdded:(Machine*)m{
-	[self.machines addObject:m];
-	NSLog(@"Added machine %@", m);
-	
-	[m resolveAndNotify:self];
-	
-	//retrieve new categories
-	[self performSelectorInBackground:@selector(retrieveNewPlexCategories:) withObject:[m retain]];
-	//does not reload at this time as the background thread will tell the main thread to refresh
-	//once it has finished its work
+- (void)machineWasAdded:(Machine*)m {
+    BOOL machineRunsServer = runsServer(m.role);
+    BOOL machineIsOnline = m.isOnline;
+    BOOL machinesListAlreadyContainsMachine = [self.machines containsObject:m];
+    
+    if ( machineRunsServer && machineIsOnline && !machinesListAlreadyContainsMachine ) {
+	    [self.machines addObject:m];
+	    NSLog(@"MachineManager: Added machine %@", m);
+		
+	    [m resolveAndNotify:self];
+		
+		//retrieve new categories
+		[self performSelectorInBackground:@selector(retrieveNewPlexCategories:) withObject:[m retain]];
+		//does not reload at this time as the background thread will tell the main thread to refresh
+		//once it has finished its work
+    }
 }
 
--(void)machineStateDidChange:(Machine*)m{
+- (void)machineStateDidChange:(Machine*)m {
 	if (m==nil) return;
 	
-	if (runsServer(m.role) && ![self.machines containsObject:m]){
+	BOOL machineRunsServer = runsServer(m.role);
+    BOOL machineIsOnline = m.isOnline;
+    BOOL machinesListAlreadyContainsMachine = [self.machines containsObject:m];
+	
+	if ( machineRunsServer && machineIsOnline && !machinesListAlreadyContainsMachine ) {
 		[self machineWasAdded:m];
 		return;
-	} else if (!runsServer(m.role) && [self.machines containsObject:m]){
+	} else if ( (!machineRunsServer || !machineIsOnline) && machinesListAlreadyContainsMachine ) {
 		[self removeAppliancesWithIdentifier:m.uid];
-		NSLog(@"Removed %@", m);
+		NSLog(@"MachineManager: Removed %@", m);
 		[self.machines removeObject:m];
 	} else {
-		NSLog(@"Changed %@", m);
+		NSLog(@"MachineManager: Changed %@", m);
 	}
 	[self reloadCategories];
 }
 
--(void)machineResolved:(Machine*)m{
-	NSLog(@"Resolved %@", m);
+- (void)machineResolved:(Machine*)m {
+	NSLog(@"MachineManager: Resolved %@", m);
 }
 
--(void)machineDidNotResolve:(Machine*)m{
-	NSLog(@"Unable to Resolve %@", m);
+- (void)machineDidNotResolve:(Machine*)m {
+	NSLog(@"MachineManager: Unable to Resolve %@", m);
 }
 
--(void)machineReceivedClients:(Machine*)m{
-	NSLog(@"Got list of clients %@", m);
+- (void)machineReceivedClients:(Machine*)m {
+	NSLog(@"MachineManager: Got list of clients %@", m);
 }
+
 
 @end
