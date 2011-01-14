@@ -163,7 +163,7 @@
 		case QualitySettingIndex: {
 			// =========== quality setting ===========
 			[asset setTitle:@"Select the video quality"];
-			[asset setSummary:@"Sets the quality of the streamed video"];
+			[asset setSummary:@"Sets the quality of the streamed video (currently not used)"];
 			break;
 		}
 		case PluginVersionNumberIndex: {
