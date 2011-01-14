@@ -8,9 +8,9 @@
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
 
-#define HELLO_ID @"hwHello"
+#define OTHERSERVERS_ID @"hwOtherServer"
 #define SETTINGS_ID @"hwSettings"
-#define HELLO_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Servers", @"Servers") identifier:HELLO_ID preferredOrder:0]
+#define OTHERSERVERS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Other Servers", @"Other Servers") identifier:OTHERSERVERS_ID preferredOrder:98]
 #define SETTINGS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Settings", @"Settings") identifier:SETTINGS_ID preferredOrder:99]
 
 @interface UIDevice (ATV)
@@ -99,7 +99,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		_topShelfController = [[TopShelfController alloc] init];
 		//preload the main menu with the settings menu item
-		_applianceCategories = [[NSMutableArray alloc] initWithObjects:SETTINGS_CAT,nil];
+		_applianceCategories = [[NSMutableArray alloc] initWithObjects:OTHERSERVERS_CAT,SETTINGS_CAT,nil];
 		_machines = [[NSMutableArray alloc] init];
 		
 		[[MachineManager sharedMachineManager] setDelegate:self];
@@ -113,6 +113,8 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	
 	if ([identifier isEqualToString:SETTINGS_ID]) {
 		menuController = [[HWSettingsController alloc] init];
+	} else if ([identifier isEqualToString:OTHERSERVERS_ID]) {
+		menuController = [[HWBasicMenu alloc] init;	
 	} else {
 		// ====== get the name of the category and identifier of the machine selected ======
 		// compoundIdentifier has format:
@@ -175,13 +177,18 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	BRApplianceCategory *appliance;
 	for (int i = 0; i<[self.applianceCat count]; i++) {
 		appliance = [self.applianceCat objectAtIndex:i];
-		if ([appliance.identifier isEqualToString:SETTINGS_ID]) {
-			//if settings appliance category, set it to the end of the list
-			[appliance setPreferredOrder:[self.applianceCat count]];
+		
+		int newPreferredOrder;
+		if ([appliance.identifier isEqualToString:OTHERSERVERS_ID]) {
+			//other servers appliance category, set it to the second to last
+			newPreferredOrder = [self.applianceCat count];
+		} else if ([appliance.identifier isEqualToString:SETTINGS_ID]) {
+			//settings appliance category, set it to the end of the list
+			newPreferredOrder = [self.applianceCat count] + 1;
 		} else {
-			[appliance setPreferredOrder:i];
+			newPreferredOrder = i;
 		}
-
+		[appliance setPreferredOrder:newPreferredOrder];
 	}
 	return self.applianceCat;
 }
@@ -204,6 +211,7 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 - (void)retrieveNewPlexCategories:(Machine *)m {
 	//autorelease pool to avoid memory leaks
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	NSLog(@"Retrieving categories for machine %@", m);
 	PlexMediaContainer *rootContainer = [m.request rootLevel];
 	NSMutableArray *directories = rootContainer.directories;
@@ -215,7 +223,6 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 		[self performSelectorOnMainThread:@selector(addNewApplianceWithDict:) withObject:dict waitUntilDone:NO];
 		NSLog(@"Adding category [%@] for machine uid [%@]", pmo.name, m.uid);
 	}
-	[m release];
 	[pool drain];
 }
 
