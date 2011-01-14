@@ -2,11 +2,14 @@
 
 #import "BackRowExtras.h"
 #import "HWPlexDir.h"
+#import "HWBasicMenu.h"
 #import "HWSettingsController.h"
 #import <Foundation/Foundation.h>
 #import <plex-oss/PlexRequest + Security.h>
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
+#import "Constants.h"
+#import "SMFPreferences.h"
 
 #define OTHERSERVERS_ID @"hwOtherServer"
 #define SETTINGS_ID @"hwSettings"
@@ -96,6 +99,13 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		freopen([logPath fileSystemRepresentation], "a+", stderr);
 		freopen([logPath fileSystemRepresentation], "a+", stdout);
 		
+		//setup user preferences
+		[[SMFPreferences preferences] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+														NO, PreferencesUseCombinedPmsView, 
+														@"<No Default Selected>", PreferencesDefaultServerName,
+														@"", PreferencesDefaultServerUid,
+														@"Low", PreferencesQualitySetting,
+														nil]];
 		
 		_topShelfController = [[TopShelfController alloc] init];
 		//preload the main menu with the settings menu item
@@ -111,10 +121,10 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 - (id)controllerForIdentifier:(id)identifier args:(id)args {
 	id menuController = nil;
 	
-	if ([identifier isEqualToString:SETTINGS_ID]) {
+	if ([identifier isEqualToString:OTHERSERVERS_ID]) {
+		menuController = [[HWBasicMenu alloc] init];
+	} else if ([identifier isEqualToString:SETTINGS_ID]) {
 		menuController = [[HWSettingsController alloc] init];
-	} else if ([identifier isEqualToString:OTHERSERVERS_ID]) {
-		menuController = [[HWBasicMenu alloc] init;	
 	} else {
 		// ====== get the name of the category and identifier of the machine selected ======
 		// compoundIdentifier has format:
@@ -336,6 +346,10 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 #pragma mark -
 #pragma mark Machine Delegate Methods
 - (void)machineWasAdded:(Machine*)m {
+	if (![[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView]
+		&& ![m.uid isEqualToString:[[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid]])
+		  return;
+	
     BOOL machineRunsServer = runsServer(m.role);
     BOOL machineIsOnline = m.isOnline;
     BOOL machinesListAlreadyContainsMachine = [self.machines containsObject:m];
@@ -370,7 +384,7 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 	} else {
 		NSLog(@"MachineManager: Changed %@", m);
 	}
-	[self reloadCategories];
+	//[self reloadCategories];
 }
 
 - (void)machineResolved:(Machine*)m {

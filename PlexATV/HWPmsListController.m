@@ -39,8 +39,6 @@
 		[[MachineManager sharedMachineManager] startAutoDetection];
 		
 		[[self list] setDatasource:self];
-		
-		userPreferences = [SMFPreferences preferences];
 	}
 	return self;
 }	
@@ -79,7 +77,8 @@
 	Machine* m = [_names objectAtIndex:selected];
 	NSLog(@"machine selected: %@", m);
 
-	[userPreferences setObject:m.serverName forKey:PreferencesDefaultServer];
+	[[SMFPreferences preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
+	[[SMFPreferences preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];
 	[self setNeedsUpdate];
 }
 
@@ -99,8 +98,8 @@
 	Machine *m = [_names objectAtIndex:row];
 	[result setText:m.serverName withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 	
-	NSString *defaultServer = [userPreferences objectForKey:PreferencesDefaultServer];
-	if ([m.serverName isEqualToString:defaultServer]) {
+	NSString *defaultServerUid = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid];
+	if ([m.uid isEqualToString:defaultServerUid]) {
 		[result addAccessoryOfType:17]; //checkmark
 	}
 	

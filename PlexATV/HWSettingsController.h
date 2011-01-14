@@ -16,9 +16,7 @@
 #import "SMFPreferences.h"
 #import "SMFMediaMenuController.h"
 
-@interface HWSettingsController : SMFMediaMenuController {
-	SMFPreferences *userPreference;
-}
+@interface HWSettingsController : SMFMediaMenuController {}
 - (void)setupList;
 
 @end
