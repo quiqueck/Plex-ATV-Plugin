@@ -1,6 +1,6 @@
 Package: com.plex.client-plugin
 Name: AppleTV PLEX Plugin
-Version: 0.6.3
+Version: 0.6.4
 Priority: optional
 Size: 1083178
 Installed-Size: 2662
@@ -13,6 +13,7 @@ Description: A PLEX Client for Lowtide (experimental)
  added by b0bben:
    - Details-Display while browsing 
    - Music Playback
+   - Video Duration (seek and resume)
 Changes: More details when browsing the library and music playback (Added by b0bben)
 Homepage: http://plexapp.com/
 Maintainer: Quiqueck <quiqueck@ambertation.de>

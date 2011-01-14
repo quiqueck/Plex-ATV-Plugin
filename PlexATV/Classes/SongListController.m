@@ -45,6 +45,7 @@
 #import "SongListController.h"
 #import "PlexMediaProvider.h"
 #import "PlexSongAsset.h"
+#import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexRequest.h>
@@ -73,14 +74,12 @@
   self.rootContainer = container;
  	[container retain];
 	[self convertDirToSongAssets:container.directories];
-  [container release];
-  
 	return self;
 }
 
 - (void)dealloc {
 	[self.songs dealloc];
-	
+	[self.rootContainer release];
 	[super dealloc];
 }
 
@@ -88,10 +87,9 @@
   NSLog(@"convertDirToSongAssets %@", plexDirectories);
   self.songs = [[NSMutableArray alloc] initWithCapacity:5];
   
-  
   for (int i=0; i < [rootContainer.directories count]; i++) {
     PlexMediaObject *track = [rootContainer.directories objectAtIndex:i];
-    
+    NSLog(@"lastkeyComponent: %@",[track lastKeyComponent]);
     NSString* ipod = [track.attributes objectForKey:@"ipod"];
     NSString* duration = [track.attributes objectForKey:@"duration"];
     NSString* key = ipod!=nil?ipod:[track.request buildAbsoluteKey:track.key];
@@ -157,8 +155,17 @@
       // Shuffle
 		[self playAtIndex:0 withArray:[self.songs shuffledArray]];
 	} else {
-      // Selected Song
-		[self playAtIndex:(selected-2) withArray:self.songs];
+    PlexMediaObject *mediaObj = [rootContainer.directories objectAtIndex:selected-2];
+    if ([@"album" isEqualToString:mediaObj.type]) {
+      SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[mediaObj contents] title:mediaObj.name];
+      [[[BRApplicationStackManager singleton] stack] pushController:songlist];
+      [songlist autorelease];      
+    }
+    else {
+        // Play selected song
+      [self playAtIndex:(selected-2) withArray:self.songs];
+      
+    }
 	}
 	
 }
@@ -183,16 +190,30 @@
   
   if(item == 0) {
 		return nil;
-	} else if (item == 1) {
+	} 
+  else if (item == 1) {
 		return nil;
-	} else {
-    
-    PlexSongAsset *song = [self.songs objectAtIndex:item -2];
-    BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
-    [preview setShowsMetadataImmediately:YES];
-    [preview setAsset:song];	
-    
-    return [preview autorelease];	}
+	} 
+  else {
+    NSLog(@"rootContainer: %@, dirs: %@", rootContainer, rootContainer.directories);
+    PlexMediaObject *mediaObj = [rootContainer.directories objectAtIndex:item -2];
+    if ([@"album" isEqualToString:mediaObj.type]) {
+      PlexPreviewAsset *album = [[PlexPreviewAsset alloc] initWithURL:mediaObj.mediaStreamURL mediaProvider:nil mediaObject:mediaObj];
+      BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
+      [preview setShowsMetadataImmediately:YES];
+      [preview setAsset:album];	
+      
+      return [preview autorelease];	
+    }
+    else {
+      PlexSongAsset *song = [self.songs objectAtIndex:item -2];
+      BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
+      [preview setShowsMetadataImmediately:YES];
+      [preview setAsset:song];	
+      
+      return [preview autorelease];	
+    }    
+  }
 }
 - (BOOL)rowSelectable:(long)selectable {
 	return YES;

@@ -3,6 +3,8 @@
   //  atvTwo
   //
   //  Created by Frank Bauer on 27.10.10.
+  //  Modified by Bob Jelica
+  //
   //  Permission is hereby granted, free of charge, to any person obtaining a copy
   //  of this software and associated documentation files (the "Software"), to deal
   //  in the Software without restriction, including without limitation the rights
@@ -24,14 +26,14 @@
 #import "BackRow/BRBaseMediaAsset.h"
 #import <BackRow/BRImageManager.h>
 #import "BackRow/BRMediaAsset.h"
-#import "PlexMediaAsset.h"
+#import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexRequest.h>
 #import <plex-oss/Machine.h>
 #import <ambertation-plex/Ambertation.h>
 
-@implementation PlexMediaAsset
+@implementation PlexPreviewAsset
 @synthesize pmo;
 
 - (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
@@ -57,7 +59,6 @@
 	[super dealloc];
 }
 
-
 - (NSString*)assetID{
 	NSLog(@"Asset: %@", pmo.key);
 	return pmo.key;
@@ -82,7 +83,17 @@
 }
 
 - (id)mediaType{
-    return [BRMediaType streamingVideo];
+  
+  NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
+  
+  if ([@"track" isEqualToString:plexMediaType])
+    return [BRMediaType song];
+  else if ([@"show" isEqualToString:plexMediaType])
+    return [BRMediaType TVShow];
+  else if (plexMediaType == nil)
+    return nil;
+  else 
+    return [BRMediaType movie];
 }
 
 -(long int)duration{
@@ -120,8 +131,7 @@
 }
 
 - (unsigned)startTimeInMS {
-  NSLog(@"startTimeInMS");
-  return [[pmo.attributes valueForKey:@"viewOffset"] intValue];
+  return 1;
 }
 
 - (id)mediaDescription {
@@ -396,7 +406,8 @@
 
 - (BOOL)hasVideoContent{
 	NSLog(@"Video Content?");
-  return YES;
+    return NO;
+
 }
 
 - (BOOL)isAvailable{

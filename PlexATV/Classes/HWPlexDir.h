@@ -38,6 +38,8 @@
 
 @property (readwrite, retain) PlexMediaContainer* rootContainer;
 
+-(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset; 
+
 //list provider
 - (float)heightForRow:(long)row;
 - (long)itemCount;

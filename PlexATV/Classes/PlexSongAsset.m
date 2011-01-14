@@ -40,10 +40,10 @@
   self = [super init];
 	if (self != nil) {
 		url = [u retain];
-		NSLog(@"PMO attrs: %@", pmo.attributes);
-    PlexRequest *req = pmo.request;
-    NSLog(@"PMO request attrs: %@", req);
-    NSLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
+      NSLog(@"PMO attrs: %@", pmo.attributes);
+      //PlexRequest *req = pmo.request;
+      //NSLog(@"PMO request attrs: %@", req);
+      //NSLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
       //NSLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
@@ -58,7 +58,7 @@
 }
 
 - (NSString*)assetID{
-    //NSLog(@"Asset: %@", pmo.key);
+    NSLog(@"Asset: %@", pmo.key);
 	return pmo.key;
 }
 
@@ -117,9 +117,6 @@
 
 - (id)imageProxy {
   NSLog(@"imageproxy");
-
-
-  NSLog(@"imageproxy.pmo_mediacontainer.attrs: %@", pmo.mediaContainer.attributes);
   NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.mediaContainer.attributes valueForKey:@"art"], [pmo.mediaContainer.attributes valueForKey:@"thumb"] );
   
   NSString *thumbURL=@"";

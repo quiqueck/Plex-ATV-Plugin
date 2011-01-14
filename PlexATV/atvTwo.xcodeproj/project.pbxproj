@@ -14,7 +14,6 @@
 		01A0EE601272224C007A60B5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */; };
 		01A0EE621272224C007A60B5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE611272224C007A60B5 /* UIKit.framework */; };
 		01A0F56D12722804007A60B5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F56C12722804007A60B5 /* AudioToolbox.framework */; };
-		01A0F56F12722804007A60B5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F56E12722804007A60B5 /* AVFoundation.framework */; };
 		01A0F57112722804007A60B5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57012722804007A60B5 /* MediaPlayer.framework */; };
 		01A0F57312722804007A60B5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57212722804007A60B5 /* libsqlite3.dylib */; };
 		01A0F57D12722827007A60B5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57C12722827007A60B5 /* SystemConfiguration.framework */; };
@@ -23,6 +22,38 @@
 		01A0F58F12722877007A60B5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F58E12722877007A60B5 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		01A0F597127228BC007A60B5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F596127228BC007A60B5 /* Foundation.framework */; };
 		01A0F59D127228CC007A60B5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F59C127228CC007A60B5 /* libz.dylib */; };
+		72B2BF6B12DBD95500E23F8E /* BRMenuItem_SMF.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF2C12DBD95500E23F8E /* BRMenuItem_SMF.m */; };
+		72B2BF6C12DBD95500E23F8E /* NSArray_SMF.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF2E12DBD95500E23F8E /* NSArray_SMF.m */; };
+		72B2BF6D12DBD95500E23F8E /* SMFBaseAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF3112DBD95500E23F8E /* SMFBaseAsset.m */; };
+		72B2BF6E12DBD95500E23F8E /* SMFCenteredMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF3312DBD95500E23F8E /* SMFCenteredMenuController.m */; };
+		72B2BF6F12DBD95500E23F8E /* SMFClockController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF3512DBD95500E23F8E /* SMFClockController.m */; };
+		72B2BF7012DBD95500E23F8E /* SMFColorSelectionMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF3712DBD95500E23F8E /* SMFColorSelectionMenu.m */; };
+		72B2BF7112DBD95500E23F8E /* SMFCommonTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF3912DBD95500E23F8E /* SMFCommonTools.m */; };
+		72B2BF7212DBD95500E23F8E /* SMFController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF3B12DBD95500E23F8E /* SMFController.m */; };
+		72B2BF7312DBD95500E23F8E /* SMFDebAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF3D12DBD95500E23F8E /* SMFDebAsset.m */; };
+		72B2BF7412DBD95500E23F8E /* SMFEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF4012DBD95500E23F8E /* SMFEvent.m */; };
+		72B2BF7512DBD95500E23F8E /* SMFEventConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF4212DBD95500E23F8E /* SMFEventConfiguration.m */; };
+		72B2BF7612DBD95500E23F8E /* SMFEventManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF4412DBD95500E23F8E /* SMFEventManager.m */; };
+		72B2BF7712DBD95500E23F8E /* SMFFolderBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF4612DBD95500E23F8E /* SMFFolderBrowser.m */; };
+		72B2BF7812DBD95500E23F8E /* SMFFolderDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF4812DBD95500E23F8E /* SMFFolderDelegate.m */; };
+		72B2BF7912DBD95500E23F8E /* SMFImageAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF4A12DBD95500E23F8E /* SMFImageAsset.m */; };
+		72B2BF7A12DBD95500E23F8E /* SMFInvocationCenteredMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF4C12DBD95500E23F8E /* SMFInvocationCenteredMenuController.m */; };
+		72B2BF7B12DBD95500E23F8E /* SMFMediaMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF4E12DBD95500E23F8E /* SMFMediaMenuController.m */; };
+		72B2BF7C12DBD95500E23F8E /* SMFMediaPreview.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF5012DBD95500E23F8E /* SMFMediaPreview.mm */; };
+		72B2BF7D12DBD95500E23F8E /* SMFMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF5212DBD95500E23F8E /* SMFMenuController.m */; };
+		72B2BF7E12DBD95500E23F8E /* SMFMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF5412DBD95500E23F8E /* SMFMenuItem.m */; };
+		72B2BF7F12DBD95500E23F8E /* SMFMovieAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF5612DBD95500E23F8E /* SMFMovieAsset.m */; };
+		72B2BF8012DBD95500E23F8E /* SMFPasscodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF5812DBD95500E23F8E /* SMFPasscodeController.m */; };
+		72B2BF8112DBD95500E23F8E /* SMFPhotoMethods.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF5A12DBD95500E23F8E /* SMFPhotoMethods.mm */; };
+		72B2BF8212DBD95500E23F8E /* SMFPopup.xm in Resources */ = {isa = PBXBuildFile; fileRef = 72B2BF5C12DBD95500E23F8E /* SMFPopup.xm */; };
+		72B2BF8312DBD95500E23F8E /* SMFPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF5E12DBD95500E23F8E /* SMFPreferences.m */; };
+		72B2BF8412DBD95500E23F8E /* SMFProgressBarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF6012DBD95500E23F8E /* SMFProgressBarControl.m */; };
+		72B2BF8512DBD95500E23F8E /* SMFProgressBarMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF6212DBD95500E23F8E /* SMFProgressBarMenuItem.m */; };
+		72B2BF8612DBD95500E23F8E /* SMFQueryMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF6412DBD95500E23F8E /* SMFQueryMenu.m */; };
+		72B2BF8712DBD95500E23F8E /* SMFScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF6712DBD95500E23F8E /* SMFScreenCapture.m */; };
+		72B2BF8812DBD95500E23F8E /* SMFThemeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2BF6A12DBD95500E23F8E /* SMFThemeInfo.m */; };
+		72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */; };
+		72B2C71512DC1F0E00E23F8E /* HWPmsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */; };
 		875A824D126FFF1F00ECADC2 /* HWAppliance.mm in Sources */ = {isa = PBXBuildFile; fileRef = 875A824A126FFF1F00ECADC2 /* HWAppliance.mm */; };
 		875A824E126FFF1F00ECADC2 /* HWBasicMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */; };
 		875A873412704ACC00ECADC2 /* theos in Resources */ = {isa = PBXBuildFile; fileRef = 875A86EB12704ACC00ECADC2 /* theos */; };
@@ -30,10 +61,10 @@
 		C4ADAFAE12D46CA9002DA507 /* HWPlexDir.m in Sources */ = {isa = PBXBuildFile; fileRef = C4ADAFA812D46CA9002DA507 /* HWPlexDir.m */; };
 		C4ADAFAF12D46CA9002DA507 /* PlexMediaAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C4ADAFAA12D46CA9002DA507 /* PlexMediaAsset.m */; };
 		C4ADAFB012D46CA9002DA507 /* PlexMediaProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C4ADAFAD12D46CA9002DA507 /* PlexMediaProvider.m */; };
-		C4ADAFCB12D46D0E002DA507 /* control in Resources */ = {isa = PBXBuildFile; fileRef = C4ADAFCA12D46D0E002DA507 /* control */; };
 		C4D558A512D66BE900877755 /* NSArray-Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D558A212D66BE900877755 /* NSArray-Shuffle.m */; };
 		C4D558A612D66BE900877755 /* SongListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D558A412D66BE900877755 /* SongListController.m */; };
 		C4D55A9312D7E22A00877755 /* PlexSongAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D55A9212D7E22A00877755 /* PlexSongAsset.m */; };
+		C4EA913612DCD77700DCC798 /* PlexPreviewAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -507,7 +538,6 @@
 		01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		01A0EE611272224C007A60B5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01A0F56C12722804007A60B5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		01A0F56E12722804007A60B5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		01A0F57012722804007A60B5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		01A0F57212722804007A60B5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		01A0F57C12722827007A60B5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -522,6 +552,75 @@
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = atvTwo_Prefix.pch; sourceTree = "<group>"; };
+		72B2BF2B12DBD95500E23F8E /* BRMenuItem_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMenuItem_SMF.h; sourceTree = "<group>"; };
+		72B2BF2C12DBD95500E23F8E /* BRMenuItem_SMF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRMenuItem_SMF.m; sourceTree = "<group>"; };
+		72B2BF2D12DBD95500E23F8E /* NSArray_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_SMF.h; sourceTree = "<group>"; };
+		72B2BF2E12DBD95500E23F8E /* NSArray_SMF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArray_SMF.m; sourceTree = "<group>"; };
+		72B2BF2F12DBD95500E23F8E /* NSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
+		72B2BF3012DBD95500E23F8E /* SMFBaseAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFBaseAsset.h; sourceTree = "<group>"; };
+		72B2BF3112DBD95500E23F8E /* SMFBaseAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFBaseAsset.m; sourceTree = "<group>"; };
+		72B2BF3212DBD95500E23F8E /* SMFCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFCenteredMenuController.h; sourceTree = "<group>"; };
+		72B2BF3312DBD95500E23F8E /* SMFCenteredMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFCenteredMenuController.m; sourceTree = "<group>"; };
+		72B2BF3412DBD95500E23F8E /* SMFClockController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFClockController.h; sourceTree = "<group>"; };
+		72B2BF3512DBD95500E23F8E /* SMFClockController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFClockController.m; sourceTree = "<group>"; };
+		72B2BF3612DBD95500E23F8E /* SMFColorSelectionMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFColorSelectionMenu.h; sourceTree = "<group>"; };
+		72B2BF3712DBD95500E23F8E /* SMFColorSelectionMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFColorSelectionMenu.m; sourceTree = "<group>"; };
+		72B2BF3812DBD95500E23F8E /* SMFCommonTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFCommonTools.h; sourceTree = "<group>"; };
+		72B2BF3912DBD95500E23F8E /* SMFCommonTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFCommonTools.m; sourceTree = "<group>"; };
+		72B2BF3A12DBD95500E23F8E /* SMFController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFController.h; sourceTree = "<group>"; };
+		72B2BF3B12DBD95500E23F8E /* SMFController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFController.m; sourceTree = "<group>"; };
+		72B2BF3C12DBD95500E23F8E /* SMFDebAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFDebAsset.h; sourceTree = "<group>"; };
+		72B2BF3D12DBD95500E23F8E /* SMFDebAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFDebAsset.m; sourceTree = "<group>"; };
+		72B2BF3E12DBD95500E23F8E /* SMFDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFDefines.h; sourceTree = "<group>"; };
+		72B2BF3F12DBD95500E23F8E /* SMFEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEvent.h; sourceTree = "<group>"; };
+		72B2BF4012DBD95500E23F8E /* SMFEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFEvent.m; sourceTree = "<group>"; };
+		72B2BF4112DBD95500E23F8E /* SMFEventConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEventConfiguration.h; sourceTree = "<group>"; };
+		72B2BF4212DBD95500E23F8E /* SMFEventConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFEventConfiguration.m; sourceTree = "<group>"; };
+		72B2BF4312DBD95500E23F8E /* SMFEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEventManager.h; sourceTree = "<group>"; };
+		72B2BF4412DBD95500E23F8E /* SMFEventManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFEventManager.m; sourceTree = "<group>"; };
+		72B2BF4512DBD95500E23F8E /* SMFFolderBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFFolderBrowser.h; sourceTree = "<group>"; };
+		72B2BF4612DBD95500E23F8E /* SMFFolderBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFFolderBrowser.m; sourceTree = "<group>"; };
+		72B2BF4712DBD95500E23F8E /* SMFFolderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFFolderDelegate.h; sourceTree = "<group>"; };
+		72B2BF4812DBD95500E23F8E /* SMFFolderDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFFolderDelegate.m; sourceTree = "<group>"; };
+		72B2BF4912DBD95500E23F8E /* SMFImageAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFImageAsset.h; sourceTree = "<group>"; };
+		72B2BF4A12DBD95500E23F8E /* SMFImageAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFImageAsset.m; sourceTree = "<group>"; };
+		72B2BF4B12DBD95500E23F8E /* SMFInvocationCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFInvocationCenteredMenuController.h; sourceTree = "<group>"; };
+		72B2BF4C12DBD95500E23F8E /* SMFInvocationCenteredMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFInvocationCenteredMenuController.m; sourceTree = "<group>"; };
+		72B2BF4D12DBD95500E23F8E /* SMFMediaMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMediaMenuController.h; sourceTree = "<group>"; };
+		72B2BF4E12DBD95500E23F8E /* SMFMediaMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFMediaMenuController.m; sourceTree = "<group>"; };
+		72B2BF4F12DBD95500E23F8E /* SMFMediaPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMediaPreview.h; sourceTree = "<group>"; };
+		72B2BF5012DBD95500E23F8E /* SMFMediaPreview.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SMFMediaPreview.mm; sourceTree = "<group>"; };
+		72B2BF5112DBD95500E23F8E /* SMFMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMenuController.h; sourceTree = "<group>"; };
+		72B2BF5212DBD95500E23F8E /* SMFMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFMenuController.m; sourceTree = "<group>"; };
+		72B2BF5312DBD95500E23F8E /* SMFMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMenuItem.h; sourceTree = "<group>"; };
+		72B2BF5412DBD95500E23F8E /* SMFMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFMenuItem.m; sourceTree = "<group>"; };
+		72B2BF5512DBD95500E23F8E /* SMFMovieAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMovieAsset.h; sourceTree = "<group>"; };
+		72B2BF5612DBD95500E23F8E /* SMFMovieAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFMovieAsset.m; sourceTree = "<group>"; };
+		72B2BF5712DBD95500E23F8E /* SMFPasscodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPasscodeController.h; sourceTree = "<group>"; };
+		72B2BF5812DBD95500E23F8E /* SMFPasscodeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFPasscodeController.m; sourceTree = "<group>"; };
+		72B2BF5912DBD95500E23F8E /* SMFPhotoMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPhotoMethods.h; sourceTree = "<group>"; };
+		72B2BF5A12DBD95500E23F8E /* SMFPhotoMethods.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SMFPhotoMethods.mm; sourceTree = "<group>"; };
+		72B2BF5B12DBD95500E23F8E /* SMFPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPopup.h; sourceTree = "<group>"; };
+		72B2BF5C12DBD95500E23F8E /* SMFPopup.xm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SMFPopup.xm; sourceTree = "<group>"; };
+		72B2BF5D12DBD95500E23F8E /* SMFPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPreferences.h; sourceTree = "<group>"; };
+		72B2BF5E12DBD95500E23F8E /* SMFPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFPreferences.m; sourceTree = "<group>"; };
+		72B2BF5F12DBD95500E23F8E /* SMFProgressBarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFProgressBarControl.h; sourceTree = "<group>"; };
+		72B2BF6012DBD95500E23F8E /* SMFProgressBarControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFProgressBarControl.m; sourceTree = "<group>"; };
+		72B2BF6112DBD95500E23F8E /* SMFProgressBarMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFProgressBarMenuItem.h; sourceTree = "<group>"; };
+		72B2BF6212DBD95500E23F8E /* SMFProgressBarMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFProgressBarMenuItem.m; sourceTree = "<group>"; };
+		72B2BF6312DBD95500E23F8E /* SMFQueryMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFQueryMenu.h; sourceTree = "<group>"; };
+		72B2BF6412DBD95500E23F8E /* SMFQueryMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFQueryMenu.m; sourceTree = "<group>"; };
+		72B2BF6512DBD95500E23F8E /* SMFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFramework.h; sourceTree = "<group>"; };
+		72B2BF6612DBD95500E23F8E /* SMFScreenCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFScreenCapture.h; sourceTree = "<group>"; };
+		72B2BF6712DBD95500E23F8E /* SMFScreenCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFScreenCapture.m; sourceTree = "<group>"; };
+		72B2BF6812DBD95500E23F8E /* SMFSettingPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFSettingPreferences.h; sourceTree = "<group>"; };
+		72B2BF6912DBD95500E23F8E /* SMFThemeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFThemeInfo.h; sourceTree = "<group>"; };
+		72B2BF6A12DBD95500E23F8E /* SMFThemeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFThemeInfo.m; sourceTree = "<group>"; };
+		72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HWSettingsController.h; sourceTree = "<group>"; };
+		72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HWSettingsController.m; sourceTree = "<group>"; };
+		72B2C52112DBE55800E23F8E /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
+		72B2C71312DC1F0E00E23F8E /* HWPmsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HWPmsListController.h; sourceTree = "<group>"; };
+		72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HWPmsListController.m; sourceTree = "<group>"; };
 		875A824A126FFF1F00ECADC2 /* HWAppliance.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = HWAppliance.mm; path = Classes/HWAppliance.mm; sourceTree = "<group>"; };
 		875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWBasicMenu.h; path = Classes/HWBasicMenu.h; sourceTree = "<group>"; };
 		875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWBasicMenu.m; path = Classes/HWBasicMenu.m; sourceTree = "<group>"; };
@@ -537,13 +636,14 @@
 		C4ADAFAB12D46CA9002DA507 /* PlexMediaContainer + SkinResources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PlexMediaContainer + SkinResources.h"; path = "Classes/PlexMediaContainer + SkinResources.h"; sourceTree = "<group>"; };
 		C4ADAFAC12D46CA9002DA507 /* PlexMediaProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexMediaProvider.h; path = Classes/PlexMediaProvider.h; sourceTree = "<group>"; };
 		C4ADAFAD12D46CA9002DA507 /* PlexMediaProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexMediaProvider.m; path = Classes/PlexMediaProvider.m; sourceTree = "<group>"; };
-		C4ADAFCA12D46D0E002DA507 /* control */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
 		C4D558A112D66BE900877755 /* NSArray-Shuffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray-Shuffle.h"; path = "Classes/NSArray-Shuffle.h"; sourceTree = "<group>"; };
 		C4D558A212D66BE900877755 /* NSArray-Shuffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray-Shuffle.m"; path = "Classes/NSArray-Shuffle.m"; sourceTree = "<group>"; };
 		C4D558A312D66BE900877755 /* SongListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SongListController.h; path = Classes/SongListController.h; sourceTree = "<group>"; };
 		C4D558A412D66BE900877755 /* SongListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SongListController.m; path = Classes/SongListController.m; sourceTree = "<group>"; };
 		C4D55A9112D7E22A00877755 /* PlexSongAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexSongAsset.h; path = Classes/PlexSongAsset.h; sourceTree = "<group>"; };
 		C4D55A9212D7E22A00877755 /* PlexSongAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexSongAsset.m; path = Classes/PlexSongAsset.m; sourceTree = "<group>"; };
+		C4EA913412DCD77700DCC798 /* PlexPreviewAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexPreviewAsset.h; path = Classes/PlexPreviewAsset.h; sourceTree = "<group>"; };
+		C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexPreviewAsset.m; path = Classes/PlexPreviewAsset.m; sourceTree = "<group>"; };
 		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -556,7 +656,6 @@
 				01A0EE601272224C007A60B5 /* CoreGraphics.framework in Frameworks */,
 				01A0EE621272224C007A60B5 /* UIKit.framework in Frameworks */,
 				01A0F56D12722804007A60B5 /* AudioToolbox.framework in Frameworks */,
-				01A0F56F12722804007A60B5 /* AVFoundation.framework in Frameworks */,
 				01A0F57112722804007A60B5 /* MediaPlayer.framework in Frameworks */,
 				01A0F57312722804007A60B5 /* libsqlite3.dylib in Frameworks */,
 				01A0F57D12722827007A60B5 /* SystemConfiguration.framework in Frameworks */,
@@ -1054,13 +1153,13 @@
 		089C166AFE841209C02AAC07 /* atvTwo */ = {
 			isa = PBXGroup;
 			children = (
-				C4ADAFCA12D46D0E002DA507 /* control */,
 				875A8427126FFF6D00ECADC2 /* Makefile */,
 				875A8425126FFF6500ECADC2 /* build.sh */,
 				875A86EB12704ACC00ECADC2 /* theos */,
 				01330D67127871D70067A5FE /* BackRow */,
 				018CF3F8128732DD00645193 /* BackRow - Important */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
+				72B2BEBE12DBD87E00E23F8E /* lib */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
@@ -1092,23 +1191,14 @@
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				C4D55A9112D7E22A00877755 /* PlexSongAsset.h */,
-				C4D55A9212D7E22A00877755 /* PlexSongAsset.m */,
+				C4EA913312DCD74600DCC798 /* Assets */,
+				72B2C4FB12DBE0EE00E23F8E /* Controllers */,
 				C4D558A112D66BE900877755 /* NSArray-Shuffle.h */,
 				C4D558A212D66BE900877755 /* NSArray-Shuffle.m */,
-				C4D558A312D66BE900877755 /* SongListController.h */,
-				C4D558A412D66BE900877755 /* SongListController.m */,
-				C4ADAFA712D46CA9002DA507 /* HWPlexDir.h */,
-				C4ADAFA812D46CA9002DA507 /* HWPlexDir.m */,
-				C4ADAFA912D46CA9002DA507 /* PlexMediaAsset.h */,
-				C4ADAFAA12D46CA9002DA507 /* PlexMediaAsset.m */,
 				C4ADAFAB12D46CA9002DA507 /* PlexMediaContainer + SkinResources.h */,
 				C4ADAFAC12D46CA9002DA507 /* PlexMediaProvider.h */,
 				C4ADAFAD12D46CA9002DA507 /* PlexMediaProvider.m */,
 				01F4DD2D12C3875500A0A0B5 /* BackRowExtras.h */,
-				875A824A126FFF1F00ECADC2 /* HWAppliance.mm */,
-				875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */,
-				875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1128,7 +1218,6 @@
 				01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */,
 				01A0EE611272224C007A60B5 /* UIKit.framework */,
 				01A0F56C12722804007A60B5 /* AudioToolbox.framework */,
-				01A0F56E12722804007A60B5 /* AVFoundation.framework */,
 				01A0F57012722804007A60B5 /* MediaPlayer.framework */,
 				01A0F57212722804007A60B5 /* libsqlite3.dylib */,
 				01A0F57C12722827007A60B5 /* SystemConfiguration.framework */,
@@ -1159,6 +1248,117 @@
 				32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */,
 			);
 			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		72B2BEBE12DBD87E00E23F8E /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				72B2BF2A12DBD95500E23F8E /* SMFramework */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+		72B2BF2A12DBD95500E23F8E /* SMFramework */ = {
+			isa = PBXGroup;
+			children = (
+				72B2C52112DBE55800E23F8E /* SynthesizeSingleton.h */,
+				72B2BF2B12DBD95500E23F8E /* BRMenuItem_SMF.h */,
+				72B2BF2C12DBD95500E23F8E /* BRMenuItem_SMF.m */,
+				72B2BF2D12DBD95500E23F8E /* NSArray_SMF.h */,
+				72B2BF2E12DBD95500E23F8E /* NSArray_SMF.m */,
+				72B2BF2F12DBD95500E23F8E /* NSTask.h */,
+				72B2BF3012DBD95500E23F8E /* SMFBaseAsset.h */,
+				72B2BF3112DBD95500E23F8E /* SMFBaseAsset.m */,
+				72B2BF3212DBD95500E23F8E /* SMFCenteredMenuController.h */,
+				72B2BF3312DBD95500E23F8E /* SMFCenteredMenuController.m */,
+				72B2BF3412DBD95500E23F8E /* SMFClockController.h */,
+				72B2BF3512DBD95500E23F8E /* SMFClockController.m */,
+				72B2BF3612DBD95500E23F8E /* SMFColorSelectionMenu.h */,
+				72B2BF3712DBD95500E23F8E /* SMFColorSelectionMenu.m */,
+				72B2BF3812DBD95500E23F8E /* SMFCommonTools.h */,
+				72B2BF3912DBD95500E23F8E /* SMFCommonTools.m */,
+				72B2BF3A12DBD95500E23F8E /* SMFController.h */,
+				72B2BF3B12DBD95500E23F8E /* SMFController.m */,
+				72B2BF3C12DBD95500E23F8E /* SMFDebAsset.h */,
+				72B2BF3D12DBD95500E23F8E /* SMFDebAsset.m */,
+				72B2BF3E12DBD95500E23F8E /* SMFDefines.h */,
+				72B2BF3F12DBD95500E23F8E /* SMFEvent.h */,
+				72B2BF4012DBD95500E23F8E /* SMFEvent.m */,
+				72B2BF4112DBD95500E23F8E /* SMFEventConfiguration.h */,
+				72B2BF4212DBD95500E23F8E /* SMFEventConfiguration.m */,
+				72B2BF4312DBD95500E23F8E /* SMFEventManager.h */,
+				72B2BF4412DBD95500E23F8E /* SMFEventManager.m */,
+				72B2BF4512DBD95500E23F8E /* SMFFolderBrowser.h */,
+				72B2BF4612DBD95500E23F8E /* SMFFolderBrowser.m */,
+				72B2BF4712DBD95500E23F8E /* SMFFolderDelegate.h */,
+				72B2BF4812DBD95500E23F8E /* SMFFolderDelegate.m */,
+				72B2BF4912DBD95500E23F8E /* SMFImageAsset.h */,
+				72B2BF4A12DBD95500E23F8E /* SMFImageAsset.m */,
+				72B2BF4B12DBD95500E23F8E /* SMFInvocationCenteredMenuController.h */,
+				72B2BF4C12DBD95500E23F8E /* SMFInvocationCenteredMenuController.m */,
+				72B2BF4D12DBD95500E23F8E /* SMFMediaMenuController.h */,
+				72B2BF4E12DBD95500E23F8E /* SMFMediaMenuController.m */,
+				72B2BF4F12DBD95500E23F8E /* SMFMediaPreview.h */,
+				72B2BF5012DBD95500E23F8E /* SMFMediaPreview.mm */,
+				72B2BF5112DBD95500E23F8E /* SMFMenuController.h */,
+				72B2BF5212DBD95500E23F8E /* SMFMenuController.m */,
+				72B2BF5312DBD95500E23F8E /* SMFMenuItem.h */,
+				72B2BF5412DBD95500E23F8E /* SMFMenuItem.m */,
+				72B2BF5512DBD95500E23F8E /* SMFMovieAsset.h */,
+				72B2BF5612DBD95500E23F8E /* SMFMovieAsset.m */,
+				72B2BF5712DBD95500E23F8E /* SMFPasscodeController.h */,
+				72B2BF5812DBD95500E23F8E /* SMFPasscodeController.m */,
+				72B2BF5912DBD95500E23F8E /* SMFPhotoMethods.h */,
+				72B2BF5A12DBD95500E23F8E /* SMFPhotoMethods.mm */,
+				72B2BF5B12DBD95500E23F8E /* SMFPopup.h */,
+				72B2BF5C12DBD95500E23F8E /* SMFPopup.xm */,
+				72B2BF5D12DBD95500E23F8E /* SMFPreferences.h */,
+				72B2BF5E12DBD95500E23F8E /* SMFPreferences.m */,
+				72B2BF5F12DBD95500E23F8E /* SMFProgressBarControl.h */,
+				72B2BF6012DBD95500E23F8E /* SMFProgressBarControl.m */,
+				72B2BF6112DBD95500E23F8E /* SMFProgressBarMenuItem.h */,
+				72B2BF6212DBD95500E23F8E /* SMFProgressBarMenuItem.m */,
+				72B2BF6312DBD95500E23F8E /* SMFQueryMenu.h */,
+				72B2BF6412DBD95500E23F8E /* SMFQueryMenu.m */,
+				72B2BF6512DBD95500E23F8E /* SMFramework.h */,
+				72B2BF6612DBD95500E23F8E /* SMFScreenCapture.h */,
+				72B2BF6712DBD95500E23F8E /* SMFScreenCapture.m */,
+				72B2BF6812DBD95500E23F8E /* SMFSettingPreferences.h */,
+				72B2BF6912DBD95500E23F8E /* SMFThemeInfo.h */,
+				72B2BF6A12DBD95500E23F8E /* SMFThemeInfo.m */,
+			);
+			path = SMFramework;
+			sourceTree = "<group>";
+		};
+		72B2C4FB12DBE0EE00E23F8E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C4D558A312D66BE900877755 /* SongListController.h */,
+				C4D558A412D66BE900877755 /* SongListController.m */,
+				C4ADAFA712D46CA9002DA507 /* HWPlexDir.h */,
+				C4ADAFA812D46CA9002DA507 /* HWPlexDir.m */,
+				875A824A126FFF1F00ECADC2 /* HWAppliance.mm */,
+				875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */,
+				875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */,
+				72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */,
+				72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */,
+				72B2C71312DC1F0E00E23F8E /* HWPmsListController.h */,
+				72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		C4EA913312DCD74600DCC798 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				C4D55A9112D7E22A00877755 /* PlexSongAsset.h */,
+				C4D55A9212D7E22A00877755 /* PlexSongAsset.m */,
+				C4ADAFA912D46CA9002DA507 /* PlexMediaAsset.h */,
+				C4ADAFAA12D46CA9002DA507 /* PlexMediaAsset.m */,
+				C4EA913412DCD77700DCC798 /* PlexPreviewAsset.h */,
+				C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */,
+			);
+			name = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1216,7 +1416,7 @@
 				875A873412704ACC00ECADC2 /* theos in Resources */,
 				013310FD127C09FD0067A5FE /* PlexIcon.png in Resources */,
 				0133123C127C26D70067A5FE /* PlexLogo.png in Resources */,
-				C4ADAFCB12D46D0E002DA507 /* control in Resources */,
+				72B2BF8212DBD95500E23F8E /* SMFPopup.xm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1251,6 +1451,38 @@
 				C4D558A512D66BE900877755 /* NSArray-Shuffle.m in Sources */,
 				C4D558A612D66BE900877755 /* SongListController.m in Sources */,
 				C4D55A9312D7E22A00877755 /* PlexSongAsset.m in Sources */,
+				72B2BF6B12DBD95500E23F8E /* BRMenuItem_SMF.m in Sources */,
+				72B2BF6C12DBD95500E23F8E /* NSArray_SMF.m in Sources */,
+				72B2BF6D12DBD95500E23F8E /* SMFBaseAsset.m in Sources */,
+				72B2BF6E12DBD95500E23F8E /* SMFCenteredMenuController.m in Sources */,
+				72B2BF6F12DBD95500E23F8E /* SMFClockController.m in Sources */,
+				72B2BF7012DBD95500E23F8E /* SMFColorSelectionMenu.m in Sources */,
+				72B2BF7112DBD95500E23F8E /* SMFCommonTools.m in Sources */,
+				72B2BF7212DBD95500E23F8E /* SMFController.m in Sources */,
+				72B2BF7312DBD95500E23F8E /* SMFDebAsset.m in Sources */,
+				72B2BF7412DBD95500E23F8E /* SMFEvent.m in Sources */,
+				72B2BF7512DBD95500E23F8E /* SMFEventConfiguration.m in Sources */,
+				72B2BF7612DBD95500E23F8E /* SMFEventManager.m in Sources */,
+				72B2BF7712DBD95500E23F8E /* SMFFolderBrowser.m in Sources */,
+				72B2BF7812DBD95500E23F8E /* SMFFolderDelegate.m in Sources */,
+				72B2BF7912DBD95500E23F8E /* SMFImageAsset.m in Sources */,
+				72B2BF7A12DBD95500E23F8E /* SMFInvocationCenteredMenuController.m in Sources */,
+				72B2BF7B12DBD95500E23F8E /* SMFMediaMenuController.m in Sources */,
+				72B2BF7C12DBD95500E23F8E /* SMFMediaPreview.mm in Sources */,
+				72B2BF7D12DBD95500E23F8E /* SMFMenuController.m in Sources */,
+				72B2BF7E12DBD95500E23F8E /* SMFMenuItem.m in Sources */,
+				72B2BF7F12DBD95500E23F8E /* SMFMovieAsset.m in Sources */,
+				72B2BF8012DBD95500E23F8E /* SMFPasscodeController.m in Sources */,
+				72B2BF8112DBD95500E23F8E /* SMFPhotoMethods.mm in Sources */,
+				72B2BF8312DBD95500E23F8E /* SMFPreferences.m in Sources */,
+				72B2BF8412DBD95500E23F8E /* SMFProgressBarControl.m in Sources */,
+				72B2BF8512DBD95500E23F8E /* SMFProgressBarMenuItem.m in Sources */,
+				72B2BF8612DBD95500E23F8E /* SMFQueryMenu.m in Sources */,
+				72B2BF8712DBD95500E23F8E /* SMFScreenCapture.m in Sources */,
+				72B2BF8812DBD95500E23F8E /* SMFThemeInfo.m in Sources */,
+				72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */,
+				72B2C71512DC1F0E00E23F8E /* HWPmsListController.m in Sources */,
+				C4EA913612DCD77700DCC798 /* PlexPreviewAsset.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
