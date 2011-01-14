@@ -1,5 +1,6 @@
 
 
+#import "HWAppliance.h"
 #import "BackRowExtras.h"
 #import "HWPlexDir.h"
 #import "HWBasicMenu.h"
@@ -58,20 +59,7 @@
 
 #pragma mark -
 #pragma mark PlexAppliance
-@interface PlexAppliance: BRBaseAppliance <MachineManagerDelegate> {
-	TopShelfController *_topShelfController;
-	NSMutableArray *_applianceCategories;
-	NSMutableArray *_machines;
-}
-@property(nonatomic, readonly, retain) id topShelfController;
-@property(retain) NSMutableArray *applianceCat;
-@property(nonatomic, retain) NSMutableArray *machines;
 
-- (void)retrieveNewPlexCategories:(Machine *)m;
-- (void)addNewApplianceWithDict:(NSDictionary *)dict;
-- (void)addNewApplianceWithName:(NSString *)name identifier:(id)ident;
-- (void)removeAppliancesWithIdentifier:(id)ident;
-@end
 
 @implementation PlexAppliance
 @synthesize topShelfController = _topShelfController;
@@ -126,7 +114,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	if ([identifier isEqualToString:OTHERSERVERS_ID]) {
 		menuController = [[HWBasicMenu alloc] init];
 	} else if ([identifier isEqualToString:SETTINGS_ID]) {
-		menuController = [[HWSettingsController alloc] init];
+		HWSettingsController* hwsc = [[HWSettingsController alloc] init];
+    hwsc.topLevelController = self;
+    menuController = hwsc;
 	} else {
 		// ====== get the name of the category and identifier of the machine selected ======
 		// compoundIdentifier has format:
@@ -176,6 +166,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 }
 
 - (id)applianceCategories {
+  if (![[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView]){
+    return [NSArray arrayWithObjects:OTHERSERVERS_CAT,SETTINGS_CAT,nil];
+  }
 	//sort the array alphabetically
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];

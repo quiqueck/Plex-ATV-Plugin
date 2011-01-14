@@ -21,6 +21,7 @@
 #import "Constants.h"
 
 @implementation HWSettingsController
+@synthesize topLevelController;
 
 #define CombinedPmsCategoriesIndex 0
 #define DefaultServerIndex 1
@@ -32,12 +33,19 @@
 
 - (id) init {
 	if((self = [super init]) != nil) {
+    topLevelController = nil;
 		[self setLabel:@"Plex Settings"];
 		[self setListTitle:@"Plex Settings"];
 				
 		[self setupList];
 	}	
 	return self;
+}
+
+- (void)wasPopped{
+  NSLog(@"Did pop controller %@", self);
+  [topLevelController reloadCategories];
+  [super wasPopped];
 }
 
 - (void)setupList {

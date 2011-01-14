@@ -538,6 +538,7 @@
 		0133123B127C26D70067A5FE /* PlexLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PlexLogo.png; sourceTree = "<group>"; };
 		015D313B12E10A52001A32C1 /* ProxyMachineDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyMachineDelegate.h; sourceTree = "<group>"; };
 		015D313C12E10A52001A32C1 /* ProxyMachineDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProxyMachineDelegate.m; sourceTree = "<group>"; };
+		015D31B812E114CE001A32C1 /* HWAppliance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HWAppliance.h; sourceTree = "<group>"; };
 		01A0EE5D1272224C007A60B5 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		01A0EE611272224C007A60B5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -1347,6 +1348,7 @@
 				C4D558A412D66BE900877755 /* SongListController.m */,
 				C4ADAFA712D46CA9002DA507 /* HWPlexDir.h */,
 				C4ADAFA812D46CA9002DA507 /* HWPlexDir.m */,
+				015D31B812E114CE001A32C1 /* HWAppliance.h */,
 				875A824A126FFF1F00ECADC2 /* HWAppliance.mm */,
 				875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */,
 				875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */,

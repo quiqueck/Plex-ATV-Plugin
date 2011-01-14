@@ -49,7 +49,7 @@
 
 
 - (void)wasPopped{
-  NSLog(@"Did Pop Controller %@");
+  NSLog(@"Did pop controller %@", self);
   [[ProxyMachineDelegate shared] removeDelegate:self];
   
   [super wasPopped];
