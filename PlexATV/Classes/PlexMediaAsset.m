@@ -82,7 +82,10 @@
 }
 
 - (id)mediaType{
-    return [BRMediaType streamingVideo];
+  if ([[[UIDevice currentDevice] systemVersion] isEqualToString:@"4.1"])
+    return [BRMediaType movie];
+
+  return [BRMediaType streamingVideo];
 }
 
 -(long int)duration{
