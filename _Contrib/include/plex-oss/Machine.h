@@ -64,6 +64,7 @@ static inline MachineRole addMachineRole(MachineRole now, MachineRole r){
 	
 	Machine* clientMachine;
 	PlexRequest* request;
+  NSDictionary* gdmDictionary;
 	
 	PlexCachedRequest* clients;
 	PlexCachedRequest* servers;
@@ -80,10 +81,11 @@ static inline MachineRole addMachineRole(MachineRole now, MachineRole r){
 @property (readonly) NSString* serverHostName;
 @property (readwrite, retain) NSString* serverName;
 @property (readonly, retain) NSString* uid;
-@property (readonly, retain) NSString* machineID;
+@property (readwrite, retain) NSString* machineID;
 @property (readwrite, retain) NSString* mac;
 @property (readwrite) int port;
 @property (readonly) BOOL bonjour;
+@property (readonly) BOOL gdm;
 @property (readonly, retain) PlexRequest* request;
 @property (readwrite) BOOL isOnline;
 @property (readwrite) BOOL localhost;
@@ -104,13 +106,15 @@ static inline MachineRole addMachineRole(MachineRole now, MachineRole r){
 @property (readonly) Machine* selectedClientMachine;
 
 -(int)maximumQuality;
++(int)versionFromVersionString:(NSString*)versStr;
 
 -(id)initLocalhostForManager:(MachineManager*)mm;
 -(id)initWithNetService:(NSNetService*) netService manager:(MachineManager*)parent;
 -(id)initWithServerName:(NSString*)serverName hostName:(NSString*)hostName port:(int)port role:(MachineRole)r manager:(MachineManager*)parent etherID:(NSString*)etherIDOrNil;
 -(void)didReceiveMemoryWarning;
 -(void)linkWithService:(NSNetService*)ns;
--(void) resolveAndNotify:(id<MachineManagerDelegate>)del;
+-(void)linkWithGDMDictionary:(NSDictionary*)dict fromAddress:(NSString*)ip;
+-(void)resolveAndNotify:(id<MachineManagerDelegate>)del;
 
 -(void)lookupEthernetID;
 -(void)lookupEthernetIDSync;

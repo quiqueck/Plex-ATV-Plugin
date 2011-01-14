@@ -8,15 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import <ambertation-plex/Ambertation.h>
+#import "PlexGDM.h"
 
 @class ServiceBrowser;
-@class Machine;
+@class Machine, PlexGDM;
+@protocol PlexGDBDelegate;
+
 @protocol MachineManagerDelegate
 -(void)machineWasAdded:(Machine*)m;
 -(void)machineStateDidChange:(Machine*)m;
 -(void)machineResolved:(Machine*)m;
 -(void)machineDidNotResolve:(Machine*)m;
 -(void)machineReceivedClients:(Machine*)m;
+@optional
+-(void)machineWasRemoved:(Machine*)m;
 @end;
 
 typedef int MachineRole;
@@ -34,13 +39,13 @@ static inline BOOL isServerService(NSNetService* s) {
 	return r.length>0;
 }
 
-@interface MachineManager : NSObject<NSNetServiceBrowserDelegate> {
+@interface MachineManager : NSObject<NSNetServiceBrowserDelegate, PlexGDBDelegate> {
 	NSNetServiceBrowser* serviceBrowserPMS;
 	NSNetServiceBrowser* serviceBrowserPlex;
 	
 	ServiceBrowser* dnsBrowserPMS;
 	ServiceBrowser* dnsBrowserPlex;
-	
+	PlexGDM*        gdmBrowser;
 	id<MachineManagerDelegate> delegate;
 	
 	NSMutableArray* machines;
