@@ -8,6 +8,7 @@
 
 
 #import <plex-oss/Preferences.h>
+#import "ProxyMachineDelegate.h"
 #endif
 
 #define DEBUG 1

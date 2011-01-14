@@ -1,26 +1,26 @@
-  //
-  //  HWPlexDir.m
-  //  atvTwo
-  //
-  //  Created by Frank Bauer on 22.10.10.
-  //  Permission is hereby granted, free of charge, to any person obtaining a copy
-  //  of this software and associated documentation files (the "Software"), to deal
-  //  in the Software without restriction, including without limitation the rights
-  //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  //  copies of the Software, and to permit persons to whom the Software is
-  //  furnished to do so, subject to the following conditions:
-  //  
-  //  The above copyright notice and this permission notice shall be included in
-  //  all copies or substantial portions of the Software.
-  //  
-  //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  //  THE SOFTWARE.
-  //  
+//
+//  HWPlexDir.m
+//  atvTwo
+//
+//  Created by Frank Bauer on 22.10.10.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//  
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//  
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//  
 
 #import "HWPlexDir.h"
 #import <plex-oss/PlexMediaObject.h>
@@ -47,7 +47,7 @@ PlexMediaProvider* __provider = nil;
 		
 		NSString *settingsPng = [[NSBundle bundleForClass:[HWPlexDir class]] pathForResource:@"PlexIcon" ofType:@"png"];
 		BRImage *sp = [BRImage imageWithPath:settingsPng];
-      //BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
+		//BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		
@@ -86,170 +86,170 @@ PlexMediaProvider* __provider = nil;
 - (id)previewControlForItem:(long)item
 {
 #if DEBUG
-  NSLog(@"HWPlexDir_previewControlForItem");
+	NSLog(@"HWPlexDir_previewControlForItem");
 #endif
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:item];
-  [pmo retain];
-  
-  NSURL* mediaURL = [pmo mediaStreamURL];
-  PlexPreviewAsset* pma = [[PlexPreviewAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
-  BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
-  [preview setShowsMetadataImmediately:YES];
-  [preview setAsset:pma];	
-  [pmo release];
-  
-  return [preview autorelease];
+	[pmo retain];
+	
+	NSURL* mediaURL = [pmo mediaStreamURL];
+	PlexPreviewAsset* pma = [[PlexPreviewAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+	BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
+	[preview setShowsMetadataImmediately:YES];
+	[preview setAsset:pma];	
+	[pmo release];
+	
+	return [preview autorelease];
 }
 
 - (void)itemSelected:(long)selected; {
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:selected];
-  
-  NSString* type = [pmo.attributes stringForKey:@"type"];
-  if ([type empty]) type = pmo.containerType;
-  type = [type lowercaseString];
-  
+	
+	NSString* type = [pmo.attributes stringForKey:@"type"];
+	if ([type empty]) type = pmo.containerType;
+	type = [type lowercaseString];
+	
 	NSLog(@"Item Selected: %@, type:%@", pmo, type);
-  
-  NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, PlexViewGroupArtist );
-  
-
-  if ([pmo.mediaContainer viewGroup] == PlexViewGroupArtist || [@"album" isEqualToString:type]) {
-    NSLog(@"Accessing Artist/Album %@", pmo);
-    SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
-    [[[BRApplicationStackManager singleton] stack] pushController:songlist];
-    [songlist autorelease];
-  }
+	
+	NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, PlexViewGroupArtist );
+	
+	
+	if ([pmo.mediaContainer viewGroup] == PlexViewGroupArtist || [@"album" isEqualToString:type]) {
+		NSLog(@"Accessing Artist/Album %@", pmo);
+		SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
+		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
+		[songlist autorelease];
+	}
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
-    NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
-    
-      //we have offset, ie. already watched a part of the movie, show a dialog asking if you want to resume or start over
-    if ([pmo.attributes valueForKey:@"viewOffset"] != nil) {
-      NSNumber *viewOffset = [NSNumber numberWithInt:[[pmo.attributes valueForKey:@"viewOffset"] intValue]];
-      
-      BROptionDialog *option = [[BROptionDialog alloc] init];
-      
-      
-      [option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
-                           viewOffset, @"viewOffset", 
-                           pmo, @"mediaObject",
-                           nil]];
-      [option setPrimaryInfoText:@"You have already watched a part of this video.\nWould you like to continue where you left off, or start from beginning?"];
-      [option setSecondaryInfoText:pmo.name];
-      
-      int offsetInMins = ([viewOffset intValue] % (1000*60*60)) / (1000*60);
-      int offsetInSecs = (([viewOffset intValue] % (1000*60*60)) % (1000*60)) / 1000;
-      [option addOptionText:[NSString stringWithFormat:@"Resume from %d mins %d secs", offsetInMins, offsetInSecs]];
-      
-      [option addOptionText:@"Play from the beginning"];
-      [option addOptionText:@"Go back"];
-      [option setActionSelector:@selector(optionSelected:) target:self];
-      [[self stack] pushController:option];
-      [option release];
-    }
-    else
-      [self playbackVideoWithMediaObject:pmo andOffset:0]; //not previously unwatched, just start playback from beginning
-    
+		NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
+		
+		//we have offset, ie. already watched a part of the movie, show a dialog asking if you want to resume or start over
+		if ([pmo.attributes valueForKey:@"viewOffset"] != nil) {
+			NSNumber *viewOffset = [NSNumber numberWithInt:[[pmo.attributes valueForKey:@"viewOffset"] intValue]];
+			
+			BROptionDialog *option = [[BROptionDialog alloc] init];
+			
+			
+			[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
+								 viewOffset, @"viewOffset", 
+								 pmo, @"mediaObject",
+								 nil]];
+			[option setPrimaryInfoText:@"You have already watched a part of this video.\nWould you like to continue where you left off, or start from beginning?"];
+			[option setSecondaryInfoText:pmo.name];
+			
+			int offsetInMins = ([viewOffset intValue] % (1000*60*60)) / (1000*60);
+			int offsetInSecs = (([viewOffset intValue] % (1000*60*60)) % (1000*60)) / 1000;
+			[option addOptionText:[NSString stringWithFormat:@"Resume from %d mins %d secs", offsetInMins, offsetInSecs]];
+			
+			[option addOptionText:@"Play from the beginning"];
+			[option addOptionText:@"Go back"];
+			[option setActionSelector:@selector(optionSelected:) target:self];
+			[[self stack] pushController:option];
+			[option release];
+		}
+		else
+			[self playbackVideoWithMediaObject:pmo andOffset:0]; //not previously unwatched, just start playback from beginning
+		
 	}
 	else {
-    HWPlexDir* menuController = [[HWPlexDir alloc] init];
-    menuController.rootContainer = [pmo contents];
-    [[[BRApplicationStackManager singleton] stack] pushController:menuController];
-    
-    [menuController autorelease];
-  }
+		HWPlexDir* menuController = [[HWPlexDir alloc] init];
+		menuController.rootContainer = [pmo contents];
+		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
+		
+		[menuController autorelease];
+	}
 }
 
 - (void)optionSelected:(id)sender {
 	BROptionDialog *option = sender;
 	PlexMediaObject *pmo = [option.userInfo objectForKey:@"mediaObject"];
 	NSNumber *viewOffset = [option.userInfo objectForKey:@"viewOffset"];
-  
+	
 	if([[sender selectedText] hasPrefix:@"Resume from"]) {
-    [[self stack] popController]; //need this so we don't go back to option dialog when going back
-    NSLog(@"Resuming from %d ms", [viewOffset intValue]);
-    [self playbackVideoWithMediaObject:pmo andOffset:[viewOffset intValue]];
+		[[self stack] popController]; //need this so we don't go back to option dialog when going back
+		NSLog(@"Resuming from %d ms", [viewOffset intValue]);
+		[self playbackVideoWithMediaObject:pmo andOffset:[viewOffset intValue]];
 	} else if ([[sender selectedText] isEqualToString:@"Play from the beginning"]) {
-    [[self stack] popController]; //need this so we don't go back to option dialog when going back
+		[[self stack] popController]; //need this so we don't go back to option dialog when going back
 		[self playbackVideoWithMediaObject:pmo andOffset:0]; //0 offset is beginning, mkay?
 	} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
 		//go back to movie listing...
-    [[self stack] popController];
+		[[self stack] popController];
 	}
 }
 
 
 -(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset {
-  [pmo.attributes setObject:[NSNumber numberWithInt:offset] forKey:@"viewOffset"]; //set where in the video we want to start...
-  pmo.request.machine.streamQuality = PlexStreamingQuality720p_1500; //quality
-  
-  NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
-  NSURL* mediaURL = [pmo mediaURL];
-  
-  NSLog(@"Starting Playback of %@", mediaURL);
-  
-  BOOL didTimeOut = NO;
-  [pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
-  
-  
-  
-  if (__provider==nil){
-    __provider = [[PlexMediaProvider alloc] init];
-    BRMediaHost* mh = [[BRMediaHost mediaHosts] objectAtIndex:0];
-    [mh addMediaProvider:__provider];
-    
-  }
-  
-  if (playProgressTimer){
-    [playProgressTimer invalidate];
-    [playProgressTimer release];
-    playProgressTimer = nil;
-  }
-  
-  if (__player){
-    [__player release];
-    __player = nil;
-  }
-  
-  if (playbackItem){
-    [playbackItem release];
-    playbackItem = nil;
-  }
-  
-  
-  PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
-
-  BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
-  NSError * error = nil;
-  BRMediaPlayer * player = [mgm playerForMediaAsset:pma error: &error];
-  
-  NSLog(@"pma=%@, prov=%@, mgm=%@, play=%@, err=%@", pma, __provider, mgm, player, error);
-  
-  if ( error != nil ){
-    NSLog(@"b0bben: error in brmediaplayer, aborting");
-    [pma release];
-    return ;
-  }
-  
-  
+	[pmo.attributes setObject:[NSNumber numberWithInt:offset] forKey:@"viewOffset"]; //set where in the video we want to start...
+	pmo.request.machine.streamQuality = PlexStreamingQuality720p_1500; //quality
+	
+	NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
+	NSURL* mediaURL = [pmo mediaURL];
+	
+	NSLog(@"Starting Playback of %@", mediaURL);
+	
+	BOOL didTimeOut = NO;
+	[pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
+	
+	
+	
+	if (__provider==nil){
+		__provider = [[PlexMediaProvider alloc] init];
+		BRMediaHost* mh = [[BRMediaHost mediaHosts] objectAtIndex:0];
+		[mh addMediaProvider:__provider];
+		
+	}
+	
+	if (playProgressTimer){
+		[playProgressTimer invalidate];
+		[playProgressTimer release];
+		playProgressTimer = nil;
+	}
+	
+	if (__player){
+		[__player release];
+		__player = nil;
+	}
+	
+	if (playbackItem){
+		[playbackItem release];
+		playbackItem = nil;
+	}
+	
+	
+	PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+	
+	BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
+	NSError * error = nil;
+	BRMediaPlayer * player = [mgm playerForMediaAsset:pma error: &error];
+	
+	NSLog(@"pma=%@, prov=%@, mgm=%@, play=%@, err=%@", pma, __provider, mgm, player, error);
+	
+	if ( error != nil ){
+		NSLog(@"b0bben: error in brmediaplayer, aborting");
+		[pma release];
+		return ;
+	}
+	
+	
     //[mgm presentMediaAsset:pma options:0];
-  [mgm presentPlayer:player options:0];
-  [pma release];
+	[mgm presentPlayer:player options:0];
+	[pma release];
     //__player = [player retain];
-  playbackItem = [pmo retain];
-  playProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:10.0f 
-                                                        target:self 
-                                                      selector:@selector(reportProgress:) 
-                                                      userInfo:nil 
-                                                       repeats:YES] retain];
-  
-  
-  
-  return;
-  
+	playbackItem = [pmo retain];
+	playProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:10.0f 
+														  target:self 
+														selector:@selector(reportProgress:) 
+														userInfo:nil 
+														 repeats:YES] retain];
+	
+	
+	
+	return;
+	
 }
 
 -(void)reportProgress:(NSTimer*)tm{
-  BRMediaPlayer *playa = [[BRMediaPlayerManager singleton] activePlayer];
+	BRMediaPlayer *playa = [[BRMediaPlayerManager singleton] activePlayer];
 	if (playa.playerState==0){
 		NSLog(@"Finished Playback");
 		
@@ -270,17 +270,17 @@ PlexMediaProvider* __provider = nil;
 		}
 		
 		
-      //stop the transcoding on PMS
+		//stop the transcoding on PMS
 		[rootContainer.request stopTranscoder];
 		NSLog(@"stopping transcoder");
 		
 		return;
 	}
-  
+	
 	NSLog(@"Elapsed: %f, %i", playa.elapsedTime, playa.playerState);
 	
     //report time back to PMS so we can continue in the right spot
-  [playbackItem postMediaProgress: playa.elapsedTime];
+	[playbackItem postMediaProgress: playa.elapsedTime];
 }
 
 
@@ -308,8 +308,8 @@ PlexMediaProvider* __provider = nil;
 	id result;
 	
 	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
-  NSString *mediaType = [pmo.attributes valueForKey:@"type"];
-  
+	NSString *mediaType = [pmo.attributes valueForKey:@"type"];
+	
 	if (pmo.hasMedia || [@"Video" isEqualToString:mediaType]) {
 		BRComboMenuItemLayer *menuItem = [[BRComboMenuItemLayer alloc] init];
 		
@@ -325,16 +325,32 @@ PlexMediaProvider* __provider = nil;
 		
 		[menuItem setTitle:[pmo name]];
 		
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy"];
-    NSString *dateString = [dateFormatter stringFromDate:pmo.originallyAvailableAt];
+		NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+		[dateFormatter setDateFormat:@"yyyy"];
+		NSString *dateString = [dateFormatter stringFromDate:pmo.originallyAvailableAt];
 		[menuItem setSubtitle:dateString];
-    [dateFormatter release];
-
+		[dateFormatter release];
+		
 		
 		result = [menuItem autorelease];
 	} else {
 		BRMenuItem * menuItem = [[BRMenuItem alloc] init];
+		
+		NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
+		if ([plexMediaType isEqualToString:@"show"] || [plexMediaType isEqualToString:@"season"]) {
+#warning this is to avoid the toplevel tv from getting the blue dot. MUST be a better way!
+			if (![pmo.name isEqualToString:@"TV"]) {
+				id image;
+				if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
+					image = [[BRThemeInfo sharedTheme] unplayedVideoImage];			
+				} else if ([pmo seenState] == PlexMediaObjectSeenStateInProgress) {
+					image = [[BRThemeInfo sharedTheme] partiallyplayedVideoImage];
+				} else {
+					image = nil;
+				}
+				[menuItem setImage:image];
+			}
+		}
 		
 		[menuItem setText:[pmo name] withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 		

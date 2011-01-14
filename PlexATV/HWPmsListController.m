@@ -12,13 +12,14 @@
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
+#import "Constants.h"
 
 @implementation HWPmsListController
 
 - (id) init
 {
 	if((self = [super init]) != nil) {		
-		[self setListTitle:@"Local Servers"];
+		[self setListTitle:@"Select default server"];
 		BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
@@ -26,20 +27,12 @@
 		_names = [[NSMutableArray alloc] init];
 		
 		//make sure we are the delegate
-		[[MachineManager sharedMachineManager] setDelegate:self];
-		
-		//add all available servers
-		for (Machine* m in [[MachineManager sharedMachineManager] machines]){
-			if (runsServer(m.role))
-				[_names addObject:m];
-		}
+    [[ProxyMachineDelegate shared] registerDelegate:self];
 		
 		//start the auto detection
 		[[MachineManager sharedMachineManager] startAutoDetection];
 		
 		[[self list] setDatasource:self];
-		
-		userPreferences = [SMFPreferences preferences];
 	}
 	return self;
 }	
@@ -47,12 +40,19 @@
 
 -(void)dealloc
 {
-	[[MachineManager sharedMachineManager] setDelegate:nil];
 	[[MachineManager sharedMachineManager] stopAutoDetection];
 	[_names release];
 	
 	[super dealloc];
 }
+
+- (void)wasPopped{
+  NSLog(@"Did Pop Controller %@");
+  [[ProxyMachineDelegate shared] removeDelegate:self];
+  
+  [super wasPopped];
+}
+
 
 
 - (id)previewControlForItem:(long)item
@@ -78,7 +78,8 @@
 	Machine* m = [_names objectAtIndex:selected];
 	NSLog(@"machine selected: %@", m);
 
-	[userPreferences setObject:m.serverName forKey:@"PlexDefaultServer"];
+	[[SMFPreferences preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
+	[[SMFPreferences preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];
 	[self setNeedsUpdate];
 }
 
@@ -96,10 +97,11 @@
 	
 	BRMenuItem * result = [[BRMenuItem alloc] init];
 	Machine *m = [_names objectAtIndex:row];
-	[result setText:m.serverName withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+  NSString* name = [NSString stringWithFormat:@"%@", m.serverName, m];
+	[result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 	
-	NSString *defaultServer = [userPreferences objectForKey:@"PlexDefaultServer"];
-	if ([m.serverName isEqualToString:defaultServer]) {
+	NSString *defaultServerUid = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid];
+	if ([m.uid isEqualToString:defaultServerUid]) {
 		[result addAccessoryOfType:17]; //checkmark
 	}
 	
@@ -127,6 +129,11 @@
 
 #pragma mark
 #pragma mark Machine Manager Delegate
+-(void)machineWasRemoved:(Machine*)m{
+  NSLog(@"Removed %@", m);
+  [_names removeObject:m];
+}
+
 -(void)machineWasAdded:(Machine*)m{
 	if (!runsServer(m.role)) return;
 	
@@ -140,10 +147,10 @@
 -(void)machineStateDidChange:(Machine*)m{
 	if (m==nil) return;
 	
-	if (runsServer(m.role) && ![_names containsObject:m]){
+	/*if (runsServer(m.role) && ![_names containsObject:m]){
 		[self machineWasAdded:m];
 		return;
-	} else if (!runsServer(m.role) && [_names containsObject:m]){
+	} else*/ if (!runsServer(m.role) && [_names containsObject:m]){
 		[_names removeObject:m];
 		NSLog(@"Removed %@", m);
 	} else {
