@@ -30,6 +30,7 @@
 #import <plex-oss/Preferences.h>
 #import "PlexMediaProvider.h"
 #import "PlexMediaAsset.h"
+#import "PlexMediaAssetOld.h"
 #import "PlexPreviewAsset.h"
 #import "PlexSongAsset.h"
 #import "SongListController.h"
@@ -215,8 +216,12 @@ PlexMediaProvider* __provider = nil;
 		playbackItem = nil;
 	}
 	
-	
-	PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+  BRBaseMediaAsset* pma = nil;
+	if ([[[UIDevice currentDevice] systemVersion] isEqualToString:@"4.1"]){
+    pma = [[PlexMediaAssetOld alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+  } else {
+    pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+  }
 	
 	BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
 	NSError * error = nil;

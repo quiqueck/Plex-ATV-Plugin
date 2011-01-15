@@ -21,37 +21,49 @@
 #import "Constants.h"
 
 @implementation HWSettingsController
+@synthesize topLevelController;
 
-#define DefaultServerIndex 0
-#define QualitySettingIndex 1
-#define PluginVersionNumberIndex 2
+#define CombinedPmsCategoriesIndex 0
+#define DefaultServerIndex 1
+#define QualitySettingIndex 2
+#define PluginVersionNumberIndex 3
 
 #pragma mark -
 #pragma mark init/dealoc
 
 - (id) init {
 	if((self = [super init]) != nil) {
+    topLevelController = nil;
 		[self setLabel:@"Plex Settings"];
 		[self setListTitle:@"Plex Settings"];
-		
-		userPreference = [SMFPreferences preferences];
-		[userPreference registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-										  @"<No Default Selected>", PreferencesDefaultServer,
-										  @"Low", PreferencesQualitySetting,
-										  nil]];
-		
+				
 		[self setupList];
 	}	
 	return self;
 }
 
+- (void)wasPopped{
+  NSLog(@"Did pop controller %@", self);
+  [topLevelController reloadCategories];
+  [super wasPopped];
+}
+
 - (void)setupList {
 	[_items removeAllObjects];
+	
+	// =========== combined PMS category view ===========
+	SMFMenuItem *combinedPmsCategoriesMenuItem = [SMFMenuItem menuItem];
+	
+	NSString *combinedPmsCategories = [[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView] ? @"Enabled" : @"Disabled";
+	NSString *combinedPmsCategoriesTitle = [[NSString alloc] initWithFormat:@"Combined PMS View:    %@", combinedPmsCategories];
+	[combinedPmsCategoriesMenuItem setTitle:combinedPmsCategoriesTitle];
+	[combinedPmsCategoriesTitle release];
+	[_items addObject:combinedPmsCategoriesMenuItem];
 	
 	// =========== default server ===========
 	SMFMenuItem *defaultServerMenuItem = [SMFMenuItem folderMenuItem];
 	
-	NSString *defaultServer = [userPreference stringForKey:PreferencesDefaultServer];
+	NSString *defaultServer = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerName];
 	NSString *defaultServerTitle = [[NSString alloc] initWithFormat:@"Default Server:    %@", defaultServer];
 	[defaultServerMenuItem setTitle:defaultServerTitle];
 	[defaultServerTitle release];
@@ -61,7 +73,7 @@
 	// =========== quality setting ===========
 	SMFMenuItem *qualitySettingMenuItem = [SMFMenuItem menuItem];
 	
-	NSString *qualitySetting = [userPreference objectForKey:PreferencesQualitySetting];
+	NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
 	NSString *qualitySettingTitle = [[NSString alloc] initWithFormat:@"Quality Setting:   %@", qualitySetting];
 	[qualitySettingMenuItem setTitle:qualitySettingTitle];
 	[qualitySettingTitle release];
@@ -71,7 +83,7 @@
 	// =========== version number ===========
 	SMFMenuItem *pluginVersionNumberMenuItem = [SMFMenuItem menuItem];
 	
-	NSString *pluginVersionNumber = @"0.6.3";
+	NSString *pluginVersionNumber = @"0.6.5";
 	NSString *pluginVersionNumberTitle = [[NSString alloc] initWithFormat:@"Version:   %@", pluginVersionNumber];
 	[pluginVersionNumberMenuItem setTitle:pluginVersionNumberTitle];
 	[pluginVersionNumberTitle release];
@@ -90,7 +102,6 @@
 }
 
 - (void)dealloc {
-	[userPreference release];
 	[super dealloc];	
 }
 
@@ -104,6 +115,15 @@
 #pragma mark List Delegate Methods
 - (void)itemSelected:(long)selected {
 	switch (selected) {
+		case CombinedPmsCategoriesIndex: {
+			// =========== combined PMS category view ===========
+			BOOL isTurnedOn = [[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView];
+			[[SMFPreferences preferences] setBool:!isTurnedOn forKey:PreferencesUseCombinedPmsView];
+			
+			[self setupList];
+			[self.list reload];
+			break;
+		}
 		case DefaultServerIndex: {
 			// =========== default server ===========
 			HWPmsListController* menuController = [[HWPmsListController alloc] init];
@@ -113,13 +133,13 @@
 		}
 		case QualitySettingIndex: {
 			// =========== quality setting ===========
-			NSString *qualitySetting = [userPreference objectForKey:PreferencesQualitySetting];
+			NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
 			if ([qualitySetting isEqualToString:@"Low"]) {
-				[userPreference setObject:@"Medium" forKey:PreferencesQualitySetting];
+				[[SMFPreferences preferences] setObject:@"Medium" forKey:PreferencesQualitySetting];
 			} else if ([qualitySetting isEqualToString:@"Medium"]) {
-				[userPreference setObject:@"High" forKey:PreferencesQualitySetting];
+				[[SMFPreferences preferences] setObject:@"High" forKey:PreferencesQualitySetting];
 			} else {
-				[userPreference setObject:@"Low" forKey:PreferencesQualitySetting];
+				[[SMFPreferences preferences] setObject:@"Low" forKey:PreferencesQualitySetting];
 			}
 			
 			[self setupList];
@@ -136,6 +156,12 @@
 {
 	SMFBaseAsset *asset = [[SMFBaseAsset alloc] init];
 	switch (item) {
+		case CombinedPmsCategoriesIndex: {
+			// =========== combined PMS category view ===========
+			[asset setTitle:@"Enables/Disables the combined view"];
+			[asset setSummary:@"Toggles between using a single default server or a combined view"];
+			break;
+		}
 		case DefaultServerIndex: {
 			// =========== default server ===========
 			[asset setTitle:@"Select the default server"];
@@ -145,7 +171,7 @@
 		case QualitySettingIndex: {
 			// =========== quality setting ===========
 			[asset setTitle:@"Select the video quality"];
-			[asset setSummary:@"Sets the quality of the streamed video"];
+			[asset setSummary:@"Sets the quality of the streamed video (currently not used)"];
 			break;
 		}
 		case PluginVersionNumberIndex: {

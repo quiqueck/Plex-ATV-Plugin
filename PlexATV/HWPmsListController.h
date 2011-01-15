@@ -11,7 +11,6 @@
 #import "SMFPreferences.h"
 
 @interface HWPmsListController : BRMediaMenuController<MachineManagerDelegate> {
-	SMFPreferences *userPreferences;
 	NSMutableArray		*_names;
 	
 }

@@ -17,8 +17,10 @@
 #import "SMFMediaMenuController.h"
 
 @interface HWSettingsController : SMFMediaMenuController {
-	SMFPreferences *userPreference;
+  BRBaseAppliance* topLevelController;
 }
+
+@property(readwrite, assign) BRBaseAppliance* topLevelController;
 - (void)setupList;
 
 @end

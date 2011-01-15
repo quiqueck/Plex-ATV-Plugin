@@ -10,6 +10,8 @@
 		013307461278688D0067A5FE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013307451278688D0067A5FE /* QuartzCore.framework */; };
 		013310FD127C09FD0067A5FE /* PlexIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 013310FC127C09FD0067A5FE /* PlexIcon.png */; };
 		0133123C127C26D70067A5FE /* PlexLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0133123B127C26D70067A5FE /* PlexLogo.png */; };
+		015D313D12E10A52001A32C1 /* ProxyMachineDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 015D313C12E10A52001A32C1 /* ProxyMachineDelegate.m */; };
+		015D320A12E11C80001A32C1 /* PlexMediaAssetOld.m in Sources */ = {isa = PBXBuildFile; fileRef = 015D320912E11C80001A32C1 /* PlexMediaAssetOld.m */; };
 		01A0EE5E1272224C007A60B5 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE5D1272224C007A60B5 /* CoreFoundation.framework */; };
 		01A0EE601272224C007A60B5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */; };
 		01A0EE621272224C007A60B5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE611272224C007A60B5 /* UIKit.framework */; };
@@ -535,6 +537,11 @@
 		01330F36127871D80067A5FE /* WebWindowDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebWindowDelegate.h; sourceTree = "<group>"; };
 		013310FC127C09FD0067A5FE /* PlexIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PlexIcon.png; sourceTree = "<group>"; };
 		0133123B127C26D70067A5FE /* PlexLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PlexLogo.png; sourceTree = "<group>"; };
+		015D313B12E10A52001A32C1 /* ProxyMachineDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyMachineDelegate.h; sourceTree = "<group>"; };
+		015D313C12E10A52001A32C1 /* ProxyMachineDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProxyMachineDelegate.m; sourceTree = "<group>"; };
+		015D31B812E114CE001A32C1 /* HWAppliance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HWAppliance.h; sourceTree = "<group>"; };
+		015D320812E11C80001A32C1 /* PlexMediaAssetOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlexMediaAssetOld.h; sourceTree = "<group>"; };
+		015D320912E11C80001A32C1 /* PlexMediaAssetOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlexMediaAssetOld.m; sourceTree = "<group>"; };
 		01A0EE5D1272224C007A60B5 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		01A0EE611272224C007A60B5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -1204,6 +1211,8 @@
 				C4ADAFAD12D46CA9002DA507 /* PlexMediaProvider.m */,
 				01F4DD2D12C3875500A0A0B5 /* BackRowExtras.h */,
 				72EA810712DEB6B500138F7D /* Constants.h */,
+				015D313B12E10A52001A32C1 /* ProxyMachineDelegate.h */,
+				015D313C12E10A52001A32C1 /* ProxyMachineDelegate.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1342,6 +1351,7 @@
 				C4D558A412D66BE900877755 /* SongListController.m */,
 				C4ADAFA712D46CA9002DA507 /* HWPlexDir.h */,
 				C4ADAFA812D46CA9002DA507 /* HWPlexDir.m */,
+				015D31B812E114CE001A32C1 /* HWAppliance.h */,
 				875A824A126FFF1F00ECADC2 /* HWAppliance.mm */,
 				875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */,
 				875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */,
@@ -1362,6 +1372,8 @@
 				C4ADAFAA12D46CA9002DA507 /* PlexMediaAsset.m */,
 				C4EA913412DCD77700DCC798 /* PlexPreviewAsset.h */,
 				C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */,
+				015D320812E11C80001A32C1 /* PlexMediaAssetOld.h */,
+				015D320912E11C80001A32C1 /* PlexMediaAssetOld.m */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -1440,7 +1452,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export APP_NAME=\"Lowtide.app\"\nexport TARGET_DIR=/Applications/${APP_NAME}/Appliances/PLEX.frappliance\n\n#copy local (in order to build the .deb\ncp \"${CODESIGNING_FOLDER_PATH}/plex\" \"${BUILD_DIR}/../_deb/PLEX.frapplication/Applications/${APP_NAME}/Appliances/PLEX.frappliance/\"\n\n\n#copy to the ATV\nscp \"${CODESIGNING_FOLDER_PATH}/plex\" root@apple-tv.local:${TARGET_DIR}\nscp \"${BUILD_DIR}/../_deb/PLEX.frapplication/Applications/${APP_NAME}/Appliances/PLEX.frappliance/Info.plist\" root@apple-tv.local:${TARGET_DIR}\n\n#restart UI\nssh root@apple-tv.local 'killall AppleTV'\n#ssh root@apple-tv.local 'killall Lowtide'\n";
+			shellScript = "export APP_NAME=\"Lowtide.app\"\nexport TARGET_DIR=/Applications/${APP_NAME}/Appliances/PLEX.frappliance\n\n#copy local (in order to build the .deb\ncp \"${CODESIGNING_FOLDER_PATH}/plex\" \"${BUILD_DIR}/../_deb/PLEX.frapplication/Applications/${APP_NAME}/Appliances/PLEX.frappliance/\"\n\n\n#copy to the ATV\nscp \"${CODESIGNING_FOLDER_PATH}/plex\" root@apple-tv.local:${TARGET_DIR}\nscp \"${BUILD_DIR}/../_deb/PLEX.frapplication/Applications/${APP_NAME}/Appliances/PLEX.frappliance/Info.plist\" root@apple-tv.local:${TARGET_DIR}\n\n#restart UI\n#ssh root@apple-tv.local 'killall AppleTV'\nssh root@apple-tv.local 'killall Lowtide'\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1489,6 +1501,8 @@
 				72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */,
 				72B2C71512DC1F0E00E23F8E /* HWPmsListController.m in Sources */,
 				C4EA913612DCD77700DCC798 /* PlexPreviewAsset.m in Sources */,
+				015D313D12E10A52001A32C1 /* ProxyMachineDelegate.m in Sources */,
+				015D320A12E11C80001A32C1 /* PlexMediaAssetOld.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
