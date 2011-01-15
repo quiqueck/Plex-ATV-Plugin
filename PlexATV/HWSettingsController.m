@@ -134,6 +134,8 @@
 		case QualitySettingIndex: {
 			// =========== quality setting ===========
 			NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
+      if (qualitySetting==nil) qualitySetting = @"Medium";
+      
 			if ([qualitySetting isEqualToString:@"Low"]) {
 				[[SMFPreferences preferences] setObject:@"Medium" forKey:PreferencesQualitySetting];
 			} else if ([qualitySetting isEqualToString:@"Medium"]) {
