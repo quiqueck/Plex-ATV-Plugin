@@ -4,7 +4,7 @@ Version: 0.6.5
 Priority: optional
 Size: 1083178
 Installed-Size: 2662
-Depends: beigelist com.nito
+Depends: beigelist,com.nito
 Replaces: plex-client-plugin
 Architecture: iphoneos-arm
 Description: A PLEX Client for Lowtide (experimental)
