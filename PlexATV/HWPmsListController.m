@@ -12,13 +12,14 @@
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
+#import "Constants.h"
 
 @implementation HWPmsListController
 
 - (id) init
 {
 	if((self = [super init]) != nil) {		
-		[self setListTitle:@"Local Servers"];
+		[self setListTitle:@"Select default server"];
 		BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
@@ -78,7 +79,7 @@
 	Machine* m = [_names objectAtIndex:selected];
 	NSLog(@"machine selected: %@", m);
 
-	[userPreferences setObject:m.serverName forKey:@"PlexDefaultServer"];
+	[userPreferences setObject:m.serverName forKey:PreferencesDefaultServer];
 	[self setNeedsUpdate];
 }
 
@@ -98,7 +99,7 @@
 	Machine *m = [_names objectAtIndex:row];
 	[result setText:m.serverName withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 	
-	NSString *defaultServer = [userPreferences objectForKey:@"PlexDefaultServer"];
+	NSString *defaultServer = [userPreferences objectForKey:PreferencesDefaultServer];
 	if ([m.serverName isEqualToString:defaultServer]) {
 		[result addAccessoryOfType:17]; //checkmark
 	}
