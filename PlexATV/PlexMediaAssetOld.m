@@ -1,51 +1,51 @@
-  //
-  //  PlexMediaAsset.m
-  //  atvTwo
-  //
-  //  Created by Frank Bauer on 27.10.10.
-  //  Permission is hereby granted, free of charge, to any person obtaining a copy
-  //  of this software and associated documentation files (the "Software"), to deal
-  //  in the Software without restriction, including without limitation the rights
-  //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  //  copies of the Software, and to permit persons to whom the Software is
-  //  furnished to do so, subject to the following conditions:
-  //  
-  //  The above copyright notice and this permission notice shall be included in
-  //  all copies or substantial portions of the Software.
-  //  
-  //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  //  THE SOFTWARE.
-  //  
+//
+//  PlexMediaAsset.m
+//  atvTwo
+//
+//  Created by Frank Bauer on 27.10.10.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//  
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//  
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//  
 #import "BackRow/BRBaseMediaAsset.h"
 #import <BackRow/BRImageManager.h>
 #import "BackRow/BRMediaAsset.h"
-#import "PlexMediaAsset.h"
+#import "PlexMediaAssetOld.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexRequest.h>
 #import <plex-oss/Machine.h>
 #import <ambertation-plex/Ambertation.h>
 
-@implementation PlexMediaAsset
+@implementation PlexMediaAssetOld
 @synthesize pmo;
 
 - (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
 {
 	pmo = [o retain];
-    //self = [super initWithMediaProvider:mediaProvider];
-    //self = [super streamingMediaAssetWithMediaItem:o];
+  //self = [super initWithMediaProvider:mediaProvider];
+  //self = [super streamingMediaAssetWithMediaItem:o];
   self = [super initWithMediaProvider:mediaProvider];
 	if (self != nil) {
 		url = [u retain];
-      //NSLog(@"PMO attrs: %@", pmo.attributes);
-      //PlexRequest *req = pmo.request;
-      //NSLog(@"PMO request attrs: %@", req);
-      //NSLog(@"Ref = %x", [self mediaItemRef]);
+    //NSLog(@"PMO attrs: %@", pmo.attributes);
+    //PlexRequest *req = pmo.request;
+    //NSLog(@"PMO request attrs: %@", req);
+    //NSLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
 }
@@ -64,7 +64,7 @@
 }
 
 - (NSString*)mediaURL{
-    //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+  //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
   NSLog(@"Wanted URL %@", [url description]);
   
   return [url description];
@@ -82,7 +82,7 @@
 }
 
 - (id)mediaType{
-  return [BRMediaType streamingVideo];
+  return [BRMediaType movie];
 }
 
 -(long int)duration{
@@ -111,7 +111,7 @@
   NSLog(@"plexMediaType: %@", plexMediaType);
 #endif
   
-    //  if ([@"movie" isEqualToString:plexMediaType] || [@"show" isEqualToString:plexMediaType] || [@"episode" isEqualToString:plexMediaType] && [agentAttr empty])
+  //  if ([@"movie" isEqualToString:plexMediaType] || [@"show" isEqualToString:plexMediaType] || [@"episode" isEqualToString:plexMediaType] && [agentAttr empty])
   if (agentAttr != nil)
     return nil;
   else
@@ -168,7 +168,7 @@
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
   NSLog(@"imageProxyWithBookMarkTimeInMS");
-    //	NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
+  //	NSString *coverURL = [NSString stringWithFormat:@"http://beta.grooveshark.com/static/amazonart/m%@", [json objectForKey:@"CoverArtFilename"]];
   return nil;//	return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:[pmo.thumb.imagePath]]];
 };
 - (BOOL)hasCoverArt {

@@ -24,6 +24,7 @@
 
 #import "PlexMediaProvider.h"
 #import "PlexMediaAsset.h"
+#import "PlexMediaAssetOld.h"
 enum
 {
     kBRMediaProviderNetworkWaitingState = 440,
@@ -79,8 +80,13 @@ enum
 
 - (id)objectsWithEntityName:(id)entityName qualifiedByPredicate:(id)predicate sortDescriptors:(id)descriptors excludeHiddenObjects:(BOOL)objects error:(id *)error{
 	NSLog(@"entityName=%@, pred=%@, desc=%@", entityName, predicate, descriptors);
-	PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:nil mediaProvider:self mediaObject:nil];
-	return [pma autorelease];
+  if ([[[UIDevice currentDevice] systemVersion] isEqualToString:@"4.1"]){
+    PlexMediaAssetOld* pma = [[PlexMediaAssetOld alloc] initWithURL:nil mediaProvider:self mediaObject:nil];
+    return [pma autorelease];
+  } else {
+    PlexMediaAsset* pma = [[PlexMediaAsset alloc] initWithURL:nil mediaProvider:self mediaObject:nil];
+    return [pma autorelease];
+  }
 }
 
 - (id)objectsWithEntityName:(id)entityName qualifiedByPredicate:(id)predicate sortDescriptors:(id)descriptors error:(id *)error{
