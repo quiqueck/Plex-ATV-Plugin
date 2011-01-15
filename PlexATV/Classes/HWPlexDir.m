@@ -137,9 +137,14 @@ PlexMediaProvider* __provider = nil;
 			[option setPrimaryInfoText:@"You have already watched a part of this video.\nWould you like to continue where you left off, or start from beginning?"];
 			[option setSecondaryInfoText:pmo.name];
 			
+      int offsetInHrs = [viewOffset intValue] / (1000*60*60);
 			int offsetInMins = ([viewOffset intValue] % (1000*60*60)) / (1000*60);
 			int offsetInSecs = (([viewOffset intValue] % (1000*60*60)) % (1000*60)) / 1000;
-			[option addOptionText:[NSString stringWithFormat:@"Resume from %d mins %d secs", offsetInMins, offsetInSecs]];
+      
+      if (offsetInHrs > 0)
+        [option addOptionText:[NSString stringWithFormat:@"Resume from %d hrs %d mins %d secs", offsetInHrs, offsetInMins, offsetInSecs]];
+      else
+        [option addOptionText:[NSString stringWithFormat:@"Resume from %d mins %d secs", offsetInMins, offsetInSecs]];
 			
 			[option addOptionText:@"Play from the beginning"];
 			[option addOptionText:@"Go back"];
