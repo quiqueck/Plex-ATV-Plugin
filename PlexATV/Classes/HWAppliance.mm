@@ -384,7 +384,7 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 	    [self.machines addObject:m];
 	    NSLog(@"MachineManager: Added machine %@", m);
 		
-	    [m resolveAndNotify:self];
+	    //[m resolveAndNotify:self];
 		
 		//retrieve new categories
 		[self performSelectorInBackground:@selector(retrieveNewPlexCategories:) withObject:[m retain]];
@@ -400,10 +400,10 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
     BOOL machineIsOnline = m.isOnline;
     BOOL machinesListAlreadyContainsMachine = [self.machines containsObject:m];
 	
-	/*if ( machineRunsServer && machineIsOnline && !machinesListAlreadyContainsMachine ) {
+	if ( machineRunsServer && machineIsOnline && !machinesListAlreadyContainsMachine ) {
 		[self machineWasAdded:m];
 		return;
-	} else */ if ( (!machineRunsServer || !machineIsOnline) && machinesListAlreadyContainsMachine ) {
+	} else  if ( (!machineRunsServer || !machineIsOnline) && machinesListAlreadyContainsMachine ) {
 		[self removeAppliancesWithIdentifier:m.uid];
 		NSLog(@"MachineManager: Removed %@", m);
 		[self.machines removeObject:m];

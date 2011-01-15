@@ -83,7 +83,7 @@
 	// =========== version number ===========
 	SMFMenuItem *pluginVersionNumberMenuItem = [SMFMenuItem menuItem];
 	
-	NSString *pluginVersionNumber = @"0.6.5";
+	NSString *pluginVersionNumber = @"0.6.6";
 	NSString *pluginVersionNumberTitle = [[NSString alloc] initWithFormat:@"Version:   %@", pluginVersionNumber];
 	[pluginVersionNumberMenuItem setTitle:pluginVersionNumberTitle];
 	[pluginVersionNumberTitle release];
