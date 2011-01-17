@@ -194,10 +194,10 @@ PlexMediaProvider* __provider = nil;
 	int streamQuality;
 	if ([qualitySetting isEqualToString:@"Low"]) {
 		streamQuality = PlexStreamingQuality720p_1500;
-	} else 	if ([qualitySetting isEqualToString:@"Medium"]) {
-		streamQuality = PlexStreamingQuality720p_2300;
-	} else { //high
+	} else 	if ([qualitySetting isEqualToString:@"High"]) {
 		streamQuality = PlexStreamingQuality720p_4000;
+	} else { //medium (default)
+		streamQuality = PlexStreamingQuality720p_2300;
 	}
 	pmo.request.machine.streamQuality = streamQuality;
 	

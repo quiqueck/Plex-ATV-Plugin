@@ -76,6 +76,7 @@
 	SMFMenuItem *qualitySettingMenuItem = [SMFMenuItem menuItem];
 	
 	NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
+	qualitySetting = qualitySetting == nil || qualitySetting == @"" ? @"Medium" : qualitySetting;
 	NSString *qualitySettingTitle = [[NSString alloc] initWithFormat:@"Quality Setting:   %@", qualitySetting];
 	[qualitySettingMenuItem setTitle:qualitySettingTitle];
 	[qualitySettingTitle release];
@@ -136,7 +137,6 @@
 		case QualitySettingIndex: {
 			// =========== quality setting ===========
 			NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
-      if (qualitySetting==nil) qualitySetting = @"Medium";
       
 			if ([qualitySetting isEqualToString:@"Low"]) {
 				[[SMFPreferences preferences] setObject:@"Medium" forKey:PreferencesQualitySetting];
