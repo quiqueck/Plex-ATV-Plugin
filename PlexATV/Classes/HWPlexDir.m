@@ -23,6 +23,8 @@
 //  
 
 #import "HWPlexDir.h"
+#import "SMFPreferences.h"
+#import "Constants.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexImage.h>
@@ -105,7 +107,7 @@ PlexMediaProvider* __provider = nil;
 - (void)itemSelected:(long)selected; {
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:selected];
 	
-	NSString* type = [pmo.attributes stringForKey:@"type"];
+	NSString* type = [pmo.attributes objectForKey:@"type"];
 	if ([type empty]) type = pmo.containerType;
 	type = [type lowercaseString];
 	
@@ -137,14 +139,14 @@ PlexMediaProvider* __provider = nil;
 			[option setPrimaryInfoText:@"You have already watched a part of this video.\nWould you like to continue where you left off, or start from beginning?"];
 			[option setSecondaryInfoText:pmo.name];
 			
-      int offsetInHrs = [viewOffset intValue] / (1000*60*60);
+			int offsetInHrs = [viewOffset intValue] / (1000*60*60);
 			int offsetInMins = ([viewOffset intValue] % (1000*60*60)) / (1000*60);
 			int offsetInSecs = (([viewOffset intValue] % (1000*60*60)) % (1000*60)) / 1000;
-      
-      if (offsetInHrs > 0)
-        [option addOptionText:[NSString stringWithFormat:@"Resume from %d hrs %d mins %d secs", offsetInHrs, offsetInMins, offsetInSecs]];
-      else
-        [option addOptionText:[NSString stringWithFormat:@"Resume from %d mins %d secs", offsetInMins, offsetInSecs]];
+			
+			if (offsetInHrs > 0)
+				[option addOptionText:[NSString stringWithFormat:@"Resume from %d hrs %d mins %d secs", offsetInHrs, offsetInMins, offsetInSecs]];
+			else
+				[option addOptionText:[NSString stringWithFormat:@"Resume from %d mins %d secs", offsetInMins, offsetInSecs]];
 			
 			[option addOptionText:@"Play from the beginning"];
 			[option addOptionText:@"Go back"];
@@ -186,13 +188,24 @@ PlexMediaProvider* __provider = nil;
 
 -(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset {
 	[pmo.attributes setObject:[NSNumber numberWithInt:offset] forKey:@"viewOffset"]; //set where in the video we want to start...
-	pmo.request.machine.streamQuality = PlexStreamingQuality720p_1500; //quality
-  
+	
+	//determine the user selected quality setting
+	NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
+	int streamQuality;
+	if ([qualitySetting isEqualToString:@"Low"]) {
+		streamQuality = PlexStreamingQuality720p_1500;
+	} else 	if ([qualitySetting isEqualToString:@"Medium"]) {
+		streamQuality = PlexStreamingQuality720p_2300;
+	} else { //high
+		streamQuality = PlexStreamingQuality720p_4000;
+	}
+	pmo.request.machine.streamQuality = streamQuality;
+	
     //player get's confused if we're running a transcoder already (tried playing and failed on ATV, transcoder still running)
-  if ([pmo.request transcoderRunning])
-    [pmo.request stopTranscoder];
-  
-  [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
+	if ([pmo.request transcoderRunning])
+		[pmo.request stopTranscoder];
+	
+	[NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
 	
 	NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
 	NSURL* mediaURL = [pmo mediaURL];
@@ -227,12 +240,12 @@ PlexMediaProvider* __provider = nil;
 		playbackItem = nil;
 	}
 	
-  BRBaseMediaAsset* pma = nil;
+	BRBaseMediaAsset* pma = nil;
 	if ([[[UIDevice currentDevice] systemVersion] isEqualToString:@"4.1"]){
-    pma = [[PlexMediaAssetOld alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
-  } else {
-    pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
-  }
+		pma = [[PlexMediaAssetOld alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+	} else {
+		pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+	}
 	
 	BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
 	NSError * error = nil;
@@ -351,7 +364,7 @@ PlexMediaProvider* __provider = nil;
 		result = [menuItem autorelease];
 	} else {
 		BRMenuItem * menuItem = [[BRMenuItem alloc] init];
-
+		
 		NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
 		if ([plexMediaType isEqualToString:@"show"] || [plexMediaType isEqualToString:@"season"]) {
 #warning this is to avoid the toplevel tv from getting the blue dot. MUST be a better way!
