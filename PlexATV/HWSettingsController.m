@@ -66,6 +66,11 @@
 	SMFMenuItem *defaultServerMenuItem = [SMFMenuItem folderMenuItem];
 	
 	NSString *defaultServer = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerName];
+	if (defaultServer == nil) {
+		[[SMFPreferences preferences] setObject:@"<No Default Selected>" forKey:PreferencesDefaultServerName];
+		defaultServer = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerName];
+	}
+	
 	NSString *defaultServerTitle = [[NSString alloc] initWithFormat:@"Default Server:    %@", defaultServer];
 	[defaultServerMenuItem setTitle:defaultServerTitle];
 	[defaultServerTitle release];
@@ -76,7 +81,11 @@
 	SMFMenuItem *qualitySettingMenuItem = [SMFMenuItem menuItem];
 	
 	NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
-	qualitySetting = qualitySetting == nil || qualitySetting == @"" ? @"Medium" : qualitySetting;
+	if (qualitySetting == nil) {
+		[[SMFPreferences preferences] setObject:@"Better" forKey:PreferencesQualitySetting];
+		qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
+	}
+	
 	NSString *qualitySettingTitle = [[NSString alloc] initWithFormat:@"Quality Setting:   %@", qualitySetting];
 	[qualitySettingMenuItem setTitle:qualitySettingTitle];
 	[qualitySettingTitle release];
@@ -138,12 +147,12 @@
 			// =========== quality setting ===========
 			NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
       
-			if ([qualitySetting isEqualToString:@"Low"]) {
-				[[SMFPreferences preferences] setObject:@"Medium" forKey:PreferencesQualitySetting];
-			} else if ([qualitySetting isEqualToString:@"Medium"]) {
-				[[SMFPreferences preferences] setObject:@"High" forKey:PreferencesQualitySetting];
+			if ([qualitySetting isEqualToString:@"Good"]) {
+				[[SMFPreferences preferences] setObject:@"Better" forKey:PreferencesQualitySetting];
+			} else if ([qualitySetting isEqualToString:@"Better"]) {
+				[[SMFPreferences preferences] setObject:@"Best" forKey:PreferencesQualitySetting];
 			} else {
-				[[SMFPreferences preferences] setObject:@"Low" forKey:PreferencesQualitySetting];
+				[[SMFPreferences preferences] setObject:@"Good" forKey:PreferencesQualitySetting];
 			}
 			
 			[self setupList];
@@ -175,7 +184,7 @@
 		case QualitySettingIndex: {
 			// =========== quality setting ===========
 			[asset setTitle:@"Select the video quality"];
-			[asset setSummary:@"Sets the quality of the streamed video (currently not used)"];
+			[asset setSummary:@"Sets the quality of the streamed video.                                        Good: 720p 1500 kbps, Better: 720p 2300 kbps, Best: 720p 4000 kbps"];
 			break;
 		}
 		case PluginVersionNumberIndex: {

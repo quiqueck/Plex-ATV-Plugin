@@ -192,9 +192,9 @@ PlexMediaProvider* __provider = nil;
 	//determine the user selected quality setting
 	NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
 	int streamQuality;
-	if ([qualitySetting isEqualToString:@"Low"]) {
+	if ([qualitySetting isEqualToString:@"Good"]) {
 		streamQuality = PlexStreamingQuality720p_1500;
-	} else 	if ([qualitySetting isEqualToString:@"High"]) {
+	} else 	if ([qualitySetting isEqualToString:@"Best"]) {
 		streamQuality = PlexStreamingQuality720p_4000;
 	} else { //medium (default)
 		streamQuality = PlexStreamingQuality720p_2300;
