@@ -23,6 +23,8 @@
 @implementation HWSettingsController
 @synthesize topLevelController;
 
+#define PlexPluginVersion @"0.6.6"
+
 #define CombinedPmsCategoriesIndex 0
 #define DefaultServerIndex 1
 #define QualitySettingIndex 2
@@ -83,7 +85,7 @@
 	// =========== version number ===========
 	SMFMenuItem *pluginVersionNumberMenuItem = [SMFMenuItem menuItem];
 	
-	NSString *pluginVersionNumber = @"0.6.6";
+	NSString *pluginVersionNumber = PlexPluginVersion;
 	NSString *pluginVersionNumberTitle = [[NSString alloc] initWithFormat:@"Version:   %@", pluginVersionNumber];
 	[pluginVersionNumberMenuItem setTitle:pluginVersionNumberTitle];
 	[pluginVersionNumberTitle release];
