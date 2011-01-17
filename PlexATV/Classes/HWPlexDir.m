@@ -187,6 +187,12 @@ PlexMediaProvider* __provider = nil;
 -(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset {
 	[pmo.attributes setObject:[NSNumber numberWithInt:offset] forKey:@"viewOffset"]; //set where in the video we want to start...
 	pmo.request.machine.streamQuality = PlexStreamingQuality720p_1500; //quality
+  
+    //player get's confused if we're running a transcoder already (tried playing and failed on ATV, transcoder still running)
+  if ([pmo.request transcoderRunning])
+    [pmo.request stopTranscoder];
+  
+  [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
 	
 	NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
 	NSURL* mediaURL = [pmo mediaURL];
