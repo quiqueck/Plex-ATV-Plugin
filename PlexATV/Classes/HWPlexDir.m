@@ -349,7 +349,9 @@ PlexMediaProvider* __provider = nil;
 		NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
 		if ([plexMediaType isEqualToString:@"show"] || [plexMediaType isEqualToString:@"season"]) {
 #warning this is to avoid the toplevel tv from getting the blue dot. MUST be a better way!
-			if (![pmo.name isEqualToString:@"TV"]) {
+			if (![pmo.name isEqualToString:@"TV"] 
+				|| ![pmo.name isEqualToString:@"TV Shows"]
+				|| ![pmo.name isEqualToString:@"TV-Shows"]) {
 				id image;
 				if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
 					image = [[BRThemeInfo sharedTheme] unplayedVideoImage];			
