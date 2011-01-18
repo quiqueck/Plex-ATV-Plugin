@@ -19,6 +19,9 @@
 @property(retain) NSMutableArray *applianceCat;
 @property(nonatomic, retain) NSMutableArray *machines;
 
+- (NSDictionary *)parseCompoundIdentifier:(NSString *)identifier;
+- (Machine *)machineFromUid:(NSString *)uid;
+
 - (void)retrieveNewPlexCategories:(Machine *)m;
 - (void)addNewApplianceWithDict:(NSDictionary *)dict;
 - (void)addNewApplianceWithName:(NSString *)name identifier:(id)ident;

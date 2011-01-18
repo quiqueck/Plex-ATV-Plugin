@@ -107,6 +107,31 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	} return self;
 }
 
+- (Machine *)machineFromUid:(NSString *)uid {
+	NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", uid];
+	NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
+	if ([matchingMachines count] != 1) {
+		NSLog(@"ERROR: incorrect number of machine matches to selected appliance with uid [%@]", uid);
+		return nil;
+	}
+	return [matchingMachines objectAtIndex:0];
+}
+
+- (NSDictionary *)parseCompoundIdentifier:(NSString *)identifier {
+	// compoundIdentifier has format:
+	// Example: "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies"
+	// or       "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies (Office)"
+	NSArray *compoundIdentifierComponents = [(NSString *)identifier componentsSeparatedByString:CompoundIdentifierDelimiter];
+	if ([compoundIdentifierComponents count] != 2) {
+		NSLog(@"ERROR: incorrect number of components in compoundIdentifier: [%@]", identifier);
+		return nil;
+	}
+	
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+	 [[compoundIdentifierComponents objectAtIndex:0] copy], @"uid",
+	 [[compoundIdentifierComponents objectAtIndex:1] copy], @"categoryName",
+			nil];
+}
 
 - (id)controllerForIdentifier:(id)identifier args:(id)args {
 	id menuController = nil;
@@ -119,25 +144,16 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
     menuController = hwsc;
 	} else {
 		// ====== get the name of the category and identifier of the machine selected ======
-		// compoundIdentifier has format:
-		// Example: "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies"
-		// or       "45E13AB3-E11C-44DD-B4F8-8A0DE1111990<delimiter>Movies (Office)"
-		NSArray *compoundIdentifierComponents = [(NSString *)identifier componentsSeparatedByString:CompoundIdentifierDelimiter];
-		if ([compoundIdentifierComponents count] != 2) {
-			NSLog(@"ERROR: incorrect number of components in compoundIdentifier: [%@]", identifier);
-			return nil;
-		}
-		NSString *ident = [compoundIdentifierComponents objectAtIndex:0];
-		NSMutableString *categoryName = [[compoundIdentifierComponents objectAtIndex:1] mutableCopy];
+		NSDictionary *compoundIdentifierComponents = [self parseCompoundIdentifier:(NSString *)identifier];
+		
+		NSString *ident = [compoundIdentifierComponents objectForKey:@"uid"];
+		if (!ident) return nil;
+		NSMutableString *categoryName = [[compoundIdentifierComponents objectForKey:@"categoryName"] mutableCopy];
+		if (!categoryName) return nil;
 		
 		// ====== find the machine using the identifer (uid) ======
-		NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
-		NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
-		if ([matchingMachines count] != 1) {
-			NSLog(@"ERROR: incorrect number of machine matches to selected appliance with uid [%@]", ident);
-			return nil;
-		}
-		Machine *machineWhoCategoryBelongsTo = [matchingMachines objectAtIndex:0];
+		Machine *machineWhoCategoryBelongsTo = [self machineFromUid:ident];
+		if (!machineWhoCategoryBelongsTo) return nil;
 		
 		// ====== find the category selected ======
 		// If this category name was a duplicate of another (ie 2x"Movies", then
@@ -283,23 +299,16 @@ NSString * const MachineUIDKey = @"PlexMachineUID";
 	NSArray *duplicateNameCategories = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
 	if ([duplicateNameCategories count] > 1) {
 		//found duplicates, iterate over all of them updating their names
-		for (BRApplianceCategory *appl in duplicateNameCategories) {
-			//vvv needs refactoring vvv
-			NSArray *compoundIdentifierComponents = [appl.identifier componentsSeparatedByString:CompoundIdentifierDelimiter];
-			if ([compoundIdentifierComponents count] != 2) {
-				NSLog(@"ERROR: incorrect number of components in compoundIdentifier: [%@]", appl.identifier);
-				break;
-			}
-			NSString *ident = [compoundIdentifierComponents objectAtIndex:0];
+		for (BRApplianceCategory *appl in duplicateNameCategories) {			
+			
+			NSDictionary *compoundIdentifierComponents = [self parseCompoundIdentifier:appl.identifier];
+			if (!compoundIdentifierComponents) break;
+			NSString *ident = [compoundIdentifierComponents objectForKey:@"uid"];
+			if (!ident) break;
+			
 			// ====== find the machine using the identifer (uid) ======
-			NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", ident];
-			NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
-			if ([matchingMachines count] != 1) {
-				NSLog(@"ERROR: incorrect number of machine matches to selected appliance");
-				break;
-			}
-			Machine *machineWhoCategoryBelongsTo = [matchingMachines objectAtIndex:0];
-			//^^^ needs refactoring ^^^
+			Machine *machineWhoCategoryBelongsTo = [self machineFromUid:ident];
+			if (!machineWhoCategoryBelongsTo) break;
 			
 			// update the name
 			// name had format:       "Movies"
