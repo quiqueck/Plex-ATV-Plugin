@@ -85,6 +85,29 @@ PlexMediaProvider* __provider = nil;
 	[super dealloc];
 }
 
+//handle custom event
+-(BOOL)brEventAction:(BREvent *)event {
+	int remoteAction = [event remoteAction];
+	//NSLog(@"EVENT: %d", remoteAction);
+    if ([(BRControllerStack *)[self stack] peekController] != self)
+		remoteAction = 0;
+    
+    switch (remoteAction)
+    {	
+        case 22: { //select held
+            if([event value] == 1) {
+				//get the index of currently selected row
+				long selected = [self getSelection];
+				[self showModifyViewedStatusViewForRow:selected];
+			}
+            break;
+		}
+		default:
+			break;
+	}
+	return [super brEventAction:event];
+}
+
 
 - (id)previewControlForItem:(long)item
 {
@@ -103,6 +126,9 @@ PlexMediaProvider* __provider = nil;
 	
 	return [preview autorelease];
 }
+
+#define ModifyViewStatusOptionDialog @"ModifyViewStatusOptionDialog"
+#define ResumeOptionDialog @"ResumeOptionDialog"
 
 - (void)itemSelected:(long)selected; {
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:selected];
@@ -130,7 +156,7 @@ PlexMediaProvider* __provider = nil;
 			NSNumber *viewOffset = [NSNumber numberWithInt:[[pmo.attributes valueForKey:@"viewOffset"] intValue]];
 			
 			BROptionDialog *option = [[BROptionDialog alloc] init];
-			
+			[option setIdentifier:ResumeOptionDialog];
 			
 			[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
 								 viewOffset, @"viewOffset", 
@@ -167,24 +193,66 @@ PlexMediaProvider* __provider = nil;
 	}
 }
 
-- (void)optionSelected:(id)sender {
-	BROptionDialog *option = sender;
-	PlexMediaObject *pmo = [option.userInfo objectForKey:@"mediaObject"];
-	NSNumber *viewOffset = [option.userInfo objectForKey:@"viewOffset"];
+- (void)showModifyViewedStatusViewForRow:(long)row {
+	//get the currently selected row
+	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:row];
 	
-	if([[sender selectedText] hasPrefix:@"Resume from"]) {
-		[[self stack] popController]; //need this so we don't go back to option dialog when going back
-		NSLog(@"Resuming from %d ms", [viewOffset intValue]);
-		[self playbackVideoWithMediaObject:pmo andOffset:[viewOffset intValue]];
-	} else if ([[sender selectedText] isEqualToString:@"Play from the beginning"]) {
-		[[self stack] popController]; //need this so we don't go back to option dialog when going back
-		[self playbackVideoWithMediaObject:pmo andOffset:0]; //0 offset is beginning, mkay?
-	} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
-		//go back to movie listing...
-		[[self stack] popController];
+	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
+		BROptionDialog *option = [[BROptionDialog alloc] init];
+		[option setIdentifier:ModifyViewStatusOptionDialog];
+		
+		[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
+							 pmo, @"mediaObject",
+							 nil]];
+		
+		[option setPrimaryInfoText:@"Modify View Status"];
+		[option setSecondaryInfoText:pmo.name];
+		
+		[option addOptionText:@"Mark as Watched"];
+		[option addOptionText:@"Mark as Unwatched"];
+		[option addOptionText:@"Cancel"];
+		[option setActionSelector:@selector(optionSelected:) target:self];
+		[[self stack] pushController:option];
+		[option release];
 	}
 }
 
+- (void)optionSelected:(id)sender {
+	BROptionDialog *option = sender;
+	PlexMediaObject *pmo = [option.userInfo objectForKey:@"mediaObject"];
+	if ([option.identifier isEqualToString:ResumeOptionDialog]) {
+		NSNumber *viewOffset = [option.userInfo objectForKey:@"viewOffset"];
+		
+		if([[sender selectedText] hasPrefix:@"Resume from"]) {
+			[[self stack] popController]; //need this so we don't go back to option dialog when going back
+			NSLog(@"Resuming from %d ms", [viewOffset intValue]);
+			[self playbackVideoWithMediaObject:pmo andOffset:[viewOffset intValue]];
+		} else if ([[sender selectedText] isEqualToString:@"Play from the beginning"]) {
+			[[self stack] popController]; //need this so we don't go back to option dialog when going back
+			[self playbackVideoWithMediaObject:pmo andOffset:0]; //0 offset is beginning, mkay?
+		} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
+			//go back to movie listing...
+			[[self stack] popController];
+		}
+	} else if ([option.identifier isEqualToString:ModifyViewStatusOptionDialog]) {		
+		if([[sender selectedText] isEqualToString:@"Mark as Watched"]) {
+			//mark video watched
+			[[self stack] popController]; //need this so we don't go back to option dialog when going back
+			NSLog(@"Marking as watched: %@", pmo.name);
+			[pmo markSeen];
+			[self.list reload];
+		} else if ([[sender selectedText] isEqualToString:@"Mark as Unwatched"]) {
+			//mark as unwatched
+			[[self stack] popController]; //need this so we don't go back to option dialog when going back
+			NSLog(@"Marking as unwatched: %@", pmo.name);
+			[pmo markUnseen];
+			[self.list reload];
+		} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
+			//go back to movie listing...
+			[[self stack] popController];
+		}
+	}
+}
 
 -(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset {
 	[pmo.attributes setObject:[NSNumber numberWithInt:offset] forKey:@"viewOffset"]; //set where in the video we want to start...
