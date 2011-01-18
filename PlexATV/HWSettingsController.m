@@ -56,8 +56,8 @@
 	// =========== combined PMS category view ===========
 	SMFMenuItem *combinedPmsCategoriesMenuItem = [SMFMenuItem menuItem];
 	
-	NSString *combinedPmsCategories = [[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView] ? @"Enabled" : @"Disabled";
-	NSString *combinedPmsCategoriesTitle = [[NSString alloc] initWithFormat:@"Combined PMS View:    %@", combinedPmsCategories];
+	NSString *combinedPmsCategories = [[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView] ? @"Combined" : @"Default Server";
+	NSString *combinedPmsCategoriesTitle = [[NSString alloc] initWithFormat:@"View mode:    %@", combinedPmsCategories];
 	[combinedPmsCategoriesMenuItem setTitle:combinedPmsCategoriesTitle];
 	[combinedPmsCategoriesTitle release];
 	[_items addObject:combinedPmsCategoriesMenuItem];
@@ -70,6 +70,7 @@
 		[[SMFPreferences preferences] setObject:@"<No Default Selected>" forKey:PreferencesDefaultServerName];
 		defaultServer = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerName];
 	}
+	[defaultServerMenuItem setDimmed:[[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView]];
 	
 	NSString *defaultServerTitle = [[NSString alloc] initWithFormat:@"Default Server:    %@", defaultServer];
 	[defaultServerMenuItem setTitle:defaultServerTitle];
@@ -171,14 +172,14 @@
 	switch (item) {
 		case CombinedPmsCategoriesIndex: {
 			// =========== combined PMS category view ===========
-			[asset setTitle:@"Enables/Disables the combined view"];
-			[asset setSummary:@"Toggles between using a single default server or a combined view"];
+			[asset setTitle:@"Switch between main menu view modes"];
+			[asset setSummary:@"Toggles between using a categories from a single default server or a combined view of categories from all available PMS'"];
 			break;
 		}
 		case DefaultServerIndex: {
 			// =========== default server ===========
 			[asset setTitle:@"Select the default server"];
-			[asset setSummary:@"Shows the category's belonging to the default server"];
+			[asset setSummary:@"Shows the category's belonging to the default server (Only used if 'Default Server' view mode is selected"];
 			break;
 		}
 		case QualitySettingIndex: {

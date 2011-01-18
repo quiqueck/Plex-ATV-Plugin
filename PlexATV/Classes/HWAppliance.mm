@@ -210,7 +210,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	[super reloadCategories];
 }
 
--(void) reloadCategories{	
+-(void) reloadCategories {
+	[self.applianceCat removeAllObjects];
+	
 	for (Machine* m in self.machines){
 		BOOL machineRunsServer = runsServer(m.role);
 		BOOL machineIsOnline = m.isOnline;
@@ -259,6 +261,11 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	NSString *categoryName = [compoundIdentifier objectForKey:CategoryNameKey];
 	NSString *machineUid = [compoundIdentifier objectForKey:MachineUIDKey];
 	//NSString *machineName = [compoundIdentifier objectForKey:MachineNameKey];
+	
+	//check if we should be adding appliances for this machine
+	if (![[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView]
+		&& ![machineUid isEqualToString:[[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid]])
+		return;
 	
 	//ensure that it is not already present
 	NSPredicate *appliancePredicate = [NSPredicate predicateWithFormat:@"(identifier.%@ like %@) AND (identifier.%@ like %@)", MachineUIDKey, machineUid, CategoryNameKey, categoryName];
@@ -343,11 +350,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
   [self removeAppliancesBelongingToMachineWithUid:m.uid];
 }
 
-- (void)machineWasAdded:(Machine*)m {
-	if (![[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView]
-		&& ![m.uid isEqualToString:[[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid]])
-		  return;
-	
+- (void)machineWasAdded:(Machine*)m {	
     BOOL machineRunsServer = runsServer(m.role);
     BOOL machineIsOnline = m.isOnline;
     BOOL machinesListAlreadyContainsMachine = [self.machines containsObject:m];
