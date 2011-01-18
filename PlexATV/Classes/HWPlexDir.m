@@ -92,9 +92,8 @@ PlexMediaProvider* __provider = nil;
     if ([(BRControllerStack *)[self stack] peekController] != self)
 		remoteAction = 0;
     
-    switch (remoteAction)
-    {	
-        case 22: { //select held
+    switch (remoteAction) {	
+        case kBREventRemoteActionSelectHold: {
             if([event value] == 1) {
 				//get the index of currently selected row
 				long selected = [self getSelection];
