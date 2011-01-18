@@ -190,6 +190,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	//settings appliance category, set it to the end of the list
 	[settingsApplianceCategory setPreferredOrder:[self.applianceCat count]+1];
 	
+	//we need to add in the "special appliances"
 	NSMutableArray *allApplianceCategories = [NSMutableArray arrayWithArray:self.applianceCat];
 	[allApplianceCategories addObject:otherServersApplianceCategory];
 	[allApplianceCategories addObject:settingsApplianceCategory];
@@ -205,31 +206,22 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 - (id)moduleName { return @"Plex"; }
 - (id)applianceKey { return @"Plex"; }
 
-//-(void) redisplayCategories{
-//  [super reloadCategories];
-//}
-//
-//-(void) reloadCategories{
-//  //make sure we reload the categories
-////  if (![[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView])
-////  {
-////    [super reloadCategories];
-////    return;
-////  } 
-////	
-////  for (Machine* m in self.machines){
-////    BOOL machineRunsServer = runsServer(m.role);
-////    BOOL machineIsOnline = m.isOnline;
-////    
-////    if ( machineRunsServer && machineIsOnline ) {
-////      //retrieve new categories
-////      [self performSelectorInBackground:@selector(retrieveNewPlexCategories:) withObject:[m retain]];
-////    }
-////  }
-//  
-//  
-//  [super reloadCategories];
-//}
+-(void) redisplayCategories{
+	[super reloadCategories];
+}
+
+-(void) reloadCategories{	
+	for (Machine* m in self.machines){
+		BOOL machineRunsServer = runsServer(m.role);
+		BOOL machineIsOnline = m.isOnline;
+		
+		if ( machineRunsServer && machineIsOnline ) {
+			//retrieve new categories
+			[self performSelectorInBackground:@selector(retrieveNewPlexCategories:) withObject:[m retain]];
+		}
+	}
+	[super reloadCategories];
+}
 
 #pragma mark -
 #pragma mark Sync Plex Categories With Appliances
@@ -265,8 +257,16 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 - (void)addNewApplianceWithCompoundIdentifier:(NSDictionary *)compoundIdentifier {
 	// the compoundIdentifier will help us find back to the right machine and category.
 	NSString *categoryName = [compoundIdentifier objectForKey:CategoryNameKey];
-	//NSString *machineUid = [compoundIdentifier objectForKey:MachineUIDKey];
+	NSString *machineUid = [compoundIdentifier objectForKey:MachineUIDKey];
 	//NSString *machineName = [compoundIdentifier objectForKey:MachineNameKey];
+	
+	//ensure that it is not already present
+	NSPredicate *appliancePredicate = [NSPredicate predicateWithFormat:@"(identifier.%@ like %@) AND (identifier.%@ like %@)", MachineUIDKey, machineUid, CategoryNameKey, categoryName];
+	NSArray *applianceAlreadyExists = [self.applianceCat filteredArrayUsingPredicate:appliancePredicate];
+	if ([applianceAlreadyExists count] > 0) {
+		NSLog(@"Duplicate appliance not being added: %@", compoundIdentifier);
+		return;
+	}
 	
 	
 	//the appliance order will be the highest number (ie it will be put at the end of the menu.
@@ -297,7 +297,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		}
 	}
 	
-	[self reloadCategories];
+	[self redisplayCategories];
 }
 
 - (void)removeAppliancesBelongingToMachineWithUid:(NSString *)uid {
@@ -333,7 +333,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 			[singleMatch setName:categoryName];
 		}
 	}
-	[self reloadCategories];
+	[self redisplayCategories];
 }
 
 #pragma mark -
