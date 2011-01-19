@@ -209,7 +209,7 @@ PlexMediaProvider* __provider = nil;
 		
 		[option addOptionText:@"Mark as Watched"];
 		[option addOptionText:@"Mark as Unwatched"];
-		[option addOptionText:@"Cancel"];
+		[option addOptionText:@"Go back"];
 		[option setActionSelector:@selector(optionSelected:) target:self];
 		[[self stack] pushController:option];
 		[option release];
@@ -421,20 +421,24 @@ PlexMediaProvider* __provider = nil;
 		
 		[menuItem setTitle:[pmo name]];
 		
-		NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateFormat:@"yyyy"];
-		NSString *dateString = [dateFormatter stringFromDate:pmo.originallyAvailableAt];
-		[menuItem setSubtitle:dateString];
-		[dateFormatter release];
-		
+		NSString *subtitle = nil;
+		if ([mediaType isEqualToString:PlexMediaObjectTypeEpisode]) {
+			//set subtitle to episode number
+			subtitle = @"Episode x";
+		} else {
+			//set subtitle to year
+			NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setDateFormat:@"yyyy"];
+			subtitle = [dateFormatter stringFromDate:pmo.originallyAvailableAt];
+			[dateFormatter release];
+		}
+		[menuItem setSubtitle:subtitle];
 		
 		result = [menuItem autorelease];
 	} else {
 		BRMenuItem * menuItem = [[BRMenuItem alloc] init];
 		
-		NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
-		if ([plexMediaType isEqualToString:@"show"] || [plexMediaType isEqualToString:@"season"]) {
-#warning this is to avoid the toplevel tv from getting the blue dot. MUST be a better way!
+		if ([mediaType isEqualToString:PlexMediaObjectTypeShow] || [mediaType isEqualToString:PlexMediaObjectTypeSeason]) {
 			if ([pmo.attributes valueForKey:@"agent"] == nil) {
 				id image;
 				if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
