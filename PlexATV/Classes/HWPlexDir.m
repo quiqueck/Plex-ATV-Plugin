@@ -56,7 +56,6 @@ PlexMediaProvider* __provider = nil;
 		
 		rootContainer = nil;
 		[[self list] setDatasource:self];
-		
 		return ( self );
 		
 	}
@@ -409,7 +408,7 @@ PlexMediaProvider* __provider = nil;
 	if (pmo.hasMedia || [@"Video" isEqualToString:mediaType]) {
 		BRComboMenuItemLayer *menuItem = [[BRComboMenuItemLayer alloc] init];
 		
-		id image;
+		BRImage *image;
 		if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
 			image = [[BRThemeInfo sharedTheme] unplayedVideoImage];			
 		} else if ([pmo seenState] == PlexMediaObjectSeenStateInProgress) {
@@ -417,7 +416,9 @@ PlexMediaProvider* __provider = nil;
 		} else {
 			image = nil;
 		}
+		//BRImageControl *thumbnailLayer = (BRImageControl *)[menuItem valueForKey:@"_thumbnailLayer"];
 		[menuItem setThumbnailImage:image];
+		[menuItem setThumbnailLayerAspectRatio:0.5]; //halves the size of the image (ie makes it the "right" size)
 		
 		[menuItem setTitle:[pmo name]];
 		
@@ -440,15 +441,15 @@ PlexMediaProvider* __provider = nil;
 		
 		if ([mediaType isEqualToString:PlexMediaObjectTypeShow] || [mediaType isEqualToString:PlexMediaObjectTypeSeason]) {
 			if ([pmo.attributes valueForKey:@"agent"] == nil) {
-				id image;
+				int accessoryType;
 				if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
-					image = [[BRThemeInfo sharedTheme] unplayedVideoImage];			
+					accessoryType = 15;
 				} else if ([pmo seenState] == PlexMediaObjectSeenStateInProgress) {
-					image = [[BRThemeInfo sharedTheme] partiallyplayedVideoImage];
+					accessoryType = 16;
 				} else {
-					image = nil;
+					accessoryType = 0;
 				}
-				[menuItem setImage:image];
+				[menuItem addAccessoryOfType:accessoryType];
 			}
 		}
 		
