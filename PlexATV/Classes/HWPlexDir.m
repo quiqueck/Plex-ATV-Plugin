@@ -119,7 +119,7 @@ PlexMediaProvider* __provider = nil;
 	NSURL* mediaURL = [pmo mediaStreamURL];
 	PlexPreviewAsset* pma = [[PlexPreviewAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
 	BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
-	[preview setShowsMetadataImmediately:YES];
+	[preview setShowsMetadataImmediately:NO];
 	[preview setAsset:pma];	
 	[pmo release];
 	
