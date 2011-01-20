@@ -56,7 +56,6 @@ PlexMediaProvider* __provider = nil;
 		
 		rootContainer = nil;
 		[[self list] setDatasource:self];
-		
 		return ( self );
 		
 	}
@@ -150,7 +149,7 @@ PlexMediaProvider* __provider = nil;
 	NSURL* mediaURL = [pmo mediaStreamURL];
 	PlexPreviewAsset* pma = [[PlexPreviewAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
 	BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
-	[preview setShowsMetadataImmediately:YES];
+	[preview setShowsMetadataImmediately:NO];
 	[preview setAsset:pma];	
 	[pmo release];
 	
@@ -240,7 +239,7 @@ PlexMediaProvider* __provider = nil;
 		
 		[option addOptionText:@"Mark as Watched"];
 		[option addOptionText:@"Mark as Unwatched"];
-		[option addOptionText:@"Cancel"];
+		[option addOptionText:@"Go back"];
 		[option setActionSelector:@selector(optionSelected:) target:self];
 		[[self stack] pushController:option];
 		[option release];
@@ -440,7 +439,7 @@ PlexMediaProvider* __provider = nil;
 	if (pmo.hasMedia || [@"Video" isEqualToString:mediaType]) {
 		BRComboMenuItemLayer *menuItem = [[BRComboMenuItemLayer alloc] init];
 		
-		id image;
+		BRImage *image;
 		if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
 			image = [[BRThemeInfo sharedTheme] unplayedVideoImage];			
 		} else if ([pmo seenState] == PlexMediaObjectSeenStateInProgress) {
@@ -448,34 +447,40 @@ PlexMediaProvider* __provider = nil;
 		} else {
 			image = nil;
 		}
+		//BRImageControl *thumbnailLayer = (BRImageControl *)[menuItem valueForKey:@"_thumbnailLayer"];
 		[menuItem setThumbnailImage:image];
+		[menuItem setThumbnailLayerAspectRatio:0.5]; //halves the size of the image (ie makes it the "right" size)
 		
 		[menuItem setTitle:[pmo name]];
 		
-		NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateFormat:@"yyyy"];
-		NSString *dateString = [dateFormatter stringFromDate:pmo.originallyAvailableAt];
-		[menuItem setSubtitle:dateString];
-		[dateFormatter release];
-		
+		NSString *subtitle = nil;
+		if ([mediaType isEqualToString:PlexMediaObjectTypeEpisode]) {
+			//set subtitle to episode number
+			subtitle = @"Episode x";
+		} else {
+			//set subtitle to year
+			NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setDateFormat:@"yyyy"];
+			subtitle = [dateFormatter stringFromDate:pmo.originallyAvailableAt];
+			[dateFormatter release];
+		}
+		[menuItem setSubtitle:subtitle];
 		
 		result = [menuItem autorelease];
 	} else {
 		BRMenuItem * menuItem = [[BRMenuItem alloc] init];
 		
-		NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
-		if ([plexMediaType isEqualToString:@"show"] || [plexMediaType isEqualToString:@"season"]) {
-#warning this is to avoid the toplevel tv from getting the blue dot. MUST be a better way!
+		if ([mediaType isEqualToString:PlexMediaObjectTypeShow] || [mediaType isEqualToString:PlexMediaObjectTypeSeason]) {
 			if ([pmo.attributes valueForKey:@"agent"] == nil) {
-				id image;
+				int accessoryType;
 				if ([pmo seenState] == PlexMediaObjectSeenStateUnseen) {
-					image = [[BRThemeInfo sharedTheme] unplayedVideoImage];			
+					accessoryType = 15;
 				} else if ([pmo seenState] == PlexMediaObjectSeenStateInProgress) {
-					image = [[BRThemeInfo sharedTheme] partiallyplayedVideoImage];
+					accessoryType = 16;
 				} else {
-					image = nil;
+					accessoryType = 0;
 				}
-				[menuItem setImage:image];
+				[menuItem addAccessoryOfType:accessoryType];
 			}
 		}
 		
