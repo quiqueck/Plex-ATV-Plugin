@@ -1,26 +1,26 @@
-//
-//  HWPlexDir.m
-//  atvTwo
-//
-//  Created by Frank Bauer on 22.10.10.
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//  
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//  
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//  
+  //
+  //  HWPlexDir.m
+  //  atvTwo
+  //
+  //  Created by Frank Bauer on 22.10.10.
+  //  Permission is hereby granted, free of charge, to any person obtaining a copy
+  //  of this software and associated documentation files (the "Software"), to deal
+  //  in the Software without restriction, including without limitation the rights
+  //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  //  copies of the Software, and to permit persons to whom the Software is
+  //  furnished to do so, subject to the following conditions:
+  //  
+  //  The above copyright notice and this permission notice shall be included in
+  //  all copies or substantial portions of the Software.
+  //  
+  //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  //  THE SOFTWARE.
+  //  
 
 #import "HWPlexDir.h"
 #import "SMFPreferences.h"
@@ -50,7 +50,7 @@ PlexMediaProvider* __provider = nil;
 		
 		NSString *settingsPng = [[NSBundle bundleForClass:[HWPlexDir class]] pathForResource:@"PlexIcon" ofType:@"png"];
 		BRImage *sp = [BRImage imageWithPath:settingsPng];
-		//BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
+      //BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		
@@ -85,28 +85,59 @@ PlexMediaProvider* __provider = nil;
 	[super dealloc];
 }
 
-//handle custom event
--(BOOL)brEventAction:(BREvent *)event {
+  //handle custom event
+-(BOOL)brEventAction:(BREvent *)event
+{
 	int remoteAction = [event remoteAction];
-	//NSLog(@"EVENT: %d", remoteAction);
-    if ([(BRControllerStack *)[self stack] peekController] != self)
+  if ([(BRControllerStack *)[self stack] peekController] != self)
 		remoteAction = 0;
-    
-    switch (remoteAction) {	
-        case kBREventRemoteActionSelectHold: {
-            if([event value] == 1) {
-				//get the index of currently selected row
+  
+  int itemCount = [[(BRListControl *)[self list] datasource] itemCount];
+  switch (remoteAction)
+  {
+    case kBREventRemoteActionSelectHold: {
+      if([event value] == 1) {
+          //get the index of currently selected row
 				long selected = [self getSelection];
 				[self showModifyViewedStatusViewForRow:selected];
 			}
-            break;
+      break;
 		}
-		default:
+    case kBREventRemoteActionSwipeLeft:
+    case kBREventRemoteActionLeft:
+      return YES;
+      break;
+    case kBREventRemoteActionSwipeRight:
+    case kBREventRemoteActionRight:
+      return YES;
+      break;
+    case kBREventRemoteActionPlayPause:
+      NSLog(@"play/pause event");
+      if([event value] == 1)
+        [self playPauseActionForRow:[self getSelection]];
+      
+      
+      return YES;
+      break;
+		case kBREventRemoteActionUp:
+		case kBREventRemoteActionHoldUp:
+			if([self getSelection] == 0 && [event value] == 1)
+			{
+				[self setSelection:itemCount-1];
+				return YES;
+			}
 			break;
-	}
+		case kBREventRemoteActionDown:
+		case kBREventRemoteActionHoldDown:
+			if([self getSelection] == itemCount-1 && [event value] == 1)
+			{
+				[self setSelection:0];
+				return YES;
+			}
+			break;
+  }
 	return [super brEventAction:event];
 }
-
 
 - (id)previewControlForItem:(long)item
 {
@@ -150,7 +181,7 @@ PlexMediaProvider* __provider = nil;
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
 		NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
 		
-		//we have offset, ie. already watched a part of the movie, show a dialog asking if you want to resume or start over
+      //we have offset, ie. already watched a part of the movie, show a dialog asking if you want to resume or start over
 		if ([pmo.attributes valueForKey:@"viewOffset"] != nil) {
 			NSNumber *viewOffset = [NSNumber numberWithInt:[[pmo.attributes valueForKey:@"viewOffset"] intValue]];
 			
@@ -158,9 +189,9 @@ PlexMediaProvider* __provider = nil;
 			[option setIdentifier:ResumeOptionDialog];
 			
 			[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
-								 viewOffset, @"viewOffset", 
-								 pmo, @"mediaObject",
-								 nil]];
+                           viewOffset, @"viewOffset", 
+                           pmo, @"mediaObject",
+                           nil]];
 			[option setPrimaryInfoText:@"You have already watched a part of this video.\nWould you like to continue where you left off, or start from beginning?"];
 			[option setSecondaryInfoText:pmo.name];
 			
@@ -193,7 +224,7 @@ PlexMediaProvider* __provider = nil;
 }
 
 - (void)showModifyViewedStatusViewForRow:(long)row {
-	//get the currently selected row
+    //get the currently selected row
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:row];
 	
 	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
@@ -201,8 +232,8 @@ PlexMediaProvider* __provider = nil;
 		[option setIdentifier:ModifyViewStatusOptionDialog];
 		
 		[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
-							 pmo, @"mediaObject",
-							 nil]];
+                         pmo, @"mediaObject",
+                         nil]];
 		
 		[option setPrimaryInfoText:@"Modify View Status"];
 		[option setSecondaryInfoText:pmo.name];
@@ -230,24 +261,24 @@ PlexMediaProvider* __provider = nil;
 			[[self stack] popController]; //need this so we don't go back to option dialog when going back
 			[self playbackVideoWithMediaObject:pmo andOffset:0]; //0 offset is beginning, mkay?
 		} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
-			//go back to movie listing...
+        //go back to movie listing...
 			[[self stack] popController];
 		}
 	} else if ([option.identifier isEqualToString:ModifyViewStatusOptionDialog]) {		
 		if([[sender selectedText] isEqualToString:@"Mark as Watched"]) {
-			//mark video watched
+        //mark video watched
 			[[self stack] popController]; //need this so we don't go back to option dialog when going back
 			NSLog(@"Marking as watched: %@", pmo.name);
 			[pmo markSeen];
 			[self.list reload];
 		} else if ([[sender selectedText] isEqualToString:@"Mark as Unwatched"]) {
-			//mark as unwatched
+        //mark as unwatched
 			[[self stack] popController]; //need this so we don't go back to option dialog when going back
 			NSLog(@"Marking as unwatched: %@", pmo.name);
 			[pmo markUnseen];
 			[self.list reload];
 		} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
-			//go back to movie listing...
+        //go back to movie listing...
 			[[self stack] popController];
 		}
 	}
@@ -256,7 +287,7 @@ PlexMediaProvider* __provider = nil;
 -(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset {
 	[pmo.attributes setObject:[NSNumber numberWithInt:offset] forKey:@"viewOffset"]; //set where in the video we want to start...
 	
-	//determine the user selected quality setting
+    //determine the user selected quality setting
 	NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
 	int streamQuality;
 	if ([qualitySetting isEqualToString:@"Good"]) {
@@ -333,10 +364,10 @@ PlexMediaProvider* __provider = nil;
     //__player = [player retain];
 	playbackItem = [pmo retain];
 	playProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:10.0f 
-														  target:self 
-														selector:@selector(reportProgress:) 
-														userInfo:nil 
-														 repeats:YES] retain];
+                                                        target:self 
+                                                      selector:@selector(reportProgress:) 
+                                                      userInfo:nil 
+                                                       repeats:YES] retain];
 	
 	
 	
@@ -366,7 +397,7 @@ PlexMediaProvider* __provider = nil;
 		}
 		
 		
-		//stop the transcoding on PMS
+      //stop the transcoding on PMS
 		[rootContainer.request stopTranscoder];
 		NSLog(@"stopping transcoder");
 		
@@ -464,7 +495,5 @@ PlexMediaProvider* __provider = nil;
 	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
 	return pmo.name;
 }
-
-
 
 @end

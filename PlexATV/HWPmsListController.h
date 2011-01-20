@@ -14,6 +14,9 @@
 	NSMutableArray		*_names;
 	
 }
+  //custom methods
+- (void)serverSearch;
+
 //list provider
 - (float)heightForRow:(long)row;
 - (long)itemCount;

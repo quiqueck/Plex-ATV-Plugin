@@ -1,10 +1,10 @@
-//
-//  HWPmsListController.m
-//  atvTwo
-//
-//  Created by Serendipity on 10/01/2011.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
+  //
+  //  HWPmsListController.m
+  //  atvTwo
+  //
+  //  Created by Serendipity on 10/01/2011.
+  //  Copyright 2011 __MyCompanyName__. All rights reserved.
+  //
 
 
 
@@ -26,13 +26,14 @@
 		
 		_names = [[NSMutableArray alloc] init];
 		
-		//make sure we are the delegate
+      //make sure we are the delegate
     [[ProxyMachineDelegate shared] registerDelegate:self];
 		
-		//start the auto detection
+      //start the auto detection
 		[[MachineManager sharedMachineManager] startAutoDetection];
 		
 		[[self list] setDatasource:self];
+ 		[[self list] addDividerAtIndex:1 withLabel:@"Servers"];
 	}
 	return self;
 }	
@@ -81,12 +82,17 @@
 }
 
 - (void)itemSelected:(long)selected {
-	if (selected<0 || selected>=_names.count) return;
-	Machine* m = [_names objectAtIndex:selected];
-	NSLog(@"machine selected: %@", m);
+	if (selected == 0) {
+    [self serverSearch];    
+  }
+  else {
+    Machine* m = [_names objectAtIndex:selected];
+    NSLog(@"machine selected: %@", m);
+    
+    [[SMFPreferences preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
+    [[SMFPreferences preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];    
+  }
 
-	[[SMFPreferences preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
-	[[SMFPreferences preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];
 	[self setNeedsUpdate];
 }
 
@@ -95,23 +101,26 @@
 }
 
 - (long)itemCount {
-	return _names.count;
+	return _names.count + 1;
 }
 
 - (id)itemForRow:(long)row {
-	if (row >= [_names count] || row<0)
-		return nil;
-	
-	BRMenuItem * result = [[BRMenuItem alloc] init];
-	Machine *m = [_names objectAtIndex:row];
-  NSString* name = [NSString stringWithFormat:@"%@", m.serverName, m];
-	[result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
-	
-	NSString *defaultServerUid = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid];
-	if ([m.uid isEqualToString:defaultServerUid]) {
-		[result addAccessoryOfType:17]; //checkmark
-	}
-	
+  BRMenuItem * result = [[BRMenuItem alloc] init];
+  
+	if(row == 0){
+		[result setText:@"Add remote server" withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+		[result addAccessoryOfType:0];
+  }
+	else {
+    Machine *m = [_names objectAtIndex:row-1];
+    NSString* name = [NSString stringWithFormat:@"%@", m.serverName, m];
+    [result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+    
+    NSString *defaultServerUid = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid];
+    if ([m.uid isEqualToString:defaultServerUid]) {
+      [result addAccessoryOfType:17]; //checkmark
+    }
+  }	
 	
 	return [result autorelease];
 }
@@ -129,9 +138,36 @@
 
 -(void)setNeedsUpdate{
 	NSLog(@"Updating UI");
-	//  [self updatePreviewController];
-	//	[self refreshControllerForModelUpdate];
+    //  [self updatePreviewController];
+    //	[self refreshControllerForModelUpdate];
 	[self.list reload];
+}
+
+#pragma mark
+#pragma mark Text input stuff
+
+- (void)serverSearch
+{
+  BRTextEntryController *textCon = [[BRTextEntryController alloc] init];
+  [textCon editor];
+  [textCon setTextFieldDelegate:self];
+  [textCon setTitle:BRLocalizedString(@"Add a remote server", @"Add a remote server")];
+  [textCon setSecondaryInfoText:BRLocalizedString(@"Please enter the IP address or hostname to a remote server. Port number will be added automatically",@"Please enter the IP address or hostname to a remote server. Port number will be added automatically")];
+  [textCon setTextEntryTextFieldLabel:BRLocalizedString(@"IP address:", @"IP address:")];
+  [[self stack] pushController:textCon];
+}
+
+- (void)textDidEndEditing:(id)text
+{
+  NSLog(@"text string: %@", [text stringValue]);
+  NSString *host = [text stringValue];
+  Machine *m = [[Machine alloc] initWithServerName:host hostName:host port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
+  m.ip = host;
+  
+  [m resolveAndNotify:self];
+  NSLog(@"machine: %@", m);
+  [m autorelease];
+  [[self stack] popController];
 }
 
 #pragma mark
@@ -147,7 +183,7 @@
 	[_names addObject:m];
 	NSLog(@"Added %@", m);
 	
-	//[m resolveAndNotify:self];
+    //[m resolveAndNotify:self];
 	[self setNeedsUpdate];
 }
 
@@ -169,6 +205,7 @@
 
 -(void)machineResolved:(Machine*)m{
 	NSLog(@"Resolved %@", m);
+  [[MachineManager sharedMachineManager] addMachine:m];
 }
 
 -(void)machineDidNotResolve:(Machine*)m{
