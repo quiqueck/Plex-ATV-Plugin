@@ -9,13 +9,15 @@
 
 #import <plex-oss/MachineManager.h>
 #import "SMFPreferences.h"
+#import "SMFMediaMenuController.h"
 
-@interface HWPmsListController : BRMediaMenuController<MachineManagerDelegate> {
+@interface HWPmsListController : SMFMediaMenuController<MachineManagerDelegate> {
 	NSMutableArray		*_names;
 	
 }
   //custom methods
 - (void)serverSearch;
+- (void)showRemoveServerViewForRow:(long)row;
 
 //list provider
 - (float)heightForRow:(long)row;

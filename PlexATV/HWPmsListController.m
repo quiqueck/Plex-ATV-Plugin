@@ -13,8 +13,11 @@
 #import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
 #import "Constants.h"
+#import "SMFDefines.h"
 
 @implementation HWPmsListController
+
+#define RemoveServerDialog @"RemoveServerDialog"
 
 - (id) init
 {
@@ -151,9 +154,9 @@
   BRTextEntryController *textCon = [[BRTextEntryController alloc] init];
   [textCon editor];
   [textCon setTextFieldDelegate:self];
-  [textCon setTitle:BRLocalizedString(@"Add a remote server", @"Add a remote server")];
-  [textCon setSecondaryInfoText:BRLocalizedString(@"Please enter the IP address or hostname to a remote server. Port number will be added automatically",@"Please enter the IP address or hostname to a remote server. Port number will be added automatically")];
-  [textCon setTextEntryTextFieldLabel:BRLocalizedString(@"IP address:", @"IP address:")];
+  [textCon setTitle:@"Add a remote server"];
+  [textCon setSecondaryInfoText:@"Please enter the IP address or hostname to a remote server. Port number will be added automatically"];
+  [textCon setTextEntryTextFieldLabel:@"IP address:"];
   [[self stack] pushController:textCon];
 }
 
@@ -168,6 +171,102 @@
   NSLog(@"machine: %@", m);
   [m autorelease];
   [[self stack] popController];
+}
+
+  //handle custom event
+-(BOOL)brEventAction:(BREvent *)event
+{
+  int remoteAction = [event remoteAction];
+  if ([(BRControllerStack *)[self stack] peekController] != self)
+		remoteAction = 0;
+  
+  int itemCount = [[(BRListControl *)[self list] datasource] itemCount];
+  switch (remoteAction)
+  {
+    case kBREventRemoteActionSelectHold: {
+      if([event value] == 1) {
+          //get the index of currently selected row
+				long selected = [self getSelection];
+				[self showRemoveServerViewForRow:selected];
+			}
+      break;
+		}
+    case kBREventRemoteActionSwipeLeft:
+    case kBREventRemoteActionLeft:
+      return YES;
+      break;
+    case kBREventRemoteActionSwipeRight:
+    case kBREventRemoteActionRight:
+      return YES;
+      break;
+    case kBREventRemoteActionPlayPause:
+      NSLog(@"play/pause event");
+      if([event value] == 1)
+        [self playPauseActionForRow:[self getSelection]];
+      
+      
+      return YES;
+      break;
+		case kBREventRemoteActionUp:
+		case kBREventRemoteActionHoldUp:
+			if([self getSelection] == 0 && [event value] == 1)
+			{
+				[self setSelection:itemCount-1];
+				return YES;
+			}
+			break;
+		case kBREventRemoteActionDown:
+		case kBREventRemoteActionHoldDown:
+			if([self getSelection] == itemCount-1 && [event value] == 1)
+			{
+				[self setSelection:0];
+				return YES;
+			}
+			break;
+  }
+	return [super brEventAction:event];
+}
+
+- (void)showRemoveServerViewForRow:(long)row {
+    //get the currently selected row
+
+
+	Machine* _machine = [_names objectAtIndex:row-1]; //always -1 since we have "Add remote" as 0 in list
+  NSLog(@"showRemoveServerViewForRow. row: %d, machine: %@, bonjour: %@", row, _machine, _machine.bonjour);
+
+	if (!_machine.bonjour){
+		BROptionDialog *option = [[BROptionDialog alloc] init];
+		[option setIdentifier:RemoveServerDialog];
+		
+		[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
+                         _machine, @"machine",
+                         nil]];
+		
+		[option setPrimaryInfoText:@"Remove remote server"];
+		[option setSecondaryInfoText:@"You can always add the remote server again later"];
+		
+		[option addOptionText:[NSString stringWithFormat:@"Remove %@ from server list", _machine.serverName]];
+		[option addOptionText:@"Go back"];
+		[option setActionSelector:@selector(optionSelected:) target:self];
+		[[self stack] pushController:option];
+		[option release];
+	}
+
+}
+
+- (void)optionSelected:(id)sender {
+	BROptionDialog *option = sender;
+	Machine *_machineToRemove = [option.userInfo objectForKey:@"machine"];
+  
+  if([[sender selectedText] hasPrefix:@"Remove"]) {
+    [[self stack] popController]; //need this so we don't go back to option dialog when going back
+    NSLog(@"Removing machine %@ from server list", _machineToRemove.serverName);
+      [[MachineManager sharedMachineManager] removeMachine:_machineToRemove];
+  } else if ([[sender selectedText] isEqualToString:@"Go back"]) {
+      //go back to movie listing...
+    [[self stack] popController];
+  }
+  
 }
 
 #pragma mark
