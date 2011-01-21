@@ -376,37 +376,45 @@ PlexMediaProvider* __provider = nil;
 
 -(void)reportProgress:(NSTimer*)tm{
 	BRMediaPlayer *playa = [[BRMediaPlayerManager singleton] activePlayer];
-	if (playa.playerState==0){
-		NSLog(@"Finished Playback");
-		
-		if (playProgressTimer){
-			[playProgressTimer invalidate];
-			[playProgressTimer release];
-			playProgressTimer = nil;
-		}
-		
-		if (playa){
-			[playa release];
-			playa = nil;
-		}
-		
-		if (playbackItem){
-			[playbackItem release];
-			playbackItem = nil;
-		}
-		
-		
-      //stop the transcoding on PMS
-		[rootContainer.request stopTranscoder];
-		NSLog(@"stopping transcoder");
-		
-		return;
-	}
-	
-	NSLog(@"Elapsed: %f, %i", playa.elapsedTime, playa.playerState);
-	
-    //report time back to PMS so we can continue in the right spot
-	[playbackItem postMediaProgress: playa.elapsedTime];
+  NSLog(@"Elapsed: %f, %i", playa.elapsedTime, playa.playerState);
+  
+  switch (playa.playerState) {
+    case kBRMediaPlayerStateStopped:
+      NSLog(@"Finished Playback");
+      
+      if (playProgressTimer){
+        [playProgressTimer invalidate];
+        [playProgressTimer release];
+        playProgressTimer = nil;
+      }
+      
+      if (playa){
+        [playa release];
+        playa = nil;
+      }
+      
+      if (playbackItem){
+        [playbackItem release];
+        playbackItem = nil;
+      }
+      
+      
+        //stop the transcoding on PMS
+      [rootContainer.request stopTranscoder];
+      NSLog(@"stopping transcoder");
+    
+      break;
+    case kBRMediaPlayerStatePlaying:
+        //report time back to PMS so we can continue in the right spot
+      [playbackItem postMediaProgress: playa.elapsedTime];
+      return;
+    case kBRMediaPlayerStatePaused:
+      NSLog(@"paused playback, pinging transcoder");
+      [rootContainer.request pingTranscoder];
+      break;
+    default:
+      break;
+  }
 }
 
 
