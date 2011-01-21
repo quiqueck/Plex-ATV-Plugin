@@ -1,4 +1,4 @@
-
+#define LOCAL_DEBUG_ENABLED 0
 
 #import "HWAppliance.h"
 #import "BackRowExtras.h"
@@ -230,8 +230,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 - (void)retrieveNewPlexCategories:(Machine *)m {
 	//autorelease pool to avoid memory leaks
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
+#if LOCAL_DEBUG_ENABLED
 	NSLog(@"Retrieving categories for machine %@", m);
+#endif
 	PlexMediaContainer *rootContainer = [m.request rootLevel];
 	NSMutableArray *directories = rootContainer.directories;
 	
@@ -240,7 +241,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		[dict setObject:[pmo.name copy] forKey:CategoryNameKey];
 		[dict setObject:[m.uid copy] forKey:MachineUIDKey];
 		[self performSelectorOnMainThread:@selector(addNewApplianceWithDict:) withObject:dict waitUntilDone:NO];
+#if LOCAL_DEBUG_ENABLED
 		NSLog(@"Adding category [%@] for machine uid [%@]", pmo.name, m.uid);
+#endif
 	}
 	[pool drain];
 }
@@ -271,7 +274,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	NSPredicate *appliancePredicate = [NSPredicate predicateWithFormat:@"(identifier.%@ like %@) AND (identifier.%@ like %@)", MachineUIDKey, machineUid, CategoryNameKey, categoryName];
 	NSArray *applianceAlreadyExists = [self.applianceCat filteredArrayUsingPredicate:appliancePredicate];
 	if ([applianceAlreadyExists count] > 0) {
+#if LOCAL_DEBUG_ENABLED
 		NSLog(@"Duplicate appliance not being added: %@", compoundIdentifier);
+#endif
 		return;
 	}
 	
@@ -279,7 +284,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	//the appliance order will be the highest number (ie it will be put at the end of the menu.
 	//this will be readjusted when the array is sorted in the (id)applianceCategories
 	float applianceOrder = [self.applianceCat count];
+#if LOCAL_DEBUG_ENABLED
 	NSLog(@"Adding appliance with name [%@] with identifier [%@]", categoryName, compoundIdentifier);
+#endif
 	BRApplianceCategory *appliance = [BRApplianceCategory categoryWithName:categoryName identifier:compoundIdentifier preferredOrder:applianceOrder];
 	[self.applianceCat addObject:appliance];
 	
@@ -310,7 +317,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 - (void)removeAppliancesBelongingToMachineWithUid:(NSString *)uid {
 	// called with actual UID (ie. "45E13AB3-E11C-44DD-B4F8-8A0DE1111990") of the
 	// machine rather than the compoundIdentifier's used for the categories	
+#if LOCAL_DEBUG_ENABLED
 	NSLog(@"Removing appliances with identifier [%@]", uid);
+#endif
 	
 	// find and remove all the appliances who's compoundIdentifers contain this machine's uid.
 	// this will be all the appliances who "belong" to this machine	
@@ -346,7 +355,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #pragma mark -
 #pragma mark Machine Delegate Methods
 -(void)machineWasRemoved:(Machine*)m{
+#if LOCAL_DEBUG_ENABLED
   NSLog(@"MachineManager: Removed machine %@", m);
+#endif
   [self removeAppliancesBelongingToMachineWithUid:m.uid];
 }
 
@@ -357,7 +368,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
     
     if ( machineRunsServer && machineIsOnline && !machinesListAlreadyContainsMachine ) {
 	    [self.machines addObject:m];
+#if LOCAL_DEBUG_ENABLED
 	    NSLog(@"MachineManager: Added machine %@", m);
+#endif
 		
 	    //[m resolveAndNotify:self];
 		
@@ -380,23 +393,33 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		return;
 	} else  if ( (!machineRunsServer || !machineIsOnline) && machinesListAlreadyContainsMachine ) {
 		[self removeAppliancesBelongingToMachineWithUid:m.uid];
+#if LOCAL_DEBUG_ENABLED
 		NSLog(@"MachineManager: Removed %@", m);
+#endif
 		[self.machines removeObject:m];
 	} else {
+#if LOCAL_DEBUG_ENABLED
 		NSLog(@"MachineManager: Changed %@", m);
+#endif
 	}
 }
 
 - (void)machineResolved:(Machine*)m {
+#if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Resolved %@", m);
+#endif
 }
 
 - (void)machineDidNotResolve:(Machine*)m {
+#if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Unable to Resolve %@", m);
+#endif
 }
 
 - (void)machineReceivedClients:(Machine*)m {
+#if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Got list of clients %@", m);
+#endif
 }
 
 

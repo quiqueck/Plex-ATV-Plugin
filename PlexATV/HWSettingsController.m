@@ -160,6 +160,10 @@
 			[self.list reload];
 			break;
 		}
+		case PluginVersionNumberIndex: {
+			//do nothing
+			break;
+		}
 		default:
 			break;
 	}
