@@ -92,7 +92,6 @@
 }
 
 - (id)titleForSorting {
-  NSLog(@"titleForSorting");
 	return pmo.name;
 };
 

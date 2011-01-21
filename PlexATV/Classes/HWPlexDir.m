@@ -456,7 +456,7 @@ PlexMediaProvider* __provider = nil;
 		NSString *subtitle = nil;
 		if ([mediaType isEqualToString:PlexMediaObjectTypeEpisode]) {
 			//set subtitle to episode number
-			subtitle = @"Episode x";
+			subtitle = [NSString stringWithFormat:@"Episode %d", [pmo.attributes integerForKey:@"index"]];
 		} else {
 			//set subtitle to year
 			NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];

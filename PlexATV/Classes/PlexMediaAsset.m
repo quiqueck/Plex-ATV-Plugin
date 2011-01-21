@@ -97,20 +97,12 @@
 }
 
 - (id)titleForSorting {
-  NSLog(@"titleForSorting");
 	return pmo.name;
 };
 
 -(id)title {
-  NSLog(@"title");
   NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
-  NSString *agentAttr = [pmo.attributes valueForKey:@"agent"];
-#if DEBUG
-  NSLog(@"title");
-  NSLog(@"agentAttr: %@", agentAttr);
-  NSLog(@"plexMediaType: %@", plexMediaType);
-#endif
-  
+  NSString *agentAttr = [pmo.attributes valueForKey:@"agent"];  
     //  if ([@"movie" isEqualToString:plexMediaType] || [@"show" isEqualToString:plexMediaType] || [@"episode" isEqualToString:plexMediaType] && [agentAttr empty])
   if (agentAttr != nil)
     return nil;
