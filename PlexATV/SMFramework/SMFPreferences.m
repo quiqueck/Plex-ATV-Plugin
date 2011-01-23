@@ -15,7 +15,7 @@
     static SMFPreferences *_preferences = nil;
     
     if(!_preferences)
-        _preferences = [[self alloc] initWithPersistentDomainName:@"com.plex.client-plugin"];
+        _preferences = [[self alloc] initWithPersistentDomainName:@"org.tomcool.SMFramework"];
     
     return _preferences;
 }

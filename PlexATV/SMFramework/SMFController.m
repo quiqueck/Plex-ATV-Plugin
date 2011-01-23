@@ -78,8 +78,6 @@
 	[_spinner setSpins:YES];
     [self addControl:_spinner];
 }
-
-#define DEFAULT_CONTROLLER_TITLE @"title"
 -(void)layoutHeader
 {
     [_headerControl removeFromParent];
