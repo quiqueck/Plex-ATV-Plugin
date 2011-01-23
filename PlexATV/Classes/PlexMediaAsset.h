@@ -25,11 +25,12 @@
 #import <Foundation/Foundation.h>
 #import "BRXMLMediaAsset.h"
 
-@class PlexMediaObject;
+@class PlexMediaObject, PlexPreviewAsset;
 @interface PlexMediaAsset : BRStreamingMediaAsset {//BRBaseMediaAsset<BRMediaAsset> {
 	//BRBaseMediaAsset* bma;
 	NSURL* url;
 	PlexMediaObject* pmo;
+	PlexPreviewAsset *ppa;
 }
 @property (nonatomic, retain) PlexMediaObject* pmo;
 

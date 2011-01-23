@@ -38,11 +38,11 @@
 
 - (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
 {
-	pmo = [o retain];
     //self = [super initWithMediaProvider:mediaProvider];
     //self = [super streamingMediaAssetWithMediaItem:o];
 	self = [super initWithMediaProvider:mediaProvider];
 	if (self != nil) {
+		pmo = [o retain];
 		url = [u retain];
 		//NSLog(@"PMO attrs: %@", pmo.attributes);
 		//PlexRequest *req = pmo.request;
@@ -68,26 +68,6 @@
 	[dateFormat setDateFormat:@"yyyy-mm-dd"];
 	return [dateFormat dateFromString:dateString];
 }
-
-
-#pragma mark -
-#pragma mark BRMediaPreviewFactoryDelegate
-- (BOOL)mediaPreviewShouldShowMetadata { 
-	return YES;
-}
-- (BOOL)mediaPreviewShouldShowMetadataImmediately { 
-	return NO;
-}
-
-
-#pragma mark -
-#pragma mark BRImageProvider
-- (NSString*)imageID{
-	return nil;
-}
-- (void)registerAsPendingImageProvider:(BRImageLoader*)loader {}
-- (void)loadImage:(BRImageLoader*)loader {}
-
 
 #pragma mark -
 #pragma mark BRMediaAsset
