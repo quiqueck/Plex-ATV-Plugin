@@ -77,7 +77,7 @@
 }
 
 - (id)mediaType{
-	return [BRMediaType movie];
+	return [BRMediaType song];
 }
 
 -(long int)duration{

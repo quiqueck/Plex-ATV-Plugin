@@ -50,6 +50,8 @@ PlexMediaProvider* __provider = nil;
       //used to mark movie as seen
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinished:) name:@"AVPlayerItemDidPlayToEndTimeNotification" object:nil];
 		
+      //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(log:) name:nil object:nil];
+    
 		[self setListTitle:@"PLEX"];
 		
 		NSString *settingsPng = [[NSBundle bundleForClass:[HWPlexDir class]] pathForResource:@"PlexIcon" ofType:@"png"];
@@ -324,12 +326,11 @@ PlexMediaProvider* __provider = nil;
 	[pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
 	
 	
-	
+
 	if (__provider==nil){
 		__provider = [[PlexMediaProvider alloc] init];
-		BRMediaHost* mh = [[BRMediaHost mediaHosts] objectAtIndex:0];
-		[mh addMediaProvider:__provider];
-		
+      BRMediaHost* mh = [[BRMediaHost mediaHosts] objectAtIndex:0];
+      [mh addMediaProvider:__provider];
 	}
 	
 	if (playProgressTimer){
@@ -355,6 +356,8 @@ PlexMediaProvider* __provider = nil;
 		pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:pmo];
 	}
 	
+  NSLog(@"mediaItem: %@", [pma mediaItemRef]);
+  
 	BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
 	NSError * error = nil;
 	BRMediaPlayer * player = [mgm playerForMediaAsset:pma error: &error];
