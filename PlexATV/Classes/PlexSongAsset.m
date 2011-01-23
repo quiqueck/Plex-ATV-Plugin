@@ -43,7 +43,7 @@
       NSLog(@"PMO attrs: %@", pmo.attributes);
       //PlexRequest *req = pmo.request;
       //NSLog(@"PMO request attrs: %@", req);
-      //NSLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
+      NSLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
       //NSLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
@@ -77,7 +77,7 @@
 }
 
 - (id)mediaType{
-  return [BRMediaType song];
+  return [BRMediaType movie];
 }
 
 -(long int)duration{

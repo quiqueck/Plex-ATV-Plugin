@@ -53,6 +53,7 @@
 - (id)initWithPlexContainer:(PlexMediaContainer *)container title:(NSString *)title;
 - (void)convertDirToSongAssets:(NSArray*)plexDirectories;
 - (void)playAtIndex:(NSInteger)index withArray:(NSArray *)songList;
+-(void)shuffleAllSongsInRootContainer;
 
 - (float)heightForRow:(long)row;
 - (long)itemCount;

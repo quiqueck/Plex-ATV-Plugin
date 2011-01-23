@@ -45,6 +45,10 @@ PlexMediaProvider* __provider = nil;
 - (id) init
 {
 	if((self = [super init]) != nil) {
+    
+      //register for notifications when a movie has finished playing properly to the end.
+      //used to mark movie as seen
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinished:) name:@"AVPlayerItemDidPlayToEndTimeNotification" object:nil];
 		
 		[self setListTitle:@"PLEX"];
 		
@@ -63,10 +67,15 @@ PlexMediaProvider* __provider = nil;
 	return ( self );
 }	
 
+- (void)log:(NSNotificationCenter *)note {
+  NSLog(@"note = %@", note);
+}
 
 -(void)dealloc
 {
-	
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  
+	NSLog(@"deallocing HWPlexDir");
 	if (playProgressTimer){
 		[playProgressTimer invalidate];
 		[playProgressTimer release];
@@ -78,7 +87,7 @@ PlexMediaProvider* __provider = nil;
 		__player = nil;
 	}
 	
-	[playbackItem release];
+  [playbackItem release];
 	[rootContainer release];
 	
 	[super dealloc];
@@ -166,12 +175,12 @@ PlexMediaProvider* __provider = nil;
 	if ([type empty]) type = pmo.containerType;
 	type = [type lowercaseString];
 	
-	NSLog(@"Item Selected: %@, type:%@", pmo, type);
+	NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, type);
 	
 	NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, PlexViewGroupArtist );
 	
 	
-	if ([pmo.mediaContainer viewGroup] == PlexViewGroupArtist || [@"album" isEqualToString:type]) {
+	if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"album" isEqualToString:type]) {
 		NSLog(@"Accessing Artist/Album %@", pmo);
 		SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
@@ -299,10 +308,12 @@ PlexMediaProvider* __provider = nil;
 	pmo.request.machine.streamQuality = streamQuality;
 	
     //player get's confused if we're running a transcoder already (tried playing and failed on ATV, transcoder still running)
-	if ([pmo.request transcoderRunning])
-		[pmo.request stopTranscoder];
+	if ([pmo.request transcoderRunning]) {
+    [pmo.request stopTranscoder];
+    [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
+  }
+		
 	
-	[NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
 	
 	NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
 	NSURL* mediaURL = [pmo mediaURL];
@@ -341,7 +352,7 @@ PlexMediaProvider* __provider = nil;
 	if ([[[UIDevice currentDevice] systemVersion] isEqualToString:@"4.1"]){
 		pma = [[PlexMediaAssetOld alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
 	} else {
-		pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
+		pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:pmo];
 	}
 	
 	BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
@@ -359,7 +370,8 @@ PlexMediaProvider* __provider = nil;
 	
     //[mgm presentMediaAsset:pma options:0];
 	[mgm presentPlayer:player options:0];
-	[pma release];
+  NSLog(@"presented player");
+    //[pma autorelease];
     //__player = [player retain];
 	playbackItem = [pmo retain];
 	playProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:10.0f 
@@ -417,6 +429,10 @@ PlexMediaProvider* __provider = nil;
   }
 }
 
+-(void)movieFinished:(NSNotification*)event {
+  [playbackItem markSeen];
+  [[self list] reload];
+}
 
 
 - (float)heightForRow:(long)row {	

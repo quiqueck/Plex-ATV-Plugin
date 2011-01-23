@@ -38,7 +38,7 @@
 }
 
 @property (readwrite, retain) PlexMediaContainer* rootContainer;
-
+- (void)log:(NSNotificationCenter *)note;
 -(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset; 
 - (void)showModifyViewedStatusViewForRow:(long)row;
 

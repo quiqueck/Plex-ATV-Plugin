@@ -85,11 +85,12 @@
 }
 
 - (void)itemSelected:(long)selected {
+  NSLog(@"itemSelected: %d",selected);
 	if (selected == 0) {
     [self serverSearch];    
   }
   else {
-    Machine* m = [_names objectAtIndex:selected];
+    Machine* m = [_names objectAtIndex:selected -1]; //-1 'cause of the "Add remote server" that screws up things
     NSLog(@"machine selected: %@", m);
     
     [[SMFPreferences preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];

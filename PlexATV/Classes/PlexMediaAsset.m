@@ -52,6 +52,7 @@
 
 - (void) dealloc
 {
+  NSLog(@"deallocing media asset for %@", pmo.name);
   [pmo release];
   [url release];
 	[super dealloc];
