@@ -7,7 +7,7 @@
 //
 
 #import "SMFPhotoMethods.h"
-#import "Classes/BackRowExtras.h"
+#import "BackRowExtras.h"
 
 @implementation SMFPhotoMethods
 static NSArray *coverArtExtention=nil;

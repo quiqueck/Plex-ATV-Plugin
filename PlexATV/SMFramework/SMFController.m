@@ -82,7 +82,7 @@
 {
     [_headerControl removeFromParent];
     if(_title == nil)
-        _title = DEFAULT_CONTROLLER_TITLE;
+        _title = @"title";
     [_headerControl setTitle:_title];
     CGRect masterFrame = [self getMasterFrame];
     CGRect frame=masterFrame;
