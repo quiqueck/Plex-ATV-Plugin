@@ -183,7 +183,7 @@
 } 
 - (id)previewControlForItem:(long)item {	
 #if DEBUG  
-    //NSLog(@"previewControlForItem - SongListController");
+    NSLog(@"previewControlForItem - SongListController");
 #endif
   
   if(item == 0) {
@@ -195,8 +195,9 @@
   else {
 
     PlexMediaObject *mediaObj = [rootContainer.directories objectAtIndex:item -2];
-    NSLog(@"_song_list_previewControlForItem type: %@", mediaObj.type);
-    if ([@"track" isEqualToString:mediaObj.type]) {
+      //NSLog(@"_song_list_previewControlForItem type: %@", mediaObj.type);
+      //NSLog(@"viewgroup: %@, content:%@",mediaObj.mediaContainer.viewGroup, mediaObj.mediaContainer.content );
+    if ([@"track" isEqualToString:mediaObj.type] || [@"songs" isEqualToString:mediaObj.mediaContainer.content]) {
       PlexSongAsset *song = [self.songs objectAtIndex:item -2];
       BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
       [preview setShowsMetadataImmediately:YES];

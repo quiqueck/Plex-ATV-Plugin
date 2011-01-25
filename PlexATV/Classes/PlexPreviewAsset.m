@@ -370,6 +370,8 @@
 			self.assetID, @"id",
 			self.mediaSummary, @"mediaSummary",
 			self.mediaDescription, @"mediaDescription",
+      self.rating, @"rating",
+      self.starRating, @"starRating",
 			nil];
 }
 
