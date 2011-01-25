@@ -22,6 +22,7 @@
 @property(retain) NSMutableArray *applianceCat;
 @property(nonatomic, retain) NSMutableArray *machines;
 
+- (void)loadInPersistentMachines;
 - (Machine *)machineFromUid:(NSString *)uid;
 
 - (void)retrieveNewPlexCategories:(Machine *)m;

@@ -1,4 +1,4 @@
-#define LOCAL_DEBUG_ENABLED 0
+#define LOCAL_DEBUG_ENABLED 1
 
 #import "HWAppliance.h"
 #import "BackRowExtras.h"
@@ -101,10 +101,42 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		otherServersApplianceCategory = [OTHERSERVERS_CAT retain];
 		settingsApplianceCategory = [SETTINGS_CAT retain];
 		
-    [[ProxyMachineDelegate shared] registerDelegate:self];
+		[[ProxyMachineDelegate shared] registerDelegate:self];
 		[[MachineManager sharedMachineManager] startAutoDetection];
 		
+		[self loadInPersistentMachines];
+		
 	} return self;
+}
+
+- (void)loadInPersistentMachines {
+	//load in persistent machines
+	NSArray *persistentRemoteServers = [[HWUserDefaults preferences] arrayForKey:PreferencesRemoteServerList];
+	
+	NSArray *currentMachines = [[MachineManager sharedMachineManager] machines];
+	for (NSDictionary *persistentRemoteServer in persistentRemoteServers) {
+		NSString *hostName = [persistentRemoteServer objectForKey:PreferencesRemoteServerHostName];
+		NSString *serverName = [persistentRemoteServer objectForKey:PreferencesRemoteServerName];
+		
+		//check if the machine manager already knows about this machine
+		NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"hostName == %@ AND serverName == %@", hostName, serverName];
+		NSArray *matchingMachines = [currentMachines filteredArrayUsingPredicate:machinePredicate];
+		if ([matchingMachines count] == 0) {
+#ifdef LOCAL_DEBUG_ENABLED
+			NSLog(@"Adding persistant remote machine with hostName [%@] and serverName [%@] ", hostName, serverName);
+#endif
+			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
+			m.ip = hostName;
+			
+			[m resolveAndNotify:self];
+			[m autorelease];
+		} else {
+#ifdef LOCAL_DEBUG_ENABLED
+			NSLog(@"Machine already exists with hostName [%@] and serverName [%@] ", hostName, serverName);
+#endif
+		}
+		
+	}
 }
 
 - (Machine *)machineFromUid:(NSString *)uid {
@@ -158,10 +190,10 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 }
 
 - (id)applianceCategories {
-//  if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]){
-//    NSLog(@"Fallback to classic menu");
-//    return [NSArray arrayWithObjects:OTHERSERVERS_CAT,SETTINGS_CAT,nil];
-//  }
+	//  if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]){
+	//    NSLog(@"Fallback to classic menu");
+	//    return [NSArray arrayWithObjects:OTHERSERVERS_CAT,SETTINGS_CAT,nil];
+	//  }
 	//sort the array alphabetically
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
@@ -250,7 +282,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	
 	[self addNewApplianceWithCompoundIdentifier:compoundIdentifier];
 }
-								
+
 - (void)addNewApplianceWithCompoundIdentifier:(NSDictionary *)compoundIdentifier {
 	// the compoundIdentifier will help us find back to the right machine and category.
 	NSString *categoryName = [compoundIdentifier objectForKey:CategoryNameKey];
@@ -348,9 +380,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #pragma mark Machine Delegate Methods
 -(void)machineWasRemoved:(Machine*)m{
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"MachineManager: Removed machine %@", m);
+	NSLog(@"MachineManager: Removed machine %@", m);
 #endif
-  [self removeAppliancesBelongingToMachineWithUid:m.uid];
+	[self removeAppliancesBelongingToMachineWithUid:m.uid];
 }
 
 - (void)machineWasAdded:(Machine*)m {	

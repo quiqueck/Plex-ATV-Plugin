@@ -24,6 +24,7 @@
 @property (copy) NSString *serverName;
 
 //custom methods
+- (void)loadInPersistentMachines;
 - (NSDictionary *)persistentRemoteServerWithHostName:(NSString *)aHostName andServerName:(NSString *)aServerName;
 
 - (void)modifyRemoteMachine:(Machine *)m withHostName:(NSString *)hostName andServerName:(NSString *)serverName;

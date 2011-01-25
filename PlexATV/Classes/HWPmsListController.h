@@ -2,22 +2,16 @@
 //  HWPmsListController.h
 //  atvTwo
 //
-//  Created by Serendipity on 10/01/2011.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Created by ccjensen on 10/01/2011.
 //
 
 
 #import <plex-oss/MachineManager.h>
-#import "SMFramework.h"
 
-@interface HWPmsListController : SMFMediaMenuController<MachineManagerDelegate> {
+@interface HWPmsListController : BRMediaMenuController<MachineManagerDelegate> {
 	NSMutableArray		*_names;
 	
 }
-  //custom methods
-- (void)serverSearch;
-- (void)showRemoveServerViewForRow:(long)row;
-
 //list provider
 - (float)heightForRow:(long)row;
 - (long)itemCount;

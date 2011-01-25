@@ -1,10 +1,9 @@
-  //
-  //  HWPmsListController.m
-  //  atvTwo
-  //
-  //  Created by Serendipity on 10/01/2011.
-  //  Copyright 2011 __MyCompanyName__. All rights reserved.
-  //
+//
+//  HWPmsListController.m
+//  atvTwo
+//
+//  Created by ccjensen on 10/01/2011.
+//
 
 
 
@@ -17,8 +16,6 @@
 
 @implementation HWPmsListController
 
-#define RemoveServerDialog @"RemoveServerDialog"
-
 - (id) init
 {
 	if((self = [super init]) != nil) {		
@@ -29,14 +26,13 @@
 		
 		_names = [[NSMutableArray alloc] init];
 		
-      //make sure we are the delegate
-    [[ProxyMachineDelegate shared] registerDelegate:self];
+		//make sure we are the delegate
+		[[ProxyMachineDelegate shared] registerDelegate:self];
 		
-      //start the auto detection
+		//start the auto detection
 		[[MachineManager sharedMachineManager] startAutoDetection];
 		
 		[[self list] setDatasource:self];
- 		[[self list] addDividerAtIndex:1 withLabel:@"Servers"];
 	}
 	return self;
 }	
@@ -51,17 +47,17 @@
 }
 
 - (void)wasPushed{
-  NSLog(@"--- Did push controller %@ %@", self, _names);
-  [[ProxyMachineDelegate shared] registerDelegate:self];
-  
-  [super wasPushed];
+	NSLog(@"--- Did push controller %@ %@", self, _names);
+	[[ProxyMachineDelegate shared] registerDelegate:self];
+	
+	[super wasPushed];
 }
 
 - (void)wasPopped{
-  NSLog(@"--- Did pop controller %@", self);
-  [[ProxyMachineDelegate shared] removeDelegate:self];
-  
-  [super wasPopped];
+	NSLog(@"--- Did pop controller %@", self);
+	[[ProxyMachineDelegate shared] removeDelegate:self];
+	
+	[super wasPopped];
 }
 
 
@@ -70,14 +66,9 @@
 
 {
 	BRImage *theImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[HWPmsListController class]] pathForResource:@"PlexLogo" ofType:@"png"]];
-	
-	
 	BRImageAndSyncingPreviewController *obj = [[BRImageAndSyncingPreviewController alloc] init];
-	
 	[obj setImage:theImage];
-	
 	return [obj autorelease];
-	
 }
 
 - (BOOL)shouldRefreshForUpdateToObject:(id)object{
@@ -85,18 +76,12 @@
 }
 
 - (void)itemSelected:(long)selected {
-  NSLog(@"itemSelected: %d",selected);
-	if (selected == 0) {
-    [self serverSearch];    
-  }
-  else {
-    Machine* m = [_names objectAtIndex:selected -1]; //-1 'cause of the "Add remote server" that screws up things
-    NSLog(@"machine selected: %@", m);
-    
-    [[HWUserDefaults preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
-    [[HWUserDefaults preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];    
-  }
-
+	Machine* m = [_names objectAtIndex:selected];
+	NSLog(@"machine selected: %@", m);
+	
+	[[HWUserDefaults preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
+	[[HWUserDefaults preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];
+	
 	[self setNeedsUpdate];
 }
 
@@ -105,26 +90,20 @@
 }
 
 - (long)itemCount {
-	return _names.count + 1;
+	return _names.count;
 }
 
 - (id)itemForRow:(long)row {
-  BRMenuItem * result = [[BRMenuItem alloc] init];
-  
-	if(row == 0){
-		[result setText:@"Add remote server" withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
-		[result addAccessoryOfType:0];
-  }
-	else {
-    Machine *m = [_names objectAtIndex:row-1];
-    NSString* name = [NSString stringWithFormat:@"%@", m.serverName, m];
-    [result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
-    
-    NSString *defaultServerUid = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid];
-    if ([m.uid isEqualToString:defaultServerUid]) {
-      [result addAccessoryOfType:17]; //checkmark
-    }
-  }	
+	BRMenuItem * result = [[BRMenuItem alloc] init];
+	
+	Machine *m = [_names objectAtIndex:row];
+	NSString* name = [NSString stringWithFormat:@"%@", m.serverName, m];
+	[result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+	
+	NSString *defaultServerUid = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid];
+	if ([m.uid isEqualToString:defaultServerUid]) {
+		[result addAccessoryOfType:17]; //checkmark
+	}
 	
 	return [result autorelease];
 }
@@ -147,134 +126,12 @@
 	[self.list reload];
 }
 
-#pragma mark
-#pragma mark Text input stuff
-
-- (void)serverSearch
-{
-  BRTextEntryController *textCon = [[BRTextEntryController alloc] init];
-  [textCon editor];
-  [textCon setTextFieldDelegate:self];
-  [textCon setTitle:@"Add a remote server"];
-  [textCon setSecondaryInfoText:@"Please enter the IP address or hostname to a remote server. Port number will be added automatically"];
-  [textCon setTextEntryTextFieldLabel:@"IP address:"];
-  [[self stack] pushController:textCon];
-}
-
-- (void)textDidEndEditing:(id)text
-{
-  NSLog(@"text string: %@", [text stringValue]);
-  NSString *host = [text stringValue];
-  Machine *m = [[Machine alloc] initWithServerName:host hostName:host port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
-  m.ip = host;
-  
-  [m resolveAndNotify:self];
-  NSLog(@"machine: %@", m);
-  [m autorelease];
-  [[self stack] popController];
-}
-
-  //handle custom event
--(BOOL)brEventAction:(BREvent *)event
-{
-  int remoteAction = [event remoteAction];
-  if ([(BRControllerStack *)[self stack] peekController] != self)
-		remoteAction = 0;
-  
-  int itemCount = [[(BRListControl *)[self list] datasource] itemCount];
-  switch (remoteAction)
-  {
-    case kBREventRemoteActionSelectHold: {
-      if([event value] == 1) {
-          //get the index of currently selected row
-				long selected = [self getSelection];
-				[self showRemoveServerViewForRow:selected];
-			}
-      break;
-		}
-    case kBREventRemoteActionSwipeLeft:
-    case kBREventRemoteActionLeft:
-      return YES;
-      break;
-    case kBREventRemoteActionSwipeRight:
-    case kBREventRemoteActionRight:
-      return YES;
-      break;
-    case kBREventRemoteActionPlayPause:
-      NSLog(@"play/pause event");
-      if([event value] == 1)
-        [self playPauseActionForRow:[self getSelection]];
-      
-      
-      return YES;
-      break;
-		case kBREventRemoteActionUp:
-		case kBREventRemoteActionHoldUp:
-			if([self getSelection] == 0 && [event value] == 1)
-			{
-				[self setSelection:itemCount-1];
-				return YES;
-			}
-			break;
-		case kBREventRemoteActionDown:
-		case kBREventRemoteActionHoldDown:
-			if([self getSelection] == itemCount-1 && [event value] == 1)
-			{
-				[self setSelection:0];
-				return YES;
-			}
-			break;
-  }
-	return [super brEventAction:event];
-}
-
-- (void)showRemoveServerViewForRow:(long)row {
-    //get the currently selected row
-
-
-	Machine* _machine = [_names objectAtIndex:row-1]; //always -1 since we have "Add remote" as 0 in list
-  NSLog(@"showRemoveServerViewForRow. row: %d, machine: %@, bonjour: %@", row, _machine, _machine.bonjour);
-
-	if (!_machine.bonjour){
-		BROptionDialog *option = [[BROptionDialog alloc] init];
-		[option setIdentifier:RemoveServerDialog];
-		
-		[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
-                         _machine, @"machine",
-                         nil]];
-		
-		[option setPrimaryInfoText:@"Remove remote server"];
-		[option setSecondaryInfoText:@"You can always add the remote server again later"];
-		
-		[option addOptionText:[NSString stringWithFormat:@"Remove %@ from server list", _machine.serverName]];
-		[option addOptionText:@"Go back"];
-		[option setActionSelector:@selector(optionSelected:) target:self];
-		[[self stack] pushController:option];
-		[option release];
-	}
-
-}
-
-- (void)optionSelected:(id)sender {
-	BROptionDialog *option = sender;
-	Machine *_machineToRemove = [option.userInfo objectForKey:@"machine"];
-  
-  if([[sender selectedText] hasPrefix:@"Remove"]) {
-    [[self stack] popController]; //need this so we don't go back to option dialog when going back
-    NSLog(@"Removing machine %@ from server list", _machineToRemove.serverName);
-      [[MachineManager sharedMachineManager] removeMachine:_machineToRemove];
-  } else if ([[sender selectedText] isEqualToString:@"Go back"]) {
-      //go back to movie listing...
-    [[self stack] popController];
-  }
-  
-}
 
 #pragma mark
 #pragma mark Machine Manager Delegate
 -(void)machineWasRemoved:(Machine*)m{
-  NSLog(@"Removed %@", m);
-  [_names removeObject:m];
+	NSLog(@"Removed %@", m);
+	[_names removeObject:m];
 }
 
 -(void)machineWasAdded:(Machine*)m{
@@ -305,7 +162,7 @@
 
 -(void)machineResolved:(Machine*)m{
 	NSLog(@"Resolved %@", m);
-  [[MachineManager sharedMachineManager] addMachine:m];
+	[[MachineManager sharedMachineManager] addMachine:m];
 }
 
 -(void)machineDidNotResolve:(Machine*)m{
