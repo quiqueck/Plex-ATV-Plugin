@@ -12,8 +12,6 @@
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
-#import "Constants.h"
-#import "SMFDefines.h"
 
 @implementation HWPmsListController
 

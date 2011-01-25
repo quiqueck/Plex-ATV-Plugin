@@ -9,8 +9,6 @@
 #import <plex-oss/PlexRequest + Security.h>
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
-#import "Constants.h"
-#import "SMFPreferences.h"
 
 #define OTHERSERVERS_ID @"hwOtherServer"
 #define SETTINGS_ID @"hwSettings"

@@ -8,8 +8,6 @@
 
 
 #import <plex-oss/MachineManager.h>
-#import "SMFPreferences.h"
-#import "SMFMediaMenuController.h"
 
 @interface HWPmsListController : SMFMediaMenuController<MachineManagerDelegate> {
 	NSMutableArray		*_names;

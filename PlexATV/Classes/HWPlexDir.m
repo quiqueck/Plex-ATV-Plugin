@@ -23,7 +23,6 @@
   //  
 
 #import "HWPlexDir.h"
-#import "SMFPreferences.h"
 #import "Constants.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>

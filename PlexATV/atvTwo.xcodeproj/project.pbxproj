@@ -530,43 +530,45 @@
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = atvTwo_Prefix.pch; sourceTree = "<group>"; };
-		72B2BF2B12DBD95500E23F8E /* BRMenuItem_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMenuItem_SMF.h; sourceTree = "<group>"; };
-		72B2BF2D12DBD95500E23F8E /* NSArray_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_SMF.h; sourceTree = "<group>"; };
-		72B2BF2F12DBD95500E23F8E /* NSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
-		72B2BF3012DBD95500E23F8E /* SMFBaseAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFBaseAsset.h; sourceTree = "<group>"; };
-		72B2BF3212DBD95500E23F8E /* SMFCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFCenteredMenuController.h; sourceTree = "<group>"; };
-		72B2BF3412DBD95500E23F8E /* SMFClockController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFClockController.h; sourceTree = "<group>"; };
-		72B2BF3612DBD95500E23F8E /* SMFColorSelectionMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFColorSelectionMenu.h; sourceTree = "<group>"; };
-		72B2BF3812DBD95500E23F8E /* SMFCommonTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFCommonTools.h; sourceTree = "<group>"; };
-		72B2BF3A12DBD95500E23F8E /* SMFController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFController.h; sourceTree = "<group>"; };
-		72B2BF3C12DBD95500E23F8E /* SMFDebAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFDebAsset.h; sourceTree = "<group>"; };
-		72B2BF3E12DBD95500E23F8E /* SMFDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFDefines.h; sourceTree = "<group>"; };
-		72B2BF3F12DBD95500E23F8E /* SMFEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEvent.h; sourceTree = "<group>"; };
-		72B2BF4112DBD95500E23F8E /* SMFEventConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEventConfiguration.h; sourceTree = "<group>"; };
-		72B2BF4312DBD95500E23F8E /* SMFEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEventManager.h; sourceTree = "<group>"; };
-		72B2BF4512DBD95500E23F8E /* SMFFolderBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFFolderBrowser.h; sourceTree = "<group>"; };
-		72B2BF4712DBD95500E23F8E /* SMFFolderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFFolderDelegate.h; sourceTree = "<group>"; };
-		72B2BF4912DBD95500E23F8E /* SMFImageAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFImageAsset.h; sourceTree = "<group>"; };
-		72B2BF4B12DBD95500E23F8E /* SMFInvocationCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFInvocationCenteredMenuController.h; sourceTree = "<group>"; };
-		72B2BF4D12DBD95500E23F8E /* SMFMediaMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMediaMenuController.h; sourceTree = "<group>"; };
-		72B2BF4F12DBD95500E23F8E /* SMFMediaPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMediaPreview.h; sourceTree = "<group>"; };
-		72B2BF5112DBD95500E23F8E /* SMFMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMenuController.h; sourceTree = "<group>"; };
-		72B2BF5312DBD95500E23F8E /* SMFMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMenuItem.h; sourceTree = "<group>"; };
-		72B2BF5512DBD95500E23F8E /* SMFMovieAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMovieAsset.h; sourceTree = "<group>"; };
-		72B2BF5712DBD95500E23F8E /* SMFPasscodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPasscodeController.h; sourceTree = "<group>"; };
-		72B2BF5912DBD95500E23F8E /* SMFPhotoMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPhotoMethods.h; sourceTree = "<group>"; };
-		72B2BF5B12DBD95500E23F8E /* SMFPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPopup.h; sourceTree = "<group>"; };
-		72B2BF5D12DBD95500E23F8E /* SMFPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPreferences.h; sourceTree = "<group>"; };
-		72B2BF5F12DBD95500E23F8E /* SMFProgressBarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFProgressBarControl.h; sourceTree = "<group>"; };
-		72B2BF6112DBD95500E23F8E /* SMFProgressBarMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFProgressBarMenuItem.h; sourceTree = "<group>"; };
-		72B2BF6312DBD95500E23F8E /* SMFQueryMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFQueryMenu.h; sourceTree = "<group>"; };
-		72B2BF6512DBD95500E23F8E /* SMFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFramework.h; sourceTree = "<group>"; };
-		72B2BF6612DBD95500E23F8E /* SMFScreenCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFScreenCapture.h; sourceTree = "<group>"; };
-		72B2BF6812DBD95500E23F8E /* SMFSettingPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFSettingPreferences.h; sourceTree = "<group>"; };
-		72B2BF6912DBD95500E23F8E /* SMFThemeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFThemeInfo.h; sourceTree = "<group>"; };
+		729722FC12EE79C20064E776 /* BRMenuItem_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMenuItem_SMF.h; sourceTree = "<group>"; };
+		729722FD12EE79C20064E776 /* NSArray_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_SMF.h; sourceTree = "<group>"; };
+		729722FE12EE79C20064E776 /* NSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
+		729722FF12EE79C20064E776 /* SMFBaseAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFBaseAsset.h; sourceTree = "<group>"; };
+		7297230012EE79C20064E776 /* SMFCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFCenteredMenuController.h; sourceTree = "<group>"; };
+		7297230112EE79C20064E776 /* SMFClockController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFClockController.h; sourceTree = "<group>"; };
+		7297230212EE79C20064E776 /* SMFColorSelectionMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFColorSelectionMenu.h; sourceTree = "<group>"; };
+		7297230312EE79C20064E776 /* SMFCommonTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFCommonTools.h; sourceTree = "<group>"; };
+		7297230412EE79C20064E776 /* SMFController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFController.h; sourceTree = "<group>"; };
+		7297230512EE79C20064E776 /* SMFDebAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFDebAsset.h; sourceTree = "<group>"; };
+		7297230612EE79C20064E776 /* SMFDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFDefines.h; sourceTree = "<group>"; };
+		7297230712EE79C20064E776 /* SMFEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEvent.h; sourceTree = "<group>"; };
+		7297230812EE79C20064E776 /* SMFEventConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEventConfiguration.h; sourceTree = "<group>"; };
+		7297230912EE79C20064E776 /* SMFEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFEventManager.h; sourceTree = "<group>"; };
+		7297230A12EE79C20064E776 /* SMFFolderBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFFolderBrowser.h; sourceTree = "<group>"; };
+		7297230B12EE79C20064E776 /* SMFFolderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFFolderDelegate.h; sourceTree = "<group>"; };
+		7297230C12EE79C20064E776 /* SMFImageAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFImageAsset.h; sourceTree = "<group>"; };
+		7297230D12EE79C20064E776 /* SMFInvocationCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFInvocationCenteredMenuController.h; sourceTree = "<group>"; };
+		7297230E12EE79C20064E776 /* SMFListDropShadowControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFListDropShadowControl.h; sourceTree = "<group>"; };
+		7297230F12EE79C20064E776 /* SMFMediaMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMediaMenuController.h; sourceTree = "<group>"; };
+		7297231012EE79C20064E776 /* SMFMediaPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMediaPreview.h; sourceTree = "<group>"; };
+		7297231112EE79C20064E776 /* SMFMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMenuController.h; sourceTree = "<group>"; };
+		7297231212EE79C20064E776 /* SMFMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMenuItem.h; sourceTree = "<group>"; };
+		7297231312EE79C20064E776 /* SMFMovieAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFMovieAsset.h; sourceTree = "<group>"; };
+		7297231412EE79C20064E776 /* SMFPasscodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPasscodeController.h; sourceTree = "<group>"; };
+		7297231512EE79C20064E776 /* SMFPhotoMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPhotoMethods.h; sourceTree = "<group>"; };
+		7297231612EE79C20064E776 /* SMFPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPopup.h; sourceTree = "<group>"; };
+		7297231712EE79C20064E776 /* SMFPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFPreferences.h; sourceTree = "<group>"; };
+		7297231812EE79C20064E776 /* SMFProgressBarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFProgressBarControl.h; sourceTree = "<group>"; };
+		7297231912EE79C30064E776 /* SMFProgressBarMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFProgressBarMenuItem.h; sourceTree = "<group>"; };
+		7297231A12EE79C30064E776 /* SMFQueryMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFQueryMenu.h; sourceTree = "<group>"; };
+		7297231B12EE79C30064E776 /* SMFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFramework.h; sourceTree = "<group>"; };
+		7297231C12EE79C30064E776 /* SMFScreenCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFScreenCapture.h; sourceTree = "<group>"; };
+		7297231D12EE79C30064E776 /* SMFSettingPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFSettingPreferences.h; sourceTree = "<group>"; };
+		7297231E12EE79C30064E776 /* SMFThemeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFThemeInfo.h; sourceTree = "<group>"; };
+		7297231F12EE79C30064E776 /* SMFViewMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFViewMenuController.h; sourceTree = "<group>"; };
+		7297232012EE79C30064E776 /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWSettingsController.h; path = Classes/HWSettingsController.h; sourceTree = "<group>"; };
 		72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWSettingsController.m; path = Classes/HWSettingsController.m; sourceTree = "<group>"; };
-		72B2C52112DBE55800E23F8E /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		72B2C71312DC1F0E00E23F8E /* HWPmsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWPmsListController.h; path = Classes/HWPmsListController.h; sourceTree = "<group>"; };
 		72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWPmsListController.m; path = Classes/HWPmsListController.m; sourceTree = "<group>"; };
 		72EA80F612DEB49B00138F7D /* PlexSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlexSettings.png; path = Resources/PlexSettings.png; sourceTree = "<group>"; };
@@ -1204,54 +1206,56 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		729722FB12EE79C20064E776 /* SMFramework */ = {
+			isa = PBXGroup;
+			children = (
+				729722FC12EE79C20064E776 /* BRMenuItem_SMF.h */,
+				729722FD12EE79C20064E776 /* NSArray_SMF.h */,
+				729722FE12EE79C20064E776 /* NSTask.h */,
+				729722FF12EE79C20064E776 /* SMFBaseAsset.h */,
+				7297230012EE79C20064E776 /* SMFCenteredMenuController.h */,
+				7297230112EE79C20064E776 /* SMFClockController.h */,
+				7297230212EE79C20064E776 /* SMFColorSelectionMenu.h */,
+				7297230312EE79C20064E776 /* SMFCommonTools.h */,
+				7297230412EE79C20064E776 /* SMFController.h */,
+				7297230512EE79C20064E776 /* SMFDebAsset.h */,
+				7297230612EE79C20064E776 /* SMFDefines.h */,
+				7297230712EE79C20064E776 /* SMFEvent.h */,
+				7297230812EE79C20064E776 /* SMFEventConfiguration.h */,
+				7297230912EE79C20064E776 /* SMFEventManager.h */,
+				7297230A12EE79C20064E776 /* SMFFolderBrowser.h */,
+				7297230B12EE79C20064E776 /* SMFFolderDelegate.h */,
+				7297230C12EE79C20064E776 /* SMFImageAsset.h */,
+				7297230D12EE79C20064E776 /* SMFInvocationCenteredMenuController.h */,
+				7297230E12EE79C20064E776 /* SMFListDropShadowControl.h */,
+				7297230F12EE79C20064E776 /* SMFMediaMenuController.h */,
+				7297231012EE79C20064E776 /* SMFMediaPreview.h */,
+				7297231112EE79C20064E776 /* SMFMenuController.h */,
+				7297231212EE79C20064E776 /* SMFMenuItem.h */,
+				7297231312EE79C20064E776 /* SMFMovieAsset.h */,
+				7297231412EE79C20064E776 /* SMFPasscodeController.h */,
+				7297231512EE79C20064E776 /* SMFPhotoMethods.h */,
+				7297231612EE79C20064E776 /* SMFPopup.h */,
+				7297231712EE79C20064E776 /* SMFPreferences.h */,
+				7297231812EE79C20064E776 /* SMFProgressBarControl.h */,
+				7297231912EE79C30064E776 /* SMFProgressBarMenuItem.h */,
+				7297231A12EE79C30064E776 /* SMFQueryMenu.h */,
+				7297231B12EE79C30064E776 /* SMFramework.h */,
+				7297231C12EE79C30064E776 /* SMFScreenCapture.h */,
+				7297231D12EE79C30064E776 /* SMFSettingPreferences.h */,
+				7297231E12EE79C30064E776 /* SMFThemeInfo.h */,
+				7297231F12EE79C30064E776 /* SMFViewMenuController.h */,
+				7297232012EE79C30064E776 /* SynthesizeSingleton.h */,
+			);
+			path = SMFramework;
+			sourceTree = "<group>";
+		};
 		72B2BEBE12DBD87E00E23F8E /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				72B2BF2A12DBD95500E23F8E /* SMFramework */,
+				729722FB12EE79C20064E776 /* SMFramework */,
 			);
 			name = lib;
-			sourceTree = "<group>";
-		};
-		72B2BF2A12DBD95500E23F8E /* SMFramework */ = {
-			isa = PBXGroup;
-			children = (
-				72B2C52112DBE55800E23F8E /* SynthesizeSingleton.h */,
-				72B2BF2B12DBD95500E23F8E /* BRMenuItem_SMF.h */,
-				72B2BF2D12DBD95500E23F8E /* NSArray_SMF.h */,
-				72B2BF2F12DBD95500E23F8E /* NSTask.h */,
-				72B2BF3012DBD95500E23F8E /* SMFBaseAsset.h */,
-				72B2BF3212DBD95500E23F8E /* SMFCenteredMenuController.h */,
-				72B2BF3412DBD95500E23F8E /* SMFClockController.h */,
-				72B2BF3612DBD95500E23F8E /* SMFColorSelectionMenu.h */,
-				72B2BF3812DBD95500E23F8E /* SMFCommonTools.h */,
-				72B2BF3A12DBD95500E23F8E /* SMFController.h */,
-				72B2BF3C12DBD95500E23F8E /* SMFDebAsset.h */,
-				72B2BF3E12DBD95500E23F8E /* SMFDefines.h */,
-				72B2BF3F12DBD95500E23F8E /* SMFEvent.h */,
-				72B2BF4112DBD95500E23F8E /* SMFEventConfiguration.h */,
-				72B2BF4312DBD95500E23F8E /* SMFEventManager.h */,
-				72B2BF4512DBD95500E23F8E /* SMFFolderBrowser.h */,
-				72B2BF4712DBD95500E23F8E /* SMFFolderDelegate.h */,
-				72B2BF4912DBD95500E23F8E /* SMFImageAsset.h */,
-				72B2BF4B12DBD95500E23F8E /* SMFInvocationCenteredMenuController.h */,
-				72B2BF4D12DBD95500E23F8E /* SMFMediaMenuController.h */,
-				72B2BF4F12DBD95500E23F8E /* SMFMediaPreview.h */,
-				72B2BF5112DBD95500E23F8E /* SMFMenuController.h */,
-				72B2BF5312DBD95500E23F8E /* SMFMenuItem.h */,
-				72B2BF5512DBD95500E23F8E /* SMFMovieAsset.h */,
-				72B2BF5712DBD95500E23F8E /* SMFPasscodeController.h */,
-				72B2BF5912DBD95500E23F8E /* SMFPhotoMethods.h */,
-				72B2BF5B12DBD95500E23F8E /* SMFPopup.h */,
-				72B2BF5D12DBD95500E23F8E /* SMFPreferences.h */,
-				72B2BF5F12DBD95500E23F8E /* SMFProgressBarControl.h */,
-				72B2BF6112DBD95500E23F8E /* SMFProgressBarMenuItem.h */,
-				72B2BF6312DBD95500E23F8E /* SMFQueryMenu.h */,
-				72B2BF6512DBD95500E23F8E /* SMFramework.h */,
-				72B2BF6612DBD95500E23F8E /* SMFScreenCapture.h */,
-				72B2BF6812DBD95500E23F8E /* SMFSettingPreferences.h */,
-				72B2BF6912DBD95500E23F8E /* SMFThemeInfo.h */,
-			);
-			path = SMFramework;
 			sourceTree = "<group>";
 		};
 		72B2C4FB12DBE0EE00E23F8E /* Controllers */ = {

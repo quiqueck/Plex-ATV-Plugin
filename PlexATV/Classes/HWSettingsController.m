@@ -14,11 +14,7 @@
 //
 
 #import "HWSettingsController.h"
-#import "SMFMenuItem.h"
 #import "HWPmsListController.h"
-#import "SMFBaseAsset.h"
-#import "SMFMediaPreview.h"
-#import "Constants.h"
 
 @implementation HWSettingsController
 @synthesize topLevelController;
