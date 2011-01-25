@@ -177,12 +177,12 @@ PlexMediaProvider* __provider = nil;
 	if ([type empty]) type = pmo.containerType;
 	type = [type lowercaseString];
 	
-	NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, type);
+    //NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, type);
 	
-	NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, PlexViewGroupArtist );
+	NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, pmo.mediaContainer.content );
 	
 	
-	if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"album" isEqualToString:type]) {
+	if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"albums" isEqualToString:pmo.mediaContainer.content]) {
 		NSLog(@"Accessing Artist/Album %@", pmo);
 		SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
@@ -310,10 +310,10 @@ PlexMediaProvider* __provider = nil;
 	pmo.request.machine.streamQuality = streamQuality;
 	
     //player get's confused if we're running a transcoder already (tried playing and failed on ATV, transcoder still running)
-	if ([pmo.request transcoderRunning]) {
-    [pmo.request stopTranscoder];
-    [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
-  }
+    //if ([pmo.request transcoderRunning]) {
+    // [pmo.request stopTranscoder];
+    //  [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
+    //}
 		
 	
 	
@@ -356,7 +356,7 @@ PlexMediaProvider* __provider = nil;
 		pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:pmo];
 	}
 	
-  NSLog(@"mediaItem: %@", [pma mediaItemRef]);
+    //NSLog(@"mediaItem: %@", [pma mediaItemRef]);
   
 	BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
 	NSError * error = nil;
