@@ -15,6 +15,8 @@
 
 #import "HWSettingsController.h"
 #import "HWPmsListController.h"
+#import "HWUserDefaults.h"
+#import "Constants.h"
 
 @implementation HWSettingsController
 @synthesize topLevelController;
@@ -51,8 +53,8 @@
 	
 	// =========== combined PMS category view ===========
 	SMFMenuItem *combinedPmsCategoriesMenuItem = [SMFMenuItem menuItem];
-	
-	NSString *combinedPmsCategories = [[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView] ? @"Combined" : @"Default Server";
+
+	NSString *combinedPmsCategories = [[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView] ? @"Combined" : @"Default Server";
 	NSString *combinedPmsCategoriesTitle = [[NSString alloc] initWithFormat:@"View mode:    %@", combinedPmsCategories];
 	[combinedPmsCategoriesMenuItem setTitle:combinedPmsCategoriesTitle];
 	[combinedPmsCategoriesTitle release];
@@ -61,12 +63,12 @@
 	// =========== default server ===========
 	SMFMenuItem *defaultServerMenuItem = [SMFMenuItem folderMenuItem];
 	
-	NSString *defaultServer = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerName];
+	NSString *defaultServer = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerName];
 	if (defaultServer == nil) {
-		[[SMFPreferences preferences] setObject:@"<No Default Selected>" forKey:PreferencesDefaultServerName];
-		defaultServer = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerName];
+		[[HWUserDefaults preferences] setObject:@"<No Default Selected>" forKey:PreferencesDefaultServerName];
+		defaultServer = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerName];
 	}
-	[defaultServerMenuItem setDimmed:[[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView]];
+	[defaultServerMenuItem setDimmed:[[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]];
 	
 	NSString *defaultServerTitle = [[NSString alloc] initWithFormat:@"Default Server:    %@", defaultServer];
 	[defaultServerMenuItem setTitle:defaultServerTitle];
@@ -77,10 +79,10 @@
 	// =========== quality setting ===========
 	SMFMenuItem *qualitySettingMenuItem = [SMFMenuItem menuItem];
 	
-	NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
+	NSString *qualitySetting = [[HWUserDefaults preferences] objectForKey:PreferencesQualitySetting];
 	if (qualitySetting == nil) {
-		[[SMFPreferences preferences] setObject:@"Better" forKey:PreferencesQualitySetting];
-		qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
+		[[HWUserDefaults preferences] setObject:@"Better" forKey:PreferencesQualitySetting];
+		qualitySetting = [[HWUserDefaults preferences] objectForKey:PreferencesQualitySetting];
 	}
 	
 	NSString *qualitySettingTitle = [[NSString alloc] initWithFormat:@"Quality Setting:   %@", qualitySetting];
@@ -126,8 +128,8 @@
 	switch (selected) {
 		case CombinedPmsCategoriesIndex: {
 			// =========== combined PMS category view ===========
-			BOOL isTurnedOn = [[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView];
-			[[SMFPreferences preferences] setBool:!isTurnedOn forKey:PreferencesUseCombinedPmsView];
+			BOOL isTurnedOn = [[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView];
+			[[HWUserDefaults preferences] setBool:!isTurnedOn forKey:PreferencesUseCombinedPmsView];
 			
 			[self setupList];
 			[self.list reload];
@@ -142,14 +144,14 @@
 		}
 		case QualitySettingIndex: {
 			// =========== quality setting ===========
-			NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
+			NSString *qualitySetting = [[HWUserDefaults preferences] objectForKey:PreferencesQualitySetting];
       
 			if ([qualitySetting isEqualToString:@"Good"]) {
-				[[SMFPreferences preferences] setObject:@"Better" forKey:PreferencesQualitySetting];
+				[[HWUserDefaults preferences] setObject:@"Better" forKey:PreferencesQualitySetting];
 			} else if ([qualitySetting isEqualToString:@"Better"]) {
-				[[SMFPreferences preferences] setObject:@"Best" forKey:PreferencesQualitySetting];
+				[[HWUserDefaults preferences] setObject:@"Best" forKey:PreferencesQualitySetting];
 			} else {
-				[[SMFPreferences preferences] setObject:@"Good" forKey:PreferencesQualitySetting];
+				[[HWUserDefaults preferences] setObject:@"Good" forKey:PreferencesQualitySetting];
 			}
 			
 			[self setupList];

@@ -35,6 +35,7 @@
 #import "PlexPreviewAsset.h"
 #import "PlexSongAsset.h"
 #import "SongListController.h"
+#import "HWUserDefaults.h"
 
 BRMediaPlayer* __player = nil;
 PlexMediaProvider* __provider = nil;
@@ -297,7 +298,7 @@ PlexMediaProvider* __provider = nil;
 	[pmo.attributes setObject:[NSNumber numberWithInt:offset] forKey:@"viewOffset"]; //set where in the video we want to start...
 	
     //determine the user selected quality setting
-	NSString *qualitySetting = [[SMFPreferences preferences] objectForKey:PreferencesQualitySetting];
+	NSString *qualitySetting = [[HWUserDefaults preferences] objectForKey:PreferencesQualitySetting];
 	int streamQuality;
 	if ([qualitySetting isEqualToString:@"Good"]) {
 		streamQuality = PlexStreamingQuality720p_1500;

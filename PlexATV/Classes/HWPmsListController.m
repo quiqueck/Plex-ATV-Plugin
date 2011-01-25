@@ -12,6 +12,8 @@
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
+#import "HWUserDefaults.h"
+#import "Constants.h"
 
 @implementation HWPmsListController
 
@@ -91,8 +93,8 @@
     Machine* m = [_names objectAtIndex:selected -1]; //-1 'cause of the "Add remote server" that screws up things
     NSLog(@"machine selected: %@", m);
     
-    [[SMFPreferences preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
-    [[SMFPreferences preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];    
+    [[HWUserDefaults preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
+    [[HWUserDefaults preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];    
   }
 
 	[self setNeedsUpdate];
@@ -118,7 +120,7 @@
     NSString* name = [NSString stringWithFormat:@"%@", m.serverName, m];
     [result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
     
-    NSString *defaultServerUid = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid];
+    NSString *defaultServerUid = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid];
     if ([m.uid isEqualToString:defaultServerUid]) {
       [result addAccessoryOfType:17]; //checkmark
     }

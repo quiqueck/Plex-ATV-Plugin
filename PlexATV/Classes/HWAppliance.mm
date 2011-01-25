@@ -9,6 +9,9 @@
 #import <plex-oss/PlexRequest + Security.h>
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
+#import "SMFramework.h"
+#import "HWUserDefaults.h"
+#import "Constants.h"
 
 #define OTHERSERVERS_ID @"hwOtherServer"
 #define SETTINGS_ID @"hwSettings"
@@ -90,19 +93,10 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		freopen([logPath fileSystemRepresentation], "a+", stderr);
 		freopen([logPath fileSystemRepresentation], "a+", stdout);
 		
-		//setup user preferences
-		[[SMFPreferences preferences] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-														NO, PreferencesUseCombinedPmsView, 
-														@"<No Default Selected>", PreferencesDefaultServerName,
-														@"", PreferencesDefaultServerUid,
-														@"Low", PreferencesQualitySetting,
-														nil]];
-		
 		_topShelfController = [[TopShelfController alloc] init];
 		//preload the main menu with the settings menu item
 		_applianceCategories = [[NSMutableArray alloc] init];
 		_machines = [[NSMutableArray alloc] init];
-		
 		
 		otherServersApplianceCategory = [OTHERSERVERS_CAT retain];
 		settingsApplianceCategory = [SETTINGS_CAT retain];
@@ -164,7 +158,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 }
 
 - (id)applianceCategories {
-//  if (![[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView]){
+//  if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]){
 //    NSLog(@"Fallback to classic menu");
 //    return [NSArray arrayWithObjects:OTHERSERVERS_CAT,SETTINGS_CAT,nil];
 //  }
@@ -264,8 +258,8 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	//NSString *machineName = [compoundIdentifier objectForKey:MachineNameKey];
 	
 	//check if we should be adding appliances for this machine
-	if (![[SMFPreferences preferences] boolForKey:PreferencesUseCombinedPmsView]
-		&& ![machineUid isEqualToString:[[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid]])
+	if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]
+		&& ![machineUid isEqualToString:[[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid]])
 		return;
 	
 	//ensure that it is not already present
