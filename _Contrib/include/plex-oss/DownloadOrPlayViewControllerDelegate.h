@@ -11,6 +11,6 @@
 @class DownloadOrPlayViewController;
 
 @protocol DownloadOrPlayViewControllerDelegate <CustomMessageViewControllerDelegate>
--(void)startDownload:(DownloadOrPlayViewController*)ctrl;
--(void)playbackAsUsual:(DownloadOrPlayViewController*)ctrl;
+-(void)startDownload:(id)ctrl;
+-(void)playbackAsUsual:(id)ctrl;
 @end

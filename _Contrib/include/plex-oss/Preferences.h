@@ -27,10 +27,10 @@ typedef int ContentRating;
 -(void)setLastSearchQuerry:(NSString*)q forSection:(NSString*)section;
 -(NSString*)lastSearchQuerryForSection:(NSString*)section;
 
--(void)setServerList:(NSArray*)serializedServers;
--(NSArray*)serverList;
--(void)setLocalServer:(NSDictionary*)s;
--(NSDictionary*)localServer;
+-(void)setServerList:(NSData*)serializedServers;
+-(NSData*)serverList;
+-(void)setLocalServer:(NSData*)s;
+-(NSData*)localServer;
 
 
 -(BOOL)enableShadows;
@@ -56,6 +56,9 @@ typedef int ContentRating;
 
 -(BOOL)broadcastLocalServer;
 -(void)setBroadcastLocalServer:(BOOL)v;
+
+-(BOOL)allowDirectPlayback;
+-(void)setAllowDirectPlayback:(BOOL)v;
 
 /*-(NSTimeInterval)contentCachingTimeout;
 -(void)setContentCachingTimeout:(NSTimeInterval)v;*/

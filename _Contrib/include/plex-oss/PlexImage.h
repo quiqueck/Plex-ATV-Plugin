@@ -10,7 +10,20 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MemoryImage.h"
 
-@class TraceableLayer, PlexRequest, BackgroundOperation;
+//we need this, to better perform on the shelfView
+@protocol BackgroundOperationDelegate;
+@class PlexImage;
+@protocol TraceableLayerProtocol<NSObject>
+@property (readwrite, nonatomic) BOOL isVisibleOnShelf;
+@property (readwrite) BOOL waitsForImage;
+@property (readwrite, assign, nonatomic) PlexImage* attachedImage;
+//CALayer
+@property(retain) id contents;
+@property CGRect frame;
+@property CGPoint position;
+@end
+
+@class PlexRequest, BackgroundOperation;
 
 @interface PlexImage : MemoryObject {
 	PlexRequest* request;
@@ -19,7 +32,7 @@
 	NSString* imagePath;
 	MemoryImage* image;
 	
-	TraceableLayer* layer;
+	id<TraceableLayerProtocol> layer;
 	UIImageView* imageView;
 	BOOL cancelBackgroundLoad;
 	BackgroundOperation* backgroundOperation;
@@ -33,7 +46,7 @@
 @property (readonly) UIImage* saveImage;
 @property (readonly) NSString* imagePath;
 @property (readwrite) CGSize maxImageSize;
-@property (readwrite, retain, nonatomic) TraceableLayer* layer;
+@property (readwrite, retain, nonatomic) id<TraceableLayerProtocol> layer;
 @property (readwrite, retain) UIImageView* imageView;
 @property (readwrite) BOOL cancelBackgroundLoad;;
 

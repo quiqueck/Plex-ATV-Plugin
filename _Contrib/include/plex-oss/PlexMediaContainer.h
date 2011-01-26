@@ -10,9 +10,7 @@
 #import "PlexObject.h"
 #import "PlexMediaObject.h"
 @class PlexRequest;
-@protocol PlexDataPresenter;
-@protocol ListViewCellProtocol;
-@protocol BookPageView;
+
 
 typedef NSUInteger PlexViewModes;
 extern const PlexViewModes PlexViewModeUndefined;
@@ -85,11 +83,12 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 #else
 @interface PlexMediaContainer : PlexObject {
 #endif
+	id formatter;
 	NSMutableArray* directories;
 	PlexMediaContainer* parentFilterContainer;
 	PlexRequest* request;
 	PlexMediaObject* parentObject;
-	id<PlexDataPresenter> formatter;
+	//id<PlexDataPresenter> formatter;
 
 	NSString* backTitle;
 	
@@ -150,7 +149,7 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 @property (readonly) PlexClontentType content;
 
 
--(Class<ListViewCellProtocol>)listViewCellClassForOrientation:(UIInterfaceOrientation)io;
+
 
 
 -(id)initWithRequest:(PlexRequest*)req baseKey:(NSString*)bk fromObject:(PlexMediaObject*)pmo;
@@ -173,4 +172,3 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 -(void)reloadAttributes;
 @end
 	
-#import "PlexMediaContainer + SkinResources.h"

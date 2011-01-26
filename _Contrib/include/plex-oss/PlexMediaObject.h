@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "PlexDirectory.h"
-#import "DownloadOrPlayViewControllerDelegate.h"
-#import "PlaybackWhereViewControllerDelegate.h"
-
 typedef int PlexMediaObjectSeenState;
 extern const PlexMediaObjectSeenState PlexMediaObjectSeenStateSeen;
 extern const PlexMediaObjectSeenState PlexMediaObjectSeenStateUnseen;
@@ -28,7 +25,7 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 @protocol BackgroundOperationDelegate;
 
 @class LoadPlexObjectBackgroundContentOperation,LoadURLOperation;
-@interface PlexMediaObject : PlexDirectory<PlaybackWhereViewControllerDelegate, DownloadOrPlayViewControllerDelegate> {
+@interface PlexMediaObject : PlexDirectory{
 	NSString* ratingKey;
 	NSTimeInterval duration;
 	NSDate* originallyAvailableAt;
