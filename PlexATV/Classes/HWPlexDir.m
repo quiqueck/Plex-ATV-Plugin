@@ -37,6 +37,8 @@
 #import "SongListController.h"
 #import "HWUserDefaults.h"
 
+#define LOCAL_DEBUG_ENABLED 1
+
 BRMediaPlayer* __player = nil;
 PlexMediaProvider* __provider = nil;
 @implementation HWPlexDir
@@ -479,11 +481,16 @@ PlexMediaProvider* __provider = nil;
 		[menuItem setThumbnailLayerAspectRatio:0.5]; //halves the size of the image (ie makes it the "right" size)
 		
 		[menuItem setTitle:[pmo name]];
-		
+
+
+
 		NSString *subtitle = nil;
 		if ([mediaType isEqualToString:PlexMediaObjectTypeEpisode]) {
-			//set subtitle to episode number
-			subtitle = [NSString stringWithFormat:@"Episode %d", [pmo.attributes integerForKey:@"index"]];
+        //used to get details about the show, instead of gettings attrs here manually
+      PlexPreviewAsset *previewData = [[PlexPreviewAsset alloc] initWithURL:nil mediaProvider:nil mediaObject:pmo];
+
+        //set subtitle to show details
+			subtitle = [NSString stringWithFormat:@"%@, Season %d, Episode %d",[previewData seriesName] ,[previewData season],[previewData episode]];
 		} else {
 			//set subtitle to year
 			NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];

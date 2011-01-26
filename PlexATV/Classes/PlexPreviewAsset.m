@@ -450,11 +450,17 @@
 }
 
 - (id)seriesName {
-	return pmo.name;
+    //grandparentTitle is usually populated for episodes when coming from dynamic views like "Recently added"
+    //whereas mediacontainer.backTitle is used in "All shows->Futurama-Season 1->Episode 4"
+  if ([pmo.attributes objectForKey:@"grandparentTitle"] != nil) {
+    return [pmo.attributes objectForKey:@"grandparentTitle"];    
+  }
+  else
+    return pmo.mediaContainer.backTitle;
 }
 
 - (id)seriesNameForSorting {
-	return pmo.name;
+	return self.seriesName;
 }
 
 - (void)skip {}
