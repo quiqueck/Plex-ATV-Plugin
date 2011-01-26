@@ -20,6 +20,8 @@
 
 @synthesize hostName = _hostName;
 @synthesize serverName = _serverName;
+@synthesize userName = _userName;
+@synthesize password = _password;
 
 - (id) init
 {
@@ -32,7 +34,12 @@
 		//setup variables
 		isEditingHostName = NO;
 		isEditingServerName = NO;
-		hasCompletedHostNameEntry = NO;
+		isEditingUserName = NO;
+		isEditingPassword = NO;
+		
+		hasCompletedAddNewRemoteServerWizardStep1 = NO;
+		hasCompletedAddNewRemoteServerWizardStep2 = NO;
+		hasCompletedAddNewRemoteServerWizardStep3 = NO;
 		
 		_machines = [[NSMutableArray alloc] init];
 		
@@ -61,6 +68,8 @@
 	for (NSDictionary *persistentRemoteServer in persistentRemoteServers) {
 		NSString *hostName = [persistentRemoteServer objectForKey:PreferencesRemoteServerHostName];
 		NSString *serverName = [persistentRemoteServer objectForKey:PreferencesRemoteServerName];
+		NSString *userName = [persistentRemoteServer objectForKey:PreferencesRemoteServerUserName];
+		NSString *password = [persistentRemoteServer objectForKey:PreferencesRemoteServerPassword];
 		
 		//check if the machine manager already knows about this machine
 		NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"hostName == %@ AND serverName == %@", hostName, serverName];
@@ -71,6 +80,9 @@
 #endif
 			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
 			m.ip = hostName;
+			m.userName = userName;
+#warning quiqueck: how can we set the password?
+			//m.password = password;
 			
 			[m resolveAndNotify:self];
 			[m autorelease];
@@ -90,6 +102,8 @@
 	[_machines release];
 	self.hostName = nil;
 	self.serverName = nil;
+	self.userName = nil;
+	self.password = nil;
 	
 	[super dealloc];
 }
@@ -128,12 +142,14 @@
 	return result;
 }
 
-- (void)modifyRemoteMachine:(Machine *)m withHostName:(NSString *)hostName andServerName:(NSString *)serverName {
+- (void)modifyRemoteMachine:(Machine *)m withHostName:(NSString *)hostName serverName:(NSString *)serverName userName:(NSString *)userName password:(NSString *)password {
 	NSDictionary *oldEntry = [self persistentRemoteServerWithHostName:m.hostName andServerName:m.serverName];
-	NSDictionary *newEntry = [NSDictionary dictionaryWithObjectsAndKeys:
-									 hostName, PreferencesRemoteServerHostName,
-									 serverName, PreferencesRemoteServerName,
-									 nil];
+	NSDictionary *newEntry = [NSDictionary dictionaryWithObjectsAndKeys: 
+							  hostName, PreferencesRemoteServerHostName,
+							  serverName, PreferencesRemoteServerName,
+							  userName, PreferencesRemoteServerUserName,
+							  password, PreferencesRemoteServerPassword,
+							  nil];
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"Replacing persistent remote server entry [%@] [%@]", oldEntry, newEntry);
 #endif
@@ -146,22 +162,29 @@
 	m.serverName = serverName;
 	m.hostName = hostName;
 	m.ip = hostName;
+	m.userName = userName;
+#warning quiqueck: how can we set the password?
+	//m.password = password;
 #warning quiqueck: is this next line needed?
 	[m resolveAndNotify:self];
 }
 
-- (void)addNewRemoteMachineWithHostName:(NSString *)hostName andServerName:(NSString *)serverName {
+- (void)addNewRemoteMachineWithHostName:(NSString *)hostName serverName:(NSString *)serverName userName:(NSString *)userName password:(NSString *)password {
+	//yes, the password is stored in plain text
 	NSDictionary *newRemoteServer = [NSDictionary dictionaryWithObjectsAndKeys:
 									 hostName, PreferencesRemoteServerHostName,
 									 serverName, PreferencesRemoteServerName,
+									 userName, PreferencesRemoteServerUserName,
+									 password, PreferencesRemoteServerPassword,
 									 nil];
 	[persistentRemoteServers addObject:newRemoteServer];
 	[[HWUserDefaults preferences] setObject:persistentRemoteServers forKey:PreferencesRemoteServerList];
 	
 	Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
 	m.ip = hostName;
-	[hostName release];
-	[serverName release];
+	m.userName = userName;
+#warning quiqueck: how can we set the password?
+	//m.password = password;
 	
 	[m resolveAndNotify:self];
 	[m autorelease];
@@ -198,9 +221,13 @@
 #endif
 	if (selected == 0) {
 		//reset variables
-		hasCompletedHostNameEntry = NO;
+		hasCompletedAddNewRemoteServerWizardStep1 = NO;
+		hasCompletedAddNewRemoteServerWizardStep2 = NO;
+		hasCompletedAddNewRemoteServerWizardStep3 = NO;
 		self.hostName = nil;
 		self.serverName = nil;
+		self.userName = nil;
+		self.password = nil;
 		
 		//start the "add remote server" wizard
 		[self showEnterHostNameDialogBoxWithInitialText:@""];
@@ -215,7 +242,7 @@
 }
 
 - (float)heightForRow:(long)row {
-	return 50.0f;
+	return 0.0f;
 }
 
 - (long)itemCount {
@@ -233,11 +260,10 @@
 		NSString* name = [NSString stringWithFormat:@"%@ (Host: %@)", m.serverName, m.hostName];
 		[result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 		
-		NSString *defaultServerUid = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid];
-		
-		[result addAccessoryOfType:1]; //folder
-		if ([m.uid isEqualToString:defaultServerUid]) {
-			[result addAccessoryOfType:17]; //checkmark
+		//[result addAccessoryOfType:1]; //folder
+		if ([m.userName length] > 0) {
+			//lock and arrow would be perfect, but can only have single accessory :(
+			[result addAccessoryOfType:5]; //lock
 		}
 	}	
 	
@@ -280,6 +306,20 @@
 				 withInitialText:initalText];
 }
 
+- (void)showEnterUsernameDialogBoxWithInitialText:(NSString *)initalText {
+	[self showDialogBoxWithTitle:@"Remote server - Secure Server Access - Username" 
+			   secondaryInfoText:@"Supply the username to log in to the PMS if Secure Server Access is enabled" 
+				  textFieldLabel:@"Username:" 
+				 withInitialText:initalText];
+}
+
+- (void)showEnterPasswordDialogBoxWithInitialText:(NSString *)initalText {
+	[self showDialogBoxWithTitle:@"Remote server - Secure Server Access - Password" 
+			   secondaryInfoText:@"Supply the password to log in to the PMS if Secure Server Access is enabled" 
+				  textFieldLabel:@"Password:" 
+				 withInitialText:initalText];
+}
+
 - (void)showDialogBoxWithTitle:(NSString *)title 
 			 secondaryInfoText:(NSString *)infoText 
 				textFieldLabel:(NSString *)textFieldLabel
@@ -303,24 +343,35 @@
 #endif
 	
 	//check if the user was adding a new remote server, or editing details of previous one
-	if (isEditingHostName || isEditingServerName) {
+	if (isEditingHostName || isEditingServerName || isEditingUserName || isEditingPassword) {
 		//editing a previously created remote server
 		
 		long selected = [self getSelection];
 		Machine *m = [_machines objectAtIndex:selected-1]; //always -1 since we have "Add remote" as 0 in list
 		
+		//setup all the variables, and then we will be modifying just one of them
 		NSString *hostName = m.hostName;
 		NSString *serverName = m.serverName;
+		NSString *userName = m.userName;
+		NSString *password = m.password;
+		
 		if (isEditingHostName) {
 			//editing a previous entered remote server's host name
 			isEditingHostName = NO;
 			hostName = textEntered;
-		} else {
+		} else if (isEditingServerName) {
 			//editing a previous entered remote server's custom server name
 			isEditingServerName = NO;
 			serverName = textEntered;
+		} else if (isEditingUserName) {
+			isEditingUserName = NO;
+			userName = textEntered;
+		} else if (isEditingPassword) {
+			isEditingPassword = NO;
+			userName = textEntered;
 		}
-		[self modifyRemoteMachine:m withHostName:hostName andServerName:serverName];
+		
+		[self modifyRemoteMachine:m withHostName:hostName serverName:serverName userName:userName password:password];
 		
 		[[self stack] popController];
 		[self setNeedsUpdate];
@@ -328,24 +379,39 @@
 	} else {
 		//adding a new remote server
 		
-		if (!hasCompletedHostNameEntry) {
-			//step 1 completed
+		if (!hasCompletedAddNewRemoteServerWizardStep1) {
+			hasCompletedAddNewRemoteServerWizardStep1 = YES;
 			self.hostName = textEntered;
 			[[self stack] popController];
 			
-			hasCompletedHostNameEntry = YES;
 			[self showEnterServerNameDialogBoxWithInitialText:@""];
-		} else {
-			//step 2 completed
+			
+		} else if (!hasCompletedAddNewRemoteServerWizardStep2) {
+			hasCompletedAddNewRemoteServerWizardStep2 = YES;
 			//if no custom name was entered, use the host name
 			self.serverName = [textEntered isEqualToString:@""] ? self.hostName : textEntered;
+			[[self stack] popController];
+			
+			[self showEnterUsernameDialogBoxWithInitialText:@""];
+			
+		} else if (!hasCompletedAddNewRemoteServerWizardStep3) {
+			hasCompletedAddNewRemoteServerWizardStep3 = YES;
+			self.userName = textEntered;
+			[[self stack] popController];
+			
+			[self showEnterPasswordDialogBoxWithInitialText:@""];
+			
+		} else {
+			//final step completed
+			self.password = textEntered;
+			[[self stack] popController];
 			
 			//add machine
-			[self addNewRemoteMachineWithHostName:self.hostName andServerName:self.serverName];
-
-			[[self stack] popController];
+			[self addNewRemoteMachineWithHostName:self.hostName serverName:self.serverName userName:self.userName password:self.password];
+			
 			[self setNeedsUpdate];
 		}
+
 	}
 }
 
@@ -370,6 +436,8 @@
 		
 		[option addOptionText:@"Edit host name"];
 		[option addOptionText:@"Edit server name"];
+		[option addOptionText:@"Edit login username"];
+		[option addOptionText:@"Edit login password"];
 		[option addOptionText:@"Remove from server list"];
 		[option addOptionText:@"Go back"];
 		[option setActionSelector:@selector(optionSelected:) target:self];
@@ -385,15 +453,27 @@
 	
 	if([[sender selectedText] isEqualToString:@"Edit host name"]) {
 		
-		//[[self stack] popController];
+		[[self stack] popController];
 		isEditingHostName = YES;
 		[self showEnterHostNameDialogBoxWithInitialText:_machine.ip];
 		
 	} else if([[sender selectedText] isEqualToString:@"Edit server name"]) {
 		
-		//[[self stack] popController];
+		[[self stack] popController];
 		isEditingServerName = YES;
 		[self showEnterServerNameDialogBoxWithInitialText:_machine.serverName];
+		
+	} else if([[sender selectedText] isEqualToString:@"Edit login username"]) {
+		
+		[[self stack] popController];
+		isEditingUserName = YES;
+		[self showEnterUsernameDialogBoxWithInitialText:_machine.userName];
+		
+	} else if([[sender selectedText] isEqualToString:@"Edit login password"]) {
+		
+		[[self stack] popController];
+		isEditingPassword = YES;
+		[self showEnterPasswordDialogBoxWithInitialText:_machine.password];
 		
 	} else if([[sender selectedText] isEqualToString:@"Remove from server list"]) {
 		

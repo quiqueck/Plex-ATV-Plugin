@@ -8,6 +8,8 @@
 #define PreferencesRemoteServerList @"PreferencesRemoteServerList"
 #define PreferencesRemoteServerHostName @"PreferencesRemoteServerHostName"
 #define PreferencesRemoteServerName @"PreferencesRemoteServerName"
+#define PreferencesRemoteServerUserName @"PreferencesRemoteServerUserName"
+#define PreferencesRemoteServerPassword @"PreferencesRemoteServerPassword"
 
 #define PreferencesQualitySetting @"PreferencesQualitySetting"
 #define PreferencesRemoteServerName @"PreferencesRemoteServerName"
