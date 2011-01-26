@@ -60,38 +60,32 @@
 }
 
 
--(void)machineWasAdded:(Machine*)m{
+
+-(void)machineWasAdded:(Machine*)m;{
   for (id<MachineManagerDelegate> d in delegates){
     NSLog(@"Send machineWasAdded to %@", d);
     [d machineWasAdded:m];
   }
 }
 
--(void)machineStateDidChange:(Machine*)m{
+-(void)machineWasChanged:(Machine*)m{
   for (id<MachineManagerDelegate> d in delegates){
-    NSLog(@"Send machineStateDidChange to %@", d);
-    [d machineStateDidChange:m];
+    NSLog(@"Send machineWasChanged to %@", d);
+    [d machineWasChanged:m];
   }
 }
 
--(void)machineResolved:(Machine*)m{
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{
   for (id<MachineManagerDelegate> d in delegates){
-    NSLog(@"Send machineResolved to %@", d);
-    [d machineResolved:m];
+    NSLog(@"Send machine:changedClientTo to %@", d);
+      [d machine:m changedClientTo:cc];
   }
 }
 
--(void)machineDidNotResolve:(Machine*)m{
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{
   for (id<MachineManagerDelegate> d in delegates){
-    NSLog(@"Send machineDidNotResolve to %@", d);
-    [d machineDidNotResolve:m];
-  }
-}
-
--(void)machineReceivedClients:(Machine*)m{
-  for (id<MachineManagerDelegate> d in delegates){
-    NSLog(@"Send machineReceivedClients to %@", d);
-    [d machineReceivedClients:m];
+    NSLog(@"Send machine:receivedInfoForConnection to %@", d);
+      [d machine:m receivedInfoForConnection:con];
   }
 }
 

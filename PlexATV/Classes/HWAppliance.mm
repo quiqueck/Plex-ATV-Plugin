@@ -127,8 +127,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #endif
 			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
 			m.ip = hostName;
-			
-			[m resolveAndNotify:self];
 			[m autorelease];
 		} else {
 #ifdef LOCAL_DEBUG_ENABLED
@@ -263,10 +261,10 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	for (PlexMediaObject *pmo in directories) {
 		NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 		[dict setObject:[pmo.name copy] forKey:CategoryNameKey];
-		[dict setObject:[m.uid copy] forKey:MachineUIDKey];
+		[dict setObject:[m.machineID copy] forKey:MachineUIDKey];
 		[self performSelectorOnMainThread:@selector(addNewApplianceWithDict:) withObject:dict waitUntilDone:NO];
 #if LOCAL_DEBUG_ENABLED
-		NSLog(@"Adding category [%@] for machine uid [%@]", pmo.name, m.uid);
+		NSLog(@"Adding category [%@] for machine uid [%@]", pmo.name, m.machineID);
 #endif
 	}
 	[pool drain];
@@ -382,10 +380,10 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Removed machine %@", m);
 #endif
-	[self removeAppliancesBelongingToMachineWithUid:m.uid];
+	[self removeAppliancesBelongingToMachineWithUid:m.machineID];
 }
 
-- (void)machineWasAdded:(Machine*)m {	
+-(void)machineWasAdded:(Machine*)m {	
     BOOL machineRunsServer = runsServer(m.role);
     BOOL machineIsOnline = m.isOnline;
     BOOL machinesListAlreadyContainsMachine = [self.machines containsObject:m];
@@ -405,7 +403,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
     }
 }
 
-- (void)machineStateDidChange:(Machine*)m {
+-(void)machineWasChanged:(Machine*)m {
 	if (m==nil) return;
 	
 	BOOL machineRunsServer = runsServer(m.role);
@@ -416,7 +414,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		[self machineWasAdded:m];
 		return;
 	} else  if ( (!machineRunsServer || !machineIsOnline) && machinesListAlreadyContainsMachine ) {
-		[self removeAppliancesBelongingToMachineWithUid:m.uid];
+		[self removeAppliancesBelongingToMachineWithUid:m.machineID];
 #if LOCAL_DEBUG_ENABLED
 		NSLog(@"MachineManager: Removed %@", m);
 #endif
@@ -428,23 +426,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	}
 }
 
-- (void)machineResolved:(Machine*)m {
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Resolved %@", m);
-#endif
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{
 }
 
-- (void)machineDidNotResolve:(Machine*)m {
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Unable to Resolve %@", m);
-#endif
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{
 }
-
-- (void)machineReceivedClients:(Machine*)m {
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Got list of clients %@", m);
-#endif
-}
-
-
 @end

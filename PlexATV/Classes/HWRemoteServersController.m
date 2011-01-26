@@ -80,11 +80,8 @@
 #endif
 			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
 			m.ip = hostName;
-			m.userName = userName;
-#warning quiqueck: how can we set the password?
-			//m.password = password;
+      [m setUsername:userName andPassword:password];
 			
-			[m resolveAndNotify:self];
 			[m autorelease];
 		} else {
 #ifdef LOCAL_DEBUG_ENABLED
@@ -161,12 +158,7 @@
 	//update machine	
 	m.serverName = serverName;
 	m.hostName = hostName;
-	m.ip = hostName;
-	m.userName = userName;
-#warning quiqueck: how can we set the password?
-	//m.password = password;
-#warning quiqueck: is this next line needed?
-	[m resolveAndNotify:self];
+	[m setUsername:userName andPassword:password];
 }
 
 - (void)addNewRemoteMachineWithHostName:(NSString *)hostName serverName:(NSString *)serverName userName:(NSString *)userName password:(NSString *)password {
@@ -181,12 +173,8 @@
 	[[HWUserDefaults preferences] setObject:persistentRemoteServers forKey:PreferencesRemoteServerList];
 	
 	Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
-	m.ip = hostName;
-	m.userName = userName;
-#warning quiqueck: how can we set the password?
-	//m.password = password;
+	[m setUsername:userName andPassword:password];
 	
-	[m resolveAndNotify:self];
 	[m autorelease];
 }
 
@@ -419,10 +407,11 @@
     //get the currently selected row
 	Machine* _machine = [_machines objectAtIndex:row-1]; //always -1 since we have "Add remote" as 0 in list
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"showEditRemoteServerViewForRow. row: %d, machine: %@, bonjour: %@", row, _machine, _machine.bonjour);
+	NSLog(@"showEditRemoteServerViewForRow. row: %d, machine: %@, bonjour: %@", row, _machine, [_machine.bestConnection class]);
 #endif
 	
-	if (!_machine.bonjour){
+#warning <Machine Manager Update> Please check this...
+	//if (!_machine.bonjour){
 		BROptionDialog *option = [[BROptionDialog alloc] init];
 		[option setIdentifier:EditServerDialog];
 		
@@ -443,7 +432,7 @@
 		[option setActionSelector:@selector(optionSelected:) target:self];
 		[[self stack] pushController:option];
 		[option release];
-	}
+	//}
 	
 }
 
@@ -550,7 +539,8 @@
 }
 
 -(void)machineWasAdded:(Machine*)m{
-	if (!runsServer(m.role) || m.bonjour) return;
+#warning <Machine Manager Update> Please check this...
+	if (!runsServer(m.role) /*|| m.bonjour*/) return;
 	
 	[_machines addObject:m];
 #ifdef LOCAL_DEBUG_ENABLED
@@ -561,7 +551,7 @@
 	[self setNeedsUpdate];
 }
 
--(void)machineStateDidChange:(Machine*)m{
+-(void)machineWasChanged:(Machine*)m{
 	if (m==nil) return;
 	
 	if (runsServer(m.role) && ![_machines containsObject:m]){
@@ -581,6 +571,13 @@
 	[self setNeedsUpdate];
 }
 
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{
+}
+
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{
+}
+
+#warning <Machine Manager Update> The delegate method no longer exists! Please check...
 -(void)machineResolved:(Machine*)m{
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"Resolved %@", m);
@@ -588,18 +585,7 @@
 	if (![_machines containsObject:m]){
 		[[MachineManager sharedMachineManager] addMachine:m];
 	}
-}
 
--(void)machineDidNotResolve:(Machine*)m{
-#ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"Unable to Resolve %@", m);
-#endif
-}
-
--(void)machineReceivedClients:(Machine*)m{
-#ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"Got list of clients %@", m);
-#endif
 }
 
 @end
