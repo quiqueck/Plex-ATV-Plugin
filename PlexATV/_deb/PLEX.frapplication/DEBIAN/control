@@ -1,10 +1,10 @@
 Package: com.plex.client-plugin
 Name: AppleTV PLEX Plugin
-Version: 0.6.6
+Version: 0.6.7
 Priority: optional
 Size: 1083178
 Installed-Size: 2662
-Depends: beigelist,com.nito
+Depends: beigelist,com.nito,org.tomcool.SMFramework
 Replaces: plex-client-plugin
 Architecture: iphoneos-arm
 Description: A PLEX Client for Lowtide (experimental)
