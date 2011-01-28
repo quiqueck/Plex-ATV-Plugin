@@ -184,7 +184,7 @@ PlexMediaProvider* __provider = nil;
 	NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, pmo.mediaContainer.content );
 	
 	
-	if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"albums" isEqualToString:pmo.mediaContainer.content]) {
+	if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"albums" isEqualToString:pmo.mediaContainer.content] || [@"playlists" isEqualToString:pmo.mediaContainer.content]) {
 		NSLog(@"Accessing Artist/Album %@", pmo);
 		SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
@@ -310,13 +310,14 @@ PlexMediaProvider* __provider = nil;
 		streamQuality = PlexStreamingQuality720p_2300;
 	}
 	pmo.request.machine.streamQuality = streamQuality;
-	
+
+	/*
     //player get's confused if we're running a transcoder already (tried playing and failed on ATV, transcoder still running)
-    //if ([pmo.request transcoderRunning]) {
-    // [pmo.request stopTranscoder];
-    //  [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
-    //}
-		
+  if ([pmo.request transcoderRunning]) {
+    [pmo.request stopTranscoder];
+    [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
+  }
+  */
 	
 	
 	NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
@@ -328,11 +329,11 @@ PlexMediaProvider* __provider = nil;
 	[pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
 	
 	
-
+  
 	if (__provider==nil){
 		__provider = [[PlexMediaProvider alloc] init];
-      BRMediaHost* mh = [[BRMediaHost mediaHosts] objectAtIndex:0];
-      [mh addMediaProvider:__provider];
+    BRMediaHost* mh = [[BRMediaHost mediaHosts] objectAtIndex:0];
+    [mh addMediaProvider:__provider];
 	}
 	
 	if (playProgressTimer){
@@ -419,7 +420,7 @@ PlexMediaProvider* __provider = nil;
         //stop the transcoding on PMS
       [rootContainer.request stopTranscoder];
       NSLog(@"stopping transcoder");
-    
+      
       break;
     case kBRMediaPlayerStatePlaying:
         //report time back to PMS so we can continue in the right spot
@@ -476,23 +477,23 @@ PlexMediaProvider* __provider = nil;
 		} else {
 			image = nil;
 		}
-		//BRImageControl *thumbnailLayer = (BRImageControl *)[menuItem valueForKey:@"_thumbnailLayer"];
+      //BRImageControl *thumbnailLayer = (BRImageControl *)[menuItem valueForKey:@"_thumbnailLayer"];
 		[menuItem setThumbnailImage:image];
 		[menuItem setThumbnailLayerAspectRatio:0.5]; //halves the size of the image (ie makes it the "right" size)
 		
 		[menuItem setTitle:[pmo name]];
-
-
-
+    
+    
+    
 		NSString *subtitle = nil;
 		if ([mediaType isEqualToString:PlexMediaObjectTypeEpisode]) {
         //used to get details about the show, instead of gettings attrs here manually
       PlexPreviewAsset *previewData = [[PlexPreviewAsset alloc] initWithURL:nil mediaProvider:nil mediaObject:pmo];
-
+      
         //set subtitle to show details
 			subtitle = [NSString stringWithFormat:@"%@, Season %d, Episode %d",[previewData seriesName] ,[previewData season],[previewData episode]];
 		} else {
-			//set subtitle to year
+        //set subtitle to year
 			NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
 			[dateFormatter setDateFormat:@"yyyy"];
 			subtitle = [dateFormatter stringFromDate:pmo.originallyAvailableAt];

@@ -76,7 +76,10 @@
 //}
 
 - (id)artist {
-	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+  if ([pmo.attributes objectForKey:@"artist" != nil])
+    return [pmo.attributes objectForKey:@"artist"];
+  else
+    return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 }
 
 - (id)artistCollection {
@@ -84,7 +87,7 @@
 }
 
 - (id)artistForSorting {
-	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+	return self.artist;
 }
 
 - (id)assetID {
@@ -395,11 +398,14 @@
 }
 
 - (id)primaryCollectionTitle {
-	return [pmo.mediaContainer.attributes valueForKey:@"title2"];
+	if ([pmo.attributes objectForKey:@"album"] != nil)
+    return [pmo.attributes objectForKey:@"album"];
+  else
+    return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 }
 
 - (id)primaryCollectionTitleForSorting {
-	return nil;
+	return self.primaryCollectionTitle;
 }
 
 - (id)primaryGenre {
