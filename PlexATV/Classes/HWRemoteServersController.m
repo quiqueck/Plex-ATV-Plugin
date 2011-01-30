@@ -84,7 +84,6 @@
 #warning quiqueck: how can we set the password?
 			//m.password = password;
 			
-			[m resolveAndNotify:self];
 			[m autorelease];
 		} else {
 #ifdef LOCAL_DEBUG_ENABLED
@@ -165,8 +164,6 @@
 	m.userName = userName;
 #warning quiqueck: how can we set the password?
 	//m.password = password;
-#warning quiqueck: is this next line needed?
-	[m resolveAndNotify:self];
 }
 
 - (void)addNewRemoteMachineWithHostName:(NSString *)hostName serverName:(NSString *)serverName userName:(NSString *)userName password:(NSString *)password {
@@ -186,7 +183,6 @@
 #warning quiqueck: how can we set the password?
 	//m.password = password;
 	
-	[m resolveAndNotify:self];
 	[m autorelease];
 }
 
@@ -556,8 +552,6 @@
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"Added %@", m);
 #endif
-	
-    //[m resolveAndNotify:self];
 	[self setNeedsUpdate];
 }
 
