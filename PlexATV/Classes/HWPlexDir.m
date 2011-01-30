@@ -36,6 +36,7 @@
 #import "PlexSongAsset.h"
 #import "SongListController.h"
 #import "HWUserDefaults.h"
+#import "HWMediaShelfController.h"
 
 #define LOCAL_DEBUG_ENABLED 1
 
@@ -180,7 +181,7 @@ PlexMediaProvider* __provider = nil;
 	type = [type lowercaseString];
 	
     //NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, type);
-	
+	NSLog(@"hwplexdir frame %@",NSStringFromRect(self.frame));
 	NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, pmo.mediaContainer.content );
 	
 	
@@ -190,6 +191,11 @@ PlexMediaProvider* __provider = nil;
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
 		[songlist autorelease];
 	}
+/*  else if ([@"secondary" isEqualToString:pmo.mediaContainer.content]) {
+    NSLog(@"pushing shelfController");
+    HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexContainer:[pmo contents]];
+    [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
+  }*/
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
 		NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
 		
