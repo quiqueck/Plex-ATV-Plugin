@@ -77,6 +77,7 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
   
 }
 
++(NSString*)stringFromVersion:(int)ver;
 +(NSString*)stringFromMachineRole:(MachineRole)r;
 +(NSString*)stringFromPlayOnType:(PlayOnType)p;
 -(id)initWithServerName:(NSString*)serverName manager:(MachineManager*)parent machineID:(NSString*)mid;
