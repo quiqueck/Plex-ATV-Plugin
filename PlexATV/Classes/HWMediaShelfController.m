@@ -11,11 +11,90 @@
 #import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
+#import "SMFramework.h"
 
 #define LOCAL_DEBUG_ENABLED 1
+#define DEFAULT_IMAGES_PATH		@"/System/Library/PrivateFrameworks/AppleTV.framework/DefaultFlowerPhotos/"
 
 @implementation HWMediaShelfController
 
+-(id)initWithPath:(NSString *)path
+{
+  return self;
+}
+
+- (void) drawSelf
+{
+  NSLog(@"drawSelf");
+  _spinner=[[BRWaitSpinnerControl alloc]init];
+  _cursorControl=[[BRCursorControl alloc] init];
+  _scroller=[[BRScrollControl alloc] init];
+  _gridControl= [[BRGridControl alloc] init];
+  [self setGrid];
+  [_gridControl focusControlAtIndex:0];
+	[_gridControl setHorizontalGap:0.01f];
+  [_gridControl setVerticalGap:0.01f];
+  [_scroller setFollowsFocus:YES];
+  [_scroller setContent:_gridControl];
+  [self layoutSubcontrols];
+  [self setNeedsDisplay];
+  [self setNeedsLayout];
+  
+}
+
+- (void) setGrid
+{
+  
+  NSLog(@"setGrid");
+  NSArray *assets=[SMFPhotoMethods mediaAssetsForPath:DEFAULT_IMAGES_PATH];
+  
+  BRDataStore *st = [SMFPhotoMethods dataStoreForAssets:assets];
+  BRPhotoDataStoreProvider* provider    = [BRPhotoDataStoreProvider providerWithDataStore:st 
+                                                                           controlFactory:[BRPhotoControlFactory standardFactory]];
+  
+  
+  
+  NSLog(@"provider: %@", provider);
+  [_gridControl setProvider:provider];
+  [_gridControl setColumnCount:5];
+  [_gridControl setWrapsNavigation:YES];
+  [self setControls:[NSArray arrayWithObjects:_spinner,_cursorControl,_scroller,nil]];
+  CGRect masterFrame = [BRWindow interfaceFrame];
+  NSLog(@"masterFrame: %f", masterFrame.size.width);
+	
+	
+  CGRect frame;
+  frame.origin.x = masterFrame.size.width  * 0.0f;
+  frame.origin.y = (masterFrame.size.height * 0.0f);// - txtSize.height;
+	
+  frame.size.width = masterFrame.size.width*1.f;
+	frame.size.height = masterFrame.size.height*1.f;
+	[_gridControl setAcceptsFocus:YES];
+  [_gridControl setWrapsNavigation:YES];
+  [_gridControl setProviderRequester:_gridControl];//[NSNotificationCenter defaultCenter]];
+  [_scroller setFrame:frame];
+  [_gridControl setFrame:frame];
+  [_scroller setAcceptsFocus:YES];
+  [self addControl:_scroller];
+  [self addControl:_spinner];
+  [self addControl:_cursorControl];
+    //[self addControl:_gridControl];
+  
+  NSLog(@"gridControl: %@", _gridControl);
+  NSLog(@"dataCount: %d", [_gridControl dataCount]);
+  NSLog(@"rowCount: %d", [_gridControl rowCount]);
+  
+  
+}
+-(void)controlWasActivated
+{
+  NSLog(@"controlWasActivated");
+	[self drawSelf];
+  [super controlWasActivated];
+	
+}
+
+/*
 @synthesize _assets;
 
 - (id) init
@@ -43,13 +122,13 @@
   masterFrame.size.width = 1280;
   masterFrame.size.height = 720;
   NSLog(@"%@",NSStringFromRect(masterFrame));
-  /*
+  
     _shelfControl = [[BRMediaShelfControl alloc] init];
     [_shelfControl setProvider:[self getProviderForGrid]];
     [_shelfControl setColumnCount:7];
     [_shelfControl setCentered:NO];
     [_shelfControl layoutSubcontrols];
-  */
+  
   
   BRGridControl *_trustedGrid = [[BRGridControl alloc]init];
   [_trustedGrid setColumnCount:7];
@@ -196,6 +275,6 @@
 -(void)setNeedsUpdate{
 	NSLog(@"Updating UI");
 }
-
+*/
 
 @end

@@ -37,7 +37,6 @@
 #import "SongListController.h"
 #import "HWUserDefaults.h"
 #import "HWMediaShelfController.h"
-#import "SMFGridController.h"
 
 #define LOCAL_DEBUG_ENABLED 1
 
@@ -195,7 +194,7 @@ PlexMediaProvider* __provider = nil;
   else if ([@"secondary" isEqualToString:pmo.mediaContainer.content]) {
     NSLog(@"pushing shelfController");
       //HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexContainer:[pmo contents]];
-    SMFGridController *shelfController = [[SMFGridController alloc] initWithPath:@""];
+    HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] init];
     [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
   }
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
