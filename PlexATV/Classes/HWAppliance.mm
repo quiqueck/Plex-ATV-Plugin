@@ -1,4 +1,4 @@
-#define LOCAL_DEBUG_ENABLED 1
+#define LOCAL_DEBUG_ENABLED 0
 
 #import "HWAppliance.h"
 #import "BackRowExtras.h"

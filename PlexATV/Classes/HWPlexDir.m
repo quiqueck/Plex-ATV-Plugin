@@ -37,6 +37,7 @@
 #import "SongListController.h"
 #import "HWUserDefaults.h"
 #import "HWMediaShelfController.h"
+#import "HWMediaShelfController2.h"
 
 #define LOCAL_DEBUG_ENABLED 1
 
@@ -193,8 +194,9 @@ PlexMediaProvider* __provider = nil;
 	}
   else if ([@"secondary" isEqualToString:pmo.mediaContainer.content]) {
     NSLog(@"pushing shelfController");
-    HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexContainer:[pmo contents]];
-    [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
+    //HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexContainer:[pmo contents]];
+	  HWMediaShelfController2 *shelfController = [[HWMediaShelfController2 alloc] init];
+	  [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
   }
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
 		NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
