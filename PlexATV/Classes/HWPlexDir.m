@@ -228,7 +228,16 @@ PlexMediaProvider* __provider = nil;
 	}
 	else {
 		HWPlexDir* menuController = [[HWPlexDir alloc] init];
-		menuController.rootContainer = [pmo contents];
+		
+		#warning Discuss the following commented code with quiqueck
+		//BOOL skipFilteringOptionsMenu = [[HWUserDefaults preferences] objectForKey:PreferencesAdvancedEnableSkipFilteringOptionsMenu];
+		//if (type of menu is 'filtering menu' && skipFilteringOptionsMenu) {
+		if (NO) {
+			//skip the menu with 'all', 'unwatched', etc
+		} else {
+			//don't skip it
+			menuController.rootContainer = [pmo contents];
+		}
 		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 		
 		[menuController autorelease];
