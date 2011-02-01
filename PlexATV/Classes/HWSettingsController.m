@@ -16,19 +16,21 @@
 #import "HWSettingsController.h"
 #import "HWPmsListController.h"
 #import "HWRemoteServersController.h"
+#import "HWAdvancedSettingsController.h"
 #import "HWUserDefaults.h"
 #import "Constants.h"
 
 @implementation HWSettingsController
 @synthesize topLevelController;
 
-#define PlexPluginVersion @"0.6.6"
+#define PlexPluginVersion @"0.6.7"
 
 #define CombinedPmsCategoriesIndex 0
 #define DefaultServerIndex 1
 #define RemoteServersIndex 2
 #define QualitySettingIndex 3
-#define PluginVersionNumberIndex 4
+#define AdvancedSettingsIndex 4
+#define PluginVersionNumberIndex 5
 
 #pragma mark -
 #pragma mark init/dealoc
@@ -99,6 +101,11 @@
 	[qualitySettingTitle release];
 	[_items addObject:qualitySettingMenuItem];
 	
+	
+	// =========== advanced settings ===========
+	SMFMenuItem *advancedSettingsMenuItem = [SMFMenuItem folderMenuItem];
+	[advancedSettingsMenuItem setTitle:@"Advanced Settings"];
+	[_items addObject:advancedSettingsMenuItem];
 	
 	// =========== version number ===========
 	SMFMenuItem *pluginVersionNumberMenuItem = [SMFMenuItem menuItem];
@@ -173,6 +180,13 @@
 			[self.list reload];
 			break;
 		}
+		case AdvancedSettingsIndex: {
+			// =========== advanced settings ===========
+			HWAdvancedSettingsController* menuController = [[HWAdvancedSettingsController alloc] init];
+			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
+			[menuController autorelease];
+			break;
+		}
 		case PluginVersionNumberIndex: {
 			//do nothing
 			break;
@@ -209,6 +223,12 @@
 			// =========== quality setting ===========
 			[asset setTitle:@"Select the video quality"];
 			[asset setSummary:@"Sets the quality of the streamed video.                                        Good: 720p 1500 kbps, Better: 720p 2300 kbps, Best: 720p 4000 kbps"];
+			break;
+		}
+		case AdvancedSettingsIndex: {
+			// =========== advanced settings ===========
+			[asset setTitle:@"Modify advanced settings"];
+			[asset setSummary:@"Alter UI behavior, enable debug mode, etc."];
 			break;
 		}
 		case PluginVersionNumberIndex: {
