@@ -238,24 +238,48 @@ PlexMediaProvider* __provider = nil;
 - (void)showModifyViewedStatusViewForRow:(long)row {
     //get the currently selected row
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:row];
+	NSString *plexMediaObjectType = [pmo.attributes valueForKey:@"type"];
 	
-	if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
-		BROptionDialog *option = [[BROptionDialog alloc] init];
-		[option setIdentifier:ModifyViewStatusOptionDialog];
+	NSLog(@"HERE: %@", plexMediaObjectType);
+	
+	if (pmo.hasMedia 
+		|| [@"Video" isEqualToString:pmo.containerType]
+		|| [@"show" isEqualToString:plexMediaObjectType]
+		|| [@"season" isEqualToString:plexMediaObjectType]) {
+		//show dialog box
+		BROptionDialog *optionDialogBox = [[BROptionDialog alloc] init];
+		[optionDialogBox setIdentifier:ModifyViewStatusOptionDialog];
 		
-		[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
-							 pmo, @"mediaObject",
-							 nil]];
+		[optionDialogBox setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
+									  pmo, @"mediaObject",
+									  nil]];
 		
-		[option setPrimaryInfoText:@"Modify View Status"];
-		[option setSecondaryInfoText:pmo.name];
+		[optionDialogBox setPrimaryInfoText:@"Modify View Status"];
+		[optionDialogBox setSecondaryInfoText:pmo.name];
 		
-		[option addOptionText:@"Mark as Watched"];
-		[option addOptionText:@"Mark as Unwatched"];
-		[option addOptionText:@"Go back"];
-		[option setActionSelector:@selector(optionSelected:) target:self];
-		[[self stack] pushController:option];
-		[option release];
+		
+		NSString *watchOption = nil;
+		NSString *unwatchOption = nil;
+		if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]) {
+			//modify single media item
+			watchOption = @"Mark as Watched";
+			unwatchOption = @"Mark as Unwatched";
+		} else if (!pmo.hasMedia && [@"show" isEqualToString:plexMediaObjectType]) {
+			//modify all seasons within show
+			watchOption = @"Mark entire show as Watched";
+			unwatchOption = @"Mark entire show as Unwatched";
+		} else if (!pmo.hasMedia && [@"season" isEqualToString:plexMediaObjectType]) {
+			//modify all episodes within season
+			watchOption = @"Mark entire season as Watched";
+			unwatchOption = @"Mark entire season as Unwatched";
+		}
+		
+		[optionDialogBox addOptionText:watchOption];
+		[optionDialogBox addOptionText:unwatchOption];
+		[optionDialogBox addOptionText:@"Go back"];
+		[optionDialogBox setActionSelector:@selector(optionSelected:) target:self];
+		[[self stack] pushController:optionDialogBox];
+		[optionDialogBox release];
 	}
 }
 
@@ -277,14 +301,14 @@ PlexMediaProvider* __provider = nil;
 			[[self stack] popController];
 		}
 	} else if ([option.identifier isEqualToString:ModifyViewStatusOptionDialog]) {		
-		if([[sender selectedText] isEqualToString:@"Mark as Watched"]) {
-			//mark video watched
+		if([[sender selectedText] hasSuffix:@"Watched"]) {
+			//mark item(s) as watched
 			[[self stack] popController]; //need this so we don't go back to option dialog when going back
 			NSLog(@"Marking as watched: %@", pmo.name);
 			[pmo markSeen];
 			[self.list reload];
-		} else if ([[sender selectedText] isEqualToString:@"Mark as Unwatched"]) {
-			//mark as unwatched
+		} else if ([[sender selectedText] hasSuffix:@"Unwatched"]) {
+			//mark item(s) as unwatched
 			[[self stack] popController]; //need this so we don't go back to option dialog when going back
 			NSLog(@"Marking as unwatched: %@", pmo.name);
 			[pmo markUnseen];
