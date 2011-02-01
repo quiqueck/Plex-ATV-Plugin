@@ -109,33 +109,32 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	} return self;
 }
 
-- (void)loadInPersistentMachines {
-	//load in persistent machines
-	NSArray *persistentRemoteServers = [[HWUserDefaults preferences] arrayForKey:PreferencesRemoteServerList];
-	
-	NSArray *currentMachines = [[MachineManager sharedMachineManager] machines];
-	for (NSDictionary *persistentRemoteServer in persistentRemoteServers) {
-		NSString *hostName = [persistentRemoteServer objectForKey:PreferencesRemoteServerHostName];
-		NSString *serverName = [persistentRemoteServer objectForKey:PreferencesRemoteServerName];
-		
-		//check if the machine manager already knows about this machine
-		NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"hostName == %@ AND serverName == %@", hostName, serverName];
-		NSArray *matchingMachines = [currentMachines filteredArrayUsingPredicate:machinePredicate];
-		if ([matchingMachines count] == 0) {
-#ifdef LOCAL_DEBUG_ENABLED
-			NSLog(@"Adding persistant remote machine with hostName [%@] and serverName [%@] ", hostName, serverName);
-#endif
-			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
-			m.ip = hostName;
-			[m autorelease];
-		} else {
-#ifdef LOCAL_DEBUG_ENABLED
-			NSLog(@"Machine already exists with hostName [%@] and serverName [%@] ", hostName, serverName);
-#endif
-		}
-		
-	}
-}
+//- (void)loadInPersistentMachines {
+//	//load in persistent machines
+//	NSArray *persistentRemoteServers = [[HWUserDefaults preferences] arrayForKey:PreferencesRemoteServerList];
+//	
+//	NSArray *currentMachines = [[MachineManager sharedMachineManager] machines];
+//	for (NSDictionary *persistentRemoteServer in persistentRemoteServers) {
+//		NSString *hostName = [persistentRemoteServer objectForKey:PreferencesRemoteServerHostName];
+//		NSString *serverName = [persistentRemoteServer objectForKey:PreferencesRemoteServerName];
+//		
+//		//check if the machine manager already knows about this machine
+//		NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"hostName == %@ AND serverName == %@", hostName, serverName];
+//		NSArray *matchingMachines = [currentMachines filteredArrayUsingPredicate:machinePredicate];
+//		if ([matchingMachines count] == 0) {
+//#ifdef LOCAL_DEBUG_ENABLED
+//			NSLog(@"Adding persistant remote machine with hostName [%@] and serverName [%@] ", hostName, serverName);
+//#endif
+//			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
+//			[m autorelease];
+//		} else {
+//#ifdef LOCAL_DEBUG_ENABLED
+//			NSLog(@"Machine already exists with hostName [%@] and serverName [%@] ", hostName, serverName);
+//#endif
+//		}
+//		
+//	}
+//}
 
 - (Machine *)machineFromUid:(NSString *)uid {
 	NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", uid];
