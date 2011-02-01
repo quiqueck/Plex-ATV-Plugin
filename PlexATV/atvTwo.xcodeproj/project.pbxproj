@@ -535,6 +535,7 @@
 		32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = atvTwo_Prefix.pch; sourceTree = "<group>"; };
 		727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWAdvancedSettingsController.h; path = Classes/HWAdvancedSettingsController.h; sourceTree = "<group>"; };
 		727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWAdvancedSettingsController.m; path = Classes/HWAdvancedSettingsController.m; sourceTree = "<group>"; };
+		727A3FAE12F7C93D00994193 /* SMFGridController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFGridController.h; sourceTree = "<group>"; };
 		729722FC12EE79C20064E776 /* BRMenuItem_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMenuItem_SMF.h; sourceTree = "<group>"; };
 		729722FD12EE79C20064E776 /* NSArray_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_SMF.h; sourceTree = "<group>"; };
 		729722FE12EE79C20064E776 /* NSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
@@ -1251,6 +1252,7 @@
 				7297230912EE79C20064E776 /* SMFEventManager.h */,
 				7297230A12EE79C20064E776 /* SMFFolderBrowser.h */,
 				7297230B12EE79C20064E776 /* SMFFolderDelegate.h */,
+				727A3FAE12F7C93D00994193 /* SMFGridController.h */,
 				7297230C12EE79C20064E776 /* SMFImageAsset.h */,
 				7297230D12EE79C20064E776 /* SMFInvocationCenteredMenuController.h */,
 				7297230E12EE79C20064E776 /* SMFListDropShadowControl.h */,
