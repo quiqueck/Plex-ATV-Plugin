@@ -228,16 +228,55 @@ PlexMediaProvider* __provider = nil;
 	}
 	else {
 		HWPlexDir* menuController = [[HWPlexDir alloc] init];
+		PlexMediaContainer *pmc = [pmo contents];
 		
-		#warning Discuss the following commented code with quiqueck
-		//BOOL skipFilteringOptionsMenu = [[HWUserDefaults preferences] objectForKey:PreferencesAdvancedEnableSkipFilteringOptionsMenu];
-		//if (type of menu is 'filtering menu' && skipFilteringOptionsMenu) {
-		if (NO) {
-			//skip the menu with 'all', 'unwatched', etc
-		} else {
-			//don't skip it
-			menuController.rootContainer = [pmo contents];
+		BOOL skipFilteringOptionsMenu = [[HWUserDefaults preferences] boolForKey:PreferencesAdvancedEnableSkipFilteringOptionsMenu];
+		if (pmc.sectionRoot && !pmc.requestsMessage && skipFilteringOptionsMenu) { 
+			//open "/library/section/x/all or the first item in the list"
+			//bypass the first filter node
+			
+			/*
+			 at some point wou will present the user a selection for the available filters, right?
+			 when the user selects one, you should write to that preference so next time user comes back
+			 ATV will use the last filter
+			 */
+			//[PlexPrefs defaultPreferences] filterForSection]
+			
+			const NSString* filter = [[PlexPrefs defaultPreferences] filterForSection:pmc.key];
+			BOOL handled = NO;
+			PlexMediaContainer* new_pmc = nil;
+			
+			for(PlexMediaObject* po in pmc.directories){
+				//NSLog(@"%@: %@ == %@", pmc.key, po.lastKeyComponent, filter);
+				if ([filter isEqualToString:po.lastKeyComponent]){
+					PlexMediaContainer* my_new_pmc = [po contents];
+					if (my_new_pmc.directories.count>0) new_pmc = my_new_pmc;
+					handled = YES;
+					break;
+				}
+			}
+			
+			if (handled && new_pmc==nil) new_pmc = [[pmc.directories objectAtIndex:0] contents];
+			if (new_pmc==nil || new_pmc.directories.count==0){
+				for(PlexMediaObject* po in pmc.directories){
+					PlexMediaContainer* my_new_pmc = [po contents];
+					if (my_new_pmc.directories.count>0) {
+						new_pmc = my_new_pmc;
+						handled = YES;
+						break;
+					}
+				}
+			}
+			
+			if (new_pmc) {
+				pmc = new_pmc;
+			}
+			
+			if (!handled && pmc.directories.count>0) pmc = [[pmc.directories objectAtIndex:0] contents];
+			menuController.rootContainer = pmc;
 		}
+		
+		menuController.rootContainer = pmc;
 		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 		
 		[menuController autorelease];
@@ -343,14 +382,14 @@ PlexMediaProvider* __provider = nil;
 		streamQuality = PlexStreamingQuality720p_2300;
 	}
 	pmo.request.machine.streamQuality = streamQuality;
-
+	
 	/*
-    //player get's confused if we're running a transcoder already (tried playing and failed on ATV, transcoder still running)
-  if ([pmo.request transcoderRunning]) {
-    [pmo.request stopTranscoder];
-    [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
-  }
-  */
+	 //player get's confused if we're running a transcoder already (tried playing and failed on ATV, transcoder still running)
+	 if ([pmo.request transcoderRunning]) {
+	 [pmo.request stopTranscoder];
+	 [NSThread sleepForTimeInterval:3.0]; //give the PMS chance to kill transcoder, since we're gonna start a new one right away
+	 }
+	 */
 	
 	
 	NSLog(@"Quality: %i, %f", pmo.request.machine.streamQuality, pmo.request.machine.quality);
