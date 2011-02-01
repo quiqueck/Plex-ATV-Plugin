@@ -69,7 +69,67 @@ PlexMediaProvider* __provider = nil;
 	}
 	
 	return ( self );
-}	
+}
+
+- (id) initWithRootContainer:(PlexMediaContainer*)container {
+  self = [self init];
+  self.rootContainer = [self applySkipFilteringOnContainer:container];
+  return self;
+}
+
+- (PlexMediaContainer*) applySkipFilteringOnContainer:(PlexMediaContainer*)container {
+  PlexMediaContainer *pmc = container;
+  
+  BOOL skipFilteringOptionsMenu = [[HWUserDefaults preferences] boolForKey:PreferencesAdvancedEnableSkipFilteringOptionsMenu];
+  NSLog(@"skipFilteringOption: %@", skipFilteringOptionsMenu ? @"YES" : @"NO");
+  
+  if (pmc.sectionRoot && !pmc.requestsMessage && skipFilteringOptionsMenu) { 
+			//open "/library/section/x/all or the first item in the list"
+			//bypass the first filter node
+    
+    /*
+     at some point wou will present the user a selection for the available filters, right?
+     when the user selects one, you should write to that preference so next time user comes back
+     ATV will use the last filter
+     */
+			//[PlexPrefs defaultPreferences] filterForSection]
+    
+    const NSString* filter = [[PlexPrefs defaultPreferences] filterForSection:pmc.key];
+    BOOL handled = NO;
+    PlexMediaContainer* new_pmc = nil;
+    
+    for(PlexMediaObject* po in pmc.directories){
+      NSLog(@"%@: %@ == %@", pmc.key, po.lastKeyComponent, filter);
+      if ([filter isEqualToString:po.lastKeyComponent]){
+        PlexMediaContainer* my_new_pmc = [po contents];
+        if (my_new_pmc.directories.count>0) new_pmc = my_new_pmc;
+        handled = YES;
+        break;
+      }
+    }
+    
+    NSLog(@"handled: %@", handled ? @"YES" : @"NO");
+    if (handled && new_pmc==nil) new_pmc = [[pmc.directories objectAtIndex:0] contents];
+    if (new_pmc==nil || new_pmc.directories.count==0){
+      for(PlexMediaObject* po in pmc.directories){
+        PlexMediaContainer* my_new_pmc = [po contents];
+        if (my_new_pmc.directories.count>0) {
+          new_pmc = my_new_pmc;
+          handled = YES;
+          break;
+        }
+      }
+    }
+    
+    if (new_pmc) {
+      pmc = new_pmc;
+    }
+    
+    if (!handled && pmc.directories.count>0) pmc = [[pmc.directories objectAtIndex:0] contents];
+  }
+  NSLog(@"done filtering");
+  return pmc;
+}
 
 - (void)log:(NSNotificationCenter *)note {
 	NSLog(@"note = %@", note);
@@ -179,7 +239,7 @@ PlexMediaProvider* __provider = nil;
 	if ([type empty]) type = pmo.containerType;
 	type = [type lowercaseString];
 	
-    //NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, type);
+  NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, type);
 	
 	NSLog(@"viewgroup: %@, artistgroup:%@",pmo.mediaContainer.viewGroup, pmo.mediaContainer.content );
 	
@@ -226,61 +286,12 @@ PlexMediaProvider* __provider = nil;
 			[self playbackVideoWithMediaObject:pmo andOffset:0]; //not previously unwatched, just start playback from beginning
 		
 	}
-	else {
-		HWPlexDir* menuController = [[HWPlexDir alloc] init];
-		PlexMediaContainer *pmc = [pmo contents];
-		
-		BOOL skipFilteringOptionsMenu = [[HWUserDefaults preferences] boolForKey:PreferencesAdvancedEnableSkipFilteringOptionsMenu];
-		if (pmc.sectionRoot && !pmc.requestsMessage && skipFilteringOptionsMenu) { 
-			//open "/library/section/x/all or the first item in the list"
-			//bypass the first filter node
-			
-			/*
-			 at some point wou will present the user a selection for the available filters, right?
-			 when the user selects one, you should write to that preference so next time user comes back
-			 ATV will use the last filter
-			 */
-			//[PlexPrefs defaultPreferences] filterForSection]
-			
-			const NSString* filter = [[PlexPrefs defaultPreferences] filterForSection:pmc.key];
-			BOOL handled = NO;
-			PlexMediaContainer* new_pmc = nil;
-			
-			for(PlexMediaObject* po in pmc.directories){
-				//NSLog(@"%@: %@ == %@", pmc.key, po.lastKeyComponent, filter);
-				if ([filter isEqualToString:po.lastKeyComponent]){
-					PlexMediaContainer* my_new_pmc = [po contents];
-					if (my_new_pmc.directories.count>0) new_pmc = my_new_pmc;
-					handled = YES;
-					break;
-				}
-			}
-			
-			if (handled && new_pmc==nil) new_pmc = [[pmc.directories objectAtIndex:0] contents];
-			if (new_pmc==nil || new_pmc.directories.count==0){
-				for(PlexMediaObject* po in pmc.directories){
-					PlexMediaContainer* my_new_pmc = [po contents];
-					if (my_new_pmc.directories.count>0) {
-						new_pmc = my_new_pmc;
-						handled = YES;
-						break;
-					}
-				}
-			}
-			
-			if (new_pmc) {
-				pmc = new_pmc;
-			}
-			
-			if (!handled && pmc.directories.count>0) pmc = [[pmc.directories objectAtIndex:0] contents];
-			menuController.rootContainer = pmc;
-		}
-		
-		menuController.rootContainer = pmc;
+  else {
+    HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[pmo contents]];
 		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
-		
+    
 		[menuController autorelease];
-	}
+  }
 }
 
 - (void)showModifyViewedStatusViewForRow:(long)row {

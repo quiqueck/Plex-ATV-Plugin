@@ -41,6 +41,8 @@
 - (void)log:(NSNotificationCenter *)note;
 -(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset; 
 - (void)showModifyViewedStatusViewForRow:(long)row;
+- (id) initWithRootContainer:(PlexMediaContainer*)container;
+- (PlexMediaContainer*) applySkipFilteringOnContainer:(PlexMediaContainer*)container;
 
 //list provider
 - (float)heightForRow:(long)row;
