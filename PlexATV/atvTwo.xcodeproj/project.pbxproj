@@ -41,6 +41,7 @@
 		C4D558A612D66BE900877755 /* SongListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D558A412D66BE900877755 /* SongListController.m */; };
 		C4D55A9312D7E22A00877755 /* PlexSongAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D55A9212D7E22A00877755 /* PlexSongAsset.m */; };
 		C4EA913612DCD77700DCC798 /* PlexPreviewAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */; };
+		C4F1606E12F75F240005A40E /* SMFGridController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4F1606D12F75F240005A40E /* SMFGridController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -605,6 +606,8 @@
 		C4D55A9212D7E22A00877755 /* PlexSongAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexSongAsset.m; path = Classes/PlexSongAsset.m; sourceTree = "<group>"; };
 		C4EA913412DCD77700DCC798 /* PlexPreviewAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexPreviewAsset.h; path = Classes/PlexPreviewAsset.h; sourceTree = "<group>"; };
 		C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexPreviewAsset.m; path = Classes/PlexPreviewAsset.m; sourceTree = "<group>"; };
+		C4F1606C12F75F240005A40E /* SMFGridController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SMFGridController.h; path = Classes/SMFGridController.h; sourceTree = "<group>"; };
+		C4F1606D12F75F240005A40E /* SMFGridController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SMFGridController.m; path = Classes/SMFGridController.m; sourceTree = "<group>"; };
 		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -1288,6 +1291,8 @@
 				72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */,
 				C43F0B0412F4CD8E004D0D68 /* HWMediaShelfController.h */,
 				C43F0B0512F4CD8E004D0D68 /* HWMediaShelfController.m */,
+				C4F1606C12F75F240005A40E /* SMFGridController.h */,
+				C4F1606D12F75F240005A40E /* SMFGridController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -1405,6 +1410,7 @@
 				7297238412EE81000064E776 /* HWUserDefaults.m in Sources */,
 				729723AF12EE84810064E776 /* HWRemoteServersController.m in Sources */,
 				C43F0B0612F4CD8E004D0D68 /* HWMediaShelfController.m in Sources */,
+				C4F1606E12F75F240005A40E /* SMFGridController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
