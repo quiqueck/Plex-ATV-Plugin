@@ -104,4 +104,6 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 -(void)setAsMatch;
 
 -(BOOL)shouldRemoveForRating:(const ContentRating)cr;
+
+-(void)updateRequest:(PlexRequest*)req;
 @end

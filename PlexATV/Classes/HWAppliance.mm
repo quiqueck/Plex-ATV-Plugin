@@ -125,8 +125,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #ifdef LOCAL_DEBUG_ENABLED
 			NSLog(@"Adding persistant remote machine with hostName [%@] and serverName [%@] ", hostName, serverName);
 #endif
+#warning Please have a look
 			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
-			m.ip = hostName;
+//			m.ip = hostName;
 			[m autorelease];
 		} else {
 #ifdef LOCAL_DEBUG_ENABLED
@@ -274,7 +275,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	//argument is a dict due to objects being passed between threads
 	NSString *machineUid = [dict objectForKey:MachineUIDKey];
 	Machine *m = [self machineFromUid:machineUid];
-	
+    if (m.serverName==nil) return;
 	NSMutableDictionary *compoundIdentifier = [dict mutableCopy];
 	[compoundIdentifier setObject:m.serverName forKey:MachineNameKey];
 	

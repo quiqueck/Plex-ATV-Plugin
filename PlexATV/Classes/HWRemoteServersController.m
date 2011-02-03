@@ -78,8 +78,8 @@
 #ifdef LOCAL_DEBUG_ENABLED
 			NSLog(@"Adding persistant remote machine with hostName [%@] and serverName [%@] ", hostName, serverName);
 #endif
+#warning Please have a look
 			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
-			m.ip = hostName;
       [m setUsername:userName andPassword:password];
 			
 			[m autorelease];
@@ -157,7 +157,8 @@
 	
 	//update machine	
 	m.serverName = serverName;
-	m.hostName = hostName;
+#warning Please have a look
+//	m.hostName = hostName;
 	[m setUsername:userName andPassword:password];
 }
 

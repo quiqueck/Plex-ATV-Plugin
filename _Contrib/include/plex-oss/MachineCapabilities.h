@@ -32,6 +32,7 @@ extern MachineCapability SERVER_CAP_TRANSCODER_PING;
 
 -(id)initForServerVersion:(int)ver;
 -(BOOL)supports:(MachineCapability)capability;
+-(PlexStreamingQuality)qualityForHeight:(int)val returnFirst:(BOOL)retf;
 -(PlexStreamingQuality)qualityForMaximumBitrate:(int)maxBrInkbps;
 -(PlexStreamingQuality)qualityForValue:(int)val;
 
