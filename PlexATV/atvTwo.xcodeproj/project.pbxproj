@@ -24,6 +24,7 @@
 		01A0F58F12722877007A60B5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F58E12722877007A60B5 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		01A0F597127228BC007A60B5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F596127228BC007A60B5 /* Foundation.framework */; };
 		01A0F59D127228CC007A60B5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F59C127228CC007A60B5 /* libz.dylib */; };
+		727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */; };
 		7297238412EE81000064E776 /* HWUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 7297238312EE81000064E776 /* HWUserDefaults.m */; };
 		729723AF12EE84810064E776 /* HWRemoteServersController.m in Sources */ = {isa = PBXBuildFile; fileRef = 729723AE12EE84810064E776 /* HWRemoteServersController.m */; };
 		72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */; };
@@ -532,6 +533,9 @@
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = atvTwo_Prefix.pch; sourceTree = "<group>"; };
+		727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWAdvancedSettingsController.h; path = Classes/HWAdvancedSettingsController.h; sourceTree = "<group>"; };
+		727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWAdvancedSettingsController.m; path = Classes/HWAdvancedSettingsController.m; sourceTree = "<group>"; };
+		727A3FAE12F7C93D00994193 /* SMFGridController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFGridController.h; sourceTree = "<group>"; };
 		729722FC12EE79C20064E776 /* BRMenuItem_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMenuItem_SMF.h; sourceTree = "<group>"; };
 		729722FD12EE79C20064E776 /* NSArray_SMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_SMF.h; sourceTree = "<group>"; };
 		729722FE12EE79C20064E776 /* NSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
@@ -1214,6 +1218,21 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		727A3F4A12F7914000994193 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */,
+				72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */,
+				729723AD12EE84810064E776 /* HWRemoteServersController.h */,
+				729723AE12EE84810064E776 /* HWRemoteServersController.m */,
+				72B2C71312DC1F0E00E23F8E /* HWPmsListController.h */,
+				72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */,
+				727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */,
+				727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		729722FB12EE79C20064E776 /* SMFramework */ = {
 			isa = PBXGroup;
 			children = (
@@ -1233,6 +1252,7 @@
 				7297230912EE79C20064E776 /* SMFEventManager.h */,
 				7297230A12EE79C20064E776 /* SMFFolderBrowser.h */,
 				7297230B12EE79C20064E776 /* SMFFolderDelegate.h */,
+				727A3FAE12F7C93D00994193 /* SMFGridController.h */,
 				7297230C12EE79C20064E776 /* SMFImageAsset.h */,
 				7297230D12EE79C20064E776 /* SMFInvocationCenteredMenuController.h */,
 				7297230E12EE79C20064E776 /* SMFListDropShadowControl.h */,
@@ -1269,6 +1289,7 @@
 		72B2C4FB12DBE0EE00E23F8E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				727A3F4A12F7914000994193 /* Settings */,
 				C4D558A312D66BE900877755 /* SongListController.h */,
 				C4D558A412D66BE900877755 /* SongListController.m */,
 				C4ADAFA712D46CA9002DA507 /* HWPlexDir.h */,
@@ -1277,12 +1298,6 @@
 				875A824A126FFF1F00ECADC2 /* HWAppliance.mm */,
 				875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */,
 				875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */,
-				729723AD12EE84810064E776 /* HWRemoteServersController.h */,
-				729723AE12EE84810064E776 /* HWRemoteServersController.m */,
-				72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */,
-				72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */,
-				72B2C71312DC1F0E00E23F8E /* HWPmsListController.h */,
-				72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -1399,6 +1414,7 @@
 				015D320A12E11C80001A32C1 /* PlexMediaAssetOld.m in Sources */,
 				7297238412EE81000064E776 /* HWUserDefaults.m in Sources */,
 				729723AF12EE84810064E776 /* HWRemoteServersController.m in Sources */,
+				727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

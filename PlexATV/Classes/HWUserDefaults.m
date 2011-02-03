@@ -29,6 +29,8 @@
 											@"<No Default Selected>", PreferencesDefaultServerName,
 											@"", PreferencesDefaultServerUid,
 											@"Low", PreferencesQualitySetting,
+											NO, PreferencesAdvancedEnableSkipFilteringOptionsMenu,
+											NO, PreferencesAdvancedEnableDebug,
 											remoteServerList, PreferencesRemoteServerList,
 											nil]];
 		[remoteServer release];

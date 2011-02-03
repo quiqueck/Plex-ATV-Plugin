@@ -12,7 +12,10 @@
 #define PreferencesRemoteServerPassword @"PreferencesRemoteServerPassword"
 
 #define PreferencesQualitySetting @"PreferencesQualitySetting"
-#define PreferencesRemoteServerName @"PreferencesRemoteServerName"
+
+#define PreferencesAdvancedEnableDebug @"PreferencesAdvancedEnableDebug"
+#define PreferencesAdvancedEnableSkipFilteringOptionsMenu @"PreferencesAdvancedEnableSkipFilteringOptionsMenu"
+
 
 typedef enum {
 	kBRMediaPlayerStateStopped = 0,

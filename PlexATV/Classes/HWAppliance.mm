@@ -1,4 +1,4 @@
-#define LOCAL_DEBUG_ENABLED 1
+#define LOCAL_DEBUG_ENABLED 0
 
 #import "HWAppliance.h"
 #import "BackRowExtras.h"
@@ -178,8 +178,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		//HAZAA! we found it! Push new view
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
-		HWPlexDir* menuController = [[HWPlexDir alloc] init];
-		menuController.rootContainer = [matchingCategory contents];
+		HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
 		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 	}
 	

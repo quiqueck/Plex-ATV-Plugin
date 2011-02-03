@@ -179,21 +179,29 @@
 
 - (id)artist {
 	NSLog(@"artist");
-	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+  if ([pmo.attributes objectForKey:@"artist"] != nil)
+    return [pmo.attributes objectForKey:@"artist"];
+  else
+    return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 };
 - (id)artistForSorting {
-    NSLog(@"artistForSorting");
-	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+  return self.artist;
 };
 
 - (id)AlbumName {
     NSLog(@"AlbumNAme");
-	return [pmo.mediaContainer.attributes valueForKey:@"title2"];
+  if ([pmo.attributes objectForKey:@"album"] != nil)
+    return [pmo.attributes objectForKey:@"album"];
+  else
+    return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 };
 
 - (id)primaryCollectionTitle {
     NSLog(@"primaryCollectionTitle");
-	return [pmo.mediaContainer.attributes valueForKey:@"title2"];
+	if ([pmo.attributes objectForKey:@"album"] != nil)
+    return [pmo.attributes objectForKey:@"album"];
+  else
+    return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 };
 
 - (id)AlbumID {
