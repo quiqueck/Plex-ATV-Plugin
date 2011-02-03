@@ -26,9 +26,9 @@
 		01A0F59D127228CC007A60B5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F59C127228CC007A60B5 /* libz.dylib */; };
 		727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */; };
 		7297238412EE81000064E776 /* HWUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 7297238312EE81000064E776 /* HWUserDefaults.m */; };
-		729723AF12EE84810064E776 /* HWRemoteServersController.m in Sources */ = {isa = PBXBuildFile; fileRef = 729723AE12EE84810064E776 /* HWRemoteServersController.m */; };
+		729723AF12EE84810064E776 /* HWServersController.m in Sources */ = {isa = PBXBuildFile; fileRef = 729723AE12EE84810064E776 /* HWServersController.m */; };
 		72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */; };
-		72B2C71512DC1F0E00E23F8E /* HWPmsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */; };
+		72B2C71512DC1F0E00E23F8E /* HWDefaultServerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C71412DC1F0E00E23F8E /* HWDefaultServerController.m */; };
 		72EA80F712DEB49B00138F7D /* PlexSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 72EA80F612DEB49B00138F7D /* PlexSettings.png */; };
 		875A824D126FFF1F00ECADC2 /* HWAppliance.mm in Sources */ = {isa = PBXBuildFile; fileRef = 875A824A126FFF1F00ECADC2 /* HWAppliance.mm */; };
 		875A824E126FFF1F00ECADC2 /* HWBasicMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */; };
@@ -575,12 +575,12 @@
 		7297232012EE79C30064E776 /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		7297238212EE81000064E776 /* HWUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWUserDefaults.h; path = Classes/HWUserDefaults.h; sourceTree = "<group>"; };
 		7297238312EE81000064E776 /* HWUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWUserDefaults.m; path = Classes/HWUserDefaults.m; sourceTree = "<group>"; };
-		729723AD12EE84810064E776 /* HWRemoteServersController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWRemoteServersController.h; path = Classes/HWRemoteServersController.h; sourceTree = "<group>"; };
-		729723AE12EE84810064E776 /* HWRemoteServersController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWRemoteServersController.m; path = Classes/HWRemoteServersController.m; sourceTree = "<group>"; };
+		729723AD12EE84810064E776 /* HWServersController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWServersController.h; path = Classes/HWServersController.h; sourceTree = "<group>"; };
+		729723AE12EE84810064E776 /* HWServersController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWServersController.m; path = Classes/HWServersController.m; sourceTree = "<group>"; };
 		72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWSettingsController.h; path = Classes/HWSettingsController.h; sourceTree = "<group>"; };
 		72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWSettingsController.m; path = Classes/HWSettingsController.m; sourceTree = "<group>"; };
-		72B2C71312DC1F0E00E23F8E /* HWPmsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWPmsListController.h; path = Classes/HWPmsListController.h; sourceTree = "<group>"; };
-		72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWPmsListController.m; path = Classes/HWPmsListController.m; sourceTree = "<group>"; };
+		72B2C71312DC1F0E00E23F8E /* HWDefaultServerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWDefaultServerController.h; path = Classes/HWDefaultServerController.h; sourceTree = "<group>"; };
+		72B2C71412DC1F0E00E23F8E /* HWDefaultServerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWDefaultServerController.m; path = Classes/HWDefaultServerController.m; sourceTree = "<group>"; };
 		72EA80F612DEB49B00138F7D /* PlexSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlexSettings.png; path = Resources/PlexSettings.png; sourceTree = "<group>"; };
 		72EA810712DEB6B500138F7D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = Classes/Constants.h; sourceTree = "<group>"; };
 		875A824A126FFF1F00ECADC2 /* HWAppliance.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = HWAppliance.mm; path = Classes/HWAppliance.mm; sourceTree = "<group>"; };
@@ -1223,10 +1223,10 @@
 			children = (
 				72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */,
 				72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */,
-				729723AD12EE84810064E776 /* HWRemoteServersController.h */,
-				729723AE12EE84810064E776 /* HWRemoteServersController.m */,
-				72B2C71312DC1F0E00E23F8E /* HWPmsListController.h */,
-				72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */,
+				729723AD12EE84810064E776 /* HWServersController.h */,
+				729723AE12EE84810064E776 /* HWServersController.m */,
+				72B2C71312DC1F0E00E23F8E /* HWDefaultServerController.h */,
+				72B2C71412DC1F0E00E23F8E /* HWDefaultServerController.m */,
 				727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */,
 				727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */,
 			);
@@ -1408,12 +1408,12 @@
 				C4D558A612D66BE900877755 /* SongListController.m in Sources */,
 				C4D55A9312D7E22A00877755 /* PlexSongAsset.m in Sources */,
 				72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */,
-				72B2C71512DC1F0E00E23F8E /* HWPmsListController.m in Sources */,
+				72B2C71512DC1F0E00E23F8E /* HWDefaultServerController.m in Sources */,
 				C4EA913612DCD77700DCC798 /* PlexPreviewAsset.m in Sources */,
 				015D313D12E10A52001A32C1 /* ProxyMachineDelegate.m in Sources */,
 				015D320A12E11C80001A32C1 /* PlexMediaAssetOld.m in Sources */,
 				7297238412EE81000064E776 /* HWUserDefaults.m in Sources */,
-				729723AF12EE84810064E776 /* HWRemoteServersController.m in Sources */,
+				729723AF12EE84810064E776 /* HWServersController.m in Sources */,
 				727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
