@@ -197,10 +197,12 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 }
 
 -(void) reloadCategories {
+	[self.applianceCat removeAllObjects];
+	
 	NSArray *machines = [[MachineManager sharedMachineManager] machines];
 	for (Machine *machine in machines) {
-		//check if the machine has a valid connection and items
-		if (machine.bestConnection.canConnect && runsServer(machine.role) && machine.rootLevel && machine.librarySections) {
+		//check if the machine is a server, is logged in and has categories
+		if (runsServer(machine.role) && machine.rootLevel && machine.librarySections) {
 			//================== machine is valid ==================
 			NSString *machineID = [machine.machineID copy];
 			NSString *machineName = [machine.serverName copy];
@@ -211,7 +213,8 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 				continue;
 			
 			//================== add all it's categories to our appliances list ==================
-			for (PlexMediaObject *pmo in machine.rootLevel.directories) {
+			//machine.request.rootLevel = machine.rootLevel + machine.librarySections
+			for (PlexMediaObject *pmo in machine.request.rootLevel) {
 				NSString *categoryName = [pmo.name copy];
 #if LOCAL_DEBUG_ENABLED
 				NSLog(@"Adding category [%@] for machine id [%@]", categoryName, machineID);
@@ -283,20 +286,30 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
 #endif
-	//check if the connection is "valid" and machine has retrieved information
-	if (con.canConnect && m.rootLevel && m.librarySections) {
+	//check if the machine is a server, is logged in and has categories
+	if (runsServer(machine.role) && machine.rootLevel && machine.librarySections) {
 		[self reloadCategories];
 	}
 }
 
 -(void)machineWasChanged:(Machine*)m {
 	if (m==nil) return;
+	
+	BOOL machineRunsServer = runsServer(m.role);
+    BOOL machineIsOnline = m.isOnline;
+	
+	//check if the machine is a server, is logged in and has categories
+	if (runsServer(machine.role) && machine.rootLevel && machine.librarySections) {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Changed %@", m);
+		NSLog(@"MachineManager: Changed %@", m);
 #endif
+	} else {
+#if LOCAL_DEBUG_ENABLED
+		NSLog(@"MachineManager: Machine %@ offline", m);
+#endif
+		[self reloadCategories];
+	}
 }
 
 -(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
--(void)machine:(Machine*)m didAcceptConnection:(MachineConnectionBase*)con {}
--(void)machine:(Machine*)m didNotAcceptConnection:(MachineConnectionBase*)con error:(NSError*)err {}
 @end
