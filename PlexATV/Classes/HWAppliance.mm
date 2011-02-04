@@ -201,17 +201,17 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	
 	NSArray *machines = [[MachineManager sharedMachineManager] machines];
 	for (Machine *machine in machines) {
-		//check if the machine is a server, is logged in and has categories
-		if (runsServer(machine.role) && machine.rootLevel && machine.librarySections) {
-			//================== machine is valid ==================
-			NSString *machineID = [machine.machineID copy];
-			NSString *machineName = [machine.serverName copy];
-			
-			//check whether user has selected to use default server, or the combined view
-			if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]
-				&& ![machineID isEqualToString:[[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid]])
-				continue;
-			
+		NSString *machineID = [machine.machineID copy];
+		NSString *machineName = [machine.serverName copy];
+		
+		//check if the user has opted to use default server view mode
+		//if he has, check if the current machine is the default one
+		//it it is not, skip to the next machine, else keep going
+		if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]
+			&& ![machineID isEqualToString:[[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid]])
+			continue;
+		
+		if (machine.isComplete) {						   
 			//================== add all it's categories to our appliances list ==================
 			//machine.request.rootLevel = machine.rootLevel + machine.librarySections
 			for (PlexMediaObject *pmo in machine.request.rootLevel) {
@@ -241,6 +241,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 				NSArray *duplicateNameCategories = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
 				if ([duplicateNameCategories count] > 1) {
 					//================== found duplicate category names ==================
+#if LOCAL_DEBUG_ENABLED
+					NSLog(@"Found [%@] duplicate categories with name [%@]", [duplicateNameCategories count], categoryName);
+#endif
 					//iterate over all of them updating their names
 					for (BRApplianceCategory *appl in duplicateNameCategories) {			
 						
@@ -262,9 +265,11 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 			[machineName release];
 		}
 	}
+	[machines release];
 	
 	[super reloadCategories];
 }
+
 
 #pragma mark -
 #pragma mark Machine Delegate Methods
@@ -282,34 +287,33 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #endif
 }
 
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con {
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask;
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
+NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
 #endif
-	//check if the machine is a server, is logged in and has categories
-	if (runsServer(machine.role) && machine.rootLevel && machine.librarySections) {
+if (machine.isComplete && [machine.bestConnection isEqual:con] 
+	&& (updateMask == ConnectionInfoTypeRootLevel || updateMask == ConnectionInfoTypeLibrarySections) {
 		[self reloadCategories];
 	}
-}
-
--(void)machineWasChanged:(Machine*)m {
-	if (m==nil) return;
-	
-	BOOL machineRunsServer = runsServer(m.role);
-    BOOL machineIsOnline = m.isOnline;
-	
-	//check if the machine is a server, is logged in and has categories
-	if (runsServer(machine.role) && machine.rootLevel && machine.librarySections) {
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"MachineManager: Changed %@", m);
-#endif
-	} else {
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"MachineManager: Machine %@ offline", m);
-#endif
-		[self reloadCategories];
 	}
-}
-
--(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
-@end
+	
+	-(void)machineWasChanged:(Machine*)m {
+		if (m==nil) return;
+		
+		BOOL machineRunsServer = runsServer(m.role);
+		BOOL machineIsOnline = m.isOnline;
+		
+		if (machine.isComplete) {
+#if LOCAL_DEBUG_ENABLED
+			NSLog(@"MachineManager: Changed %@", m);
+#endif
+		} else {
+#if LOCAL_DEBUG_ENABLED
+			NSLog(@"MachineManager: Machine %@ offline", m);
+#endif
+			[self reloadCategories];
+		}
+	}
+	
+	-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
+	@end
