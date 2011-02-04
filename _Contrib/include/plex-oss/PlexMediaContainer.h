@@ -155,6 +155,7 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 -(id)initWithRequest:(PlexRequest*)req baseKey:(NSString*)bk fromObject:(PlexMediaObject*)pmo;
 -(void)didReceiveMemoryWarning;
 -(void)freeBannersAndArt;
+-(void)updateRequest:(PlexRequest*)req;
 	
 -(void)displayMessage;
 -(PlexMediaContainer*)reload;

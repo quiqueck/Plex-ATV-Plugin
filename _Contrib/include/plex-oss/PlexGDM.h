@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <ambertation-plex/PollingThread.h>
+#include <netinet/in.h>
 
 @protocol PlexGDBDelegate<NSObject>
 -(void)gdmReceivedNewResource:(NSString*)machineID withHeaders:(NSDictionary*)dict httpVersion:(NSString*)ver responseCode:(NSInteger)code sourceAddress:(NSString*)ip;
@@ -16,27 +18,19 @@
 @end
 
 
-@interface PlexGDM : NSObject {
-	NSTimeInterval		forgetAfterInterval;
-	NSTimeInterval		pollingInterval;
-	NSThread*           thread;
-	NSCondition*        cond;
-	bool                run;
-	BOOL				  isRunning;
-	id<PlexGDBDelegate> delegate;
+@interface PlexGDM : PollingThread {
+	NSTimeInterval			forgetAfterInterval;
+	id<PlexGDBDelegate>		delegate;
 	
-	NSMutableDictionary*		  lastMachineIDs;
+	NSMutableDictionary*	lastMachineIDs;
+	
+	//thread private
+	int sockfd;
+	struct sockaddr_in their_addr;
 }
 
 @property (readwrite, assign) id<PlexGDBDelegate> delegate;
-@property (readonly) BOOL isRunning;
-
 @property (readwrite, assign) NSTimeInterval forgetAfterInterval;
-@property (readwrite, assign) NSTimeInterval pollingInterval;
-
--(id)init;
--(void)start;
--(void)stop;
 
 -(void)invalidateMachineWithID:(NSString*)machineID;
 @end

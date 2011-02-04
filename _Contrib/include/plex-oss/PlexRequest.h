@@ -37,6 +37,7 @@ extern const NSString* plexClientsKey ;
 	int port, localPort;
 	NSMutableDictionary* flagCache;
 	BOOL transcoderRunning;
+	BOOL authWasExpected;
 	
 	PlexServer* serverObject;
 	Machine* machine;
@@ -45,6 +46,7 @@ extern const NSString* plexClientsKey ;
 @property (readwrite, assign) Machine* machine;
 @property (readonly) NSString* base;
 @property (readwrite) BOOL transcoderRunning;
+@property (readwrite) BOOL authWasExpected;
 @property (readonly) PlexServer* serverObject;
 
 -(id) initWithServer:(NSString*)host onPort:(NSUInteger)port;
@@ -90,6 +92,9 @@ extern const NSString* plexClientsKey ;
 +(void)pingTranscoders;
 -(void)pingTranscoder;
 -(void)pingTranscoderSync;
+
+-(void)refreshSection:(NSString*)key force:(BOOL)forceRefresh;
+-(void)refreshAllSections:(BOOL)force;
 
 +(void)freeCache;
 

@@ -26,6 +26,7 @@
 	BOOL canConnect;
 	BOOL isOnline;
 	BOOL stateUpdateRunning;
+	BOOL authenticationNeeded;
 	NSTimeInterval updateTime;
 	
 	
@@ -55,10 +56,12 @@
 @property (readwrite, retain) NSString* qualityHeights;
 
 @property (readonly, assign) BOOL isUsedToConnect;
+@property (readonly, assign) BOOL isComplete;
 
 @property (readonly) BOOL inLocalNetwork;
 @property (readonly) BOOL canConnect;
 @property (readonly) BOOL isOnline;
+@property (readonly) BOOL authenticationNeeded;
 @property (readonly) NSTimeInterval lastStateUpdateTime;
 
 @property (readonly, retain) NSArray* clientConnections;

@@ -74,7 +74,10 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
   //clients
   NSString* clientHostName;
   
-  
+  //caching (for offline machines)
+  NSString* qualityValues;
+  NSString* qualityBitrates;
+  NSString* qualityHeights;
 }
 
 +(NSString*)stringFromVersion:(int)ver;
@@ -120,6 +123,7 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
 @property (readonly) NSString* hostName;
 @property (readonly) MachineRole role;
 @property (readonly) BOOL isOnline;
+@property (readonly) BOOL isComplete;
 -(void)renewPasswordHash;
 
 @property(readonly, retain) MachineCapabilities* capabilities;

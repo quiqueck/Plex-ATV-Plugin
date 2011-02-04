@@ -14,11 +14,12 @@
         PlexRequest;
 @interface MachineConnection : MachineConnectionBase {
 	PlexMediaContainer* rootLevel;
-  PlexMediaContainer* librarySections;
+	PlexMediaContainer* librarySections;
 }
 
 @property (readonly, retain) PlexMediaContainer* rootLevel;
 @property (readonly, retain) PlexMediaContainer* librarySections;
+
 
 -(NSArray*)_loadClientsFromRequest:(PlexRequest*)pr;
 -(PlexMediaContainer*)_processRootLevelContainer:(PlexMediaContainer*) realRoot;
