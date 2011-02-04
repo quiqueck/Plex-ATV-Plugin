@@ -225,8 +225,12 @@
 	return (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]);
 }
 
+- (id)thumbURL {
+  return [self.imageProxy url];
+}
+
 - (id)coverArt {
-  return self.imageProxy;
+    return self.imageProxy;
 }
 - (id)imageProxy {
 	//NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
@@ -329,6 +333,7 @@
 }
 
 - (id)mediaType {	
+  /*
 	NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
 	BRMediaType *mediaType;
 	if ([@"track" isEqualToString:plexMediaType])
@@ -340,6 +345,8 @@
 	else 
 		mediaType = [BRMediaType movie];
 	return mediaType;
+   */
+  return [BRMediaType movie];
 }
 
 - (NSString*)mediaURL{
