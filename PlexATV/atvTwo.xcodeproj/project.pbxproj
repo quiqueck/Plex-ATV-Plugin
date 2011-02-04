@@ -74,14 +74,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D5B49AC048680CD000E48DA /* atvTwo */;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
 			remoteInfo = atvTwo;
 		};
 		DD02DEB912FCAD020019FBEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DD02DEB712FCACEC0019FBEE /* Install */;
+			remoteGlobalIDString = DD02DEB712FCACEC0019FBEE;
 			remoteInfo = Install;
 		};
 /* End PBXContainerItemProxy section */
@@ -514,7 +514,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../ATV2Includes;
 				PREBINDING = NO;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				STRIP_INSTALLED_PRODUCT = NO;
 			};
 			name = Release;
