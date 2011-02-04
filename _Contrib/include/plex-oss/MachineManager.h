@@ -10,6 +10,10 @@
 #import <ambertation-plex/Ambertation.h>
 #import "MachineAutoDetector.h"
 
+typedef int ConnectionInfoType;
+extern const ConnectionInfoType ConnectionInfoTypeRootLevel;
+extern const ConnectionInfoType ConnectionInfoTypeLibrarySections;
+extern const ConnectionInfoType ConnectionInfoTypeClients;
 
 @class Machine, ClientConnection;
 
@@ -17,7 +21,7 @@
 -(void)machineWasAdded:(Machine*)m;
 -(void)machineWasRemoved:(Machine*)m;
 -(void)machineWasChanged:(Machine*)m;
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con;
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask;
 -(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc;
 @end;
 
@@ -35,7 +39,7 @@ extern const MachineRole MachineRoleClientServer;
 	Machine* localhost;
 	
 	
-    NSTimeInterval stateMonitorInterval;
+  NSTimeInterval stateMonitorInterval;
 	NSTimer* stateMonitorTimer;
 }
 

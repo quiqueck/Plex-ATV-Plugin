@@ -76,7 +76,7 @@
 -(void)updateCanConnect;
 -(void)upddateEtherID;
 
--(BOOL)didUpdateConnectionState;
+-(void)didUpdateConnectionState;
 -(void)didCancelUpdateConnectionState;
 
 -(int)score;

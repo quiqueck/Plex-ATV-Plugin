@@ -51,7 +51,7 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
   NSString* machineID;
   MachineManager* parent;
   PlexRequest* request;
-  
+    
   //pms properties
   MachineCapabilities* capabilities;
   NSUInteger	streamingBitrate;
@@ -67,6 +67,12 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
   NSString* serverName;
   NSMutableArray* connections;
   BOOL localhost;
+  
+  //cache for best connection
+  PlexMediaContainer* rootLevel;
+  PlexMediaContainer* librarySections;
+  NSArray* clientConnections;
+    
   
   //connection state
   MachineRole role;
@@ -140,4 +146,5 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
 
 @property (readonly, assign) PlexMediaContainer* librarySections;
 @property (readonly, assign) PlexMediaContainer* rootLevel;
+@property (readonly, assign) NSArray* clientConnections;
 @end
