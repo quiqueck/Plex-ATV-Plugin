@@ -11,10 +11,10 @@
 typedef const NSString* MachineCapability; 
 extern MachineCapability SERVER_CAP_1080p_TRANSCODER;
 extern MachineCapability SERVER_CAP_QUALITY_LISTING;
-extern MachineCapability SERVER_CAP_GDM_DISCOVERY;
-extern MachineCapability SERVER_CAP_BONJOUR_DISCOVERY;
+extern MachineCapability SERVER_CAP_BONJOUR_ANNOUNCE;
 extern MachineCapability SERVER_CAP_TRANSCODER_KEYS_IN_URL;
 extern MachineCapability SERVER_CAP_DIRECT_PLAYBACK;
+extern MachineCapability SERVER_CAP_DECODER_CAPS;
 extern MachineCapability SERVER_CAP_EDIT_METADATA;
 extern MachineCapability SERVER_CAP_TRANSCODER_PING;
 

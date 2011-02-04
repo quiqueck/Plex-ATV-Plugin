@@ -56,6 +56,7 @@
 @property (readwrite, retain) NSString* qualityHeights;
 
 @property (readonly, assign) BOOL isUsedToConnect;
+@property (readonly, assign) BOOL isComplete;
 
 @property (readonly) BOOL inLocalNetwork;
 @property (readonly) BOOL canConnect;

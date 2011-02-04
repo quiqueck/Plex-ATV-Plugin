@@ -74,7 +74,10 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
   //clients
   NSString* clientHostName;
   
-  
+  //caching (for offline machines)
+  NSString* qualityValues;
+  NSString* qualityBitrates;
+  NSString* qualityHeights;
 }
 
 +(NSString*)stringFromVersion:(int)ver;
