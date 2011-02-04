@@ -385,13 +385,12 @@ PlexMediaProvider* __provider = nil;
     //determine the user selected quality setting
 	NSString *qualitySetting = [[HWUserDefaults preferences] objectForKey:PreferencesQualitySetting];
 	PlexStreamingQuality streamQuality;
-  Machine* m = pmo.request.machine;
 	if ([qualitySetting isEqualToString:@"Good"]) {
-      streamQuality = [m.capabilities qualityForHeight:768 returnFirst:NO]; //720p streams are higher bitrate streams than 768!!!
+      streamQuality = [PlexStreamingQualityDescriptor quality720pHigh];
 	} else 	if ([qualitySetting isEqualToString:@"Best"]) {
-		streamQuality = [m.capabilities qualityForHeight:1080 returnFirst:YES];
+		streamQuality = [PlexStreamingQualityDescriptor quality1080pLow];
 	} else { //medium (default)
-		streamQuality = [m.capabilities qualityForHeight:720 returnFirst:YES];
+		streamQuality = [PlexStreamingQualityDescriptor quality720pLow];
 	}
 	pmo.request.machine.streamQuality = streamQuality;
 	
@@ -404,8 +403,7 @@ PlexMediaProvider* __provider = nil;
 	 */
 	
 	
-	NSLog(@"Quality (%@): %@, %i", qualitySetting, m.streamQuality, m.streamQuality.value);
-    NSLog(@"Quality (%@): %@, %i", qualitySetting, streamQuality, streamQuality.value);
+	NSLog(@"Quality: %@, %f", pmo.request.machine.streamQuality, pmo.request.machine.streamQuality);
 	NSURL* mediaURL = [pmo mediaURL];
 	
 	NSLog(@"Starting Playback of %@", mediaURL);
