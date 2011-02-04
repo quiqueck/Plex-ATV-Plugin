@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SMFramework.h"
 
 @interface HWUserDefaults : NSObject {}
 

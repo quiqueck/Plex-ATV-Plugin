@@ -9,7 +9,6 @@
 #import <plex-oss/PlexRequest + Security.h>
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
-#import "SMFramework.h"
 #import "HWUserDefaults.h"
 #import "Constants.h"
 

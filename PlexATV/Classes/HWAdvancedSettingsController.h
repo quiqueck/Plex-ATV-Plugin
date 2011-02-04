@@ -13,7 +13,6 @@
 //		Copyright 2010 tomcool.org. All rights reserved.
 //
 
-#import "SMFramework.h"
 
 @interface HWAdvancedSettingsController : SMFMediaMenuController {}
 - (void)setupList;
