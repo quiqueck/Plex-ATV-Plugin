@@ -35,7 +35,7 @@ extern const MachineRole MachineRoleClientServer;
 	Machine* localhost;
 	
 	
-    NSTimeInterval stateMonitorInterval;
+  NSTimeInterval stateMonitorInterval;
 	NSTimer* stateMonitorTimer;
 }
 
