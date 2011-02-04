@@ -23,17 +23,50 @@
   return self;
 }
 
+- (id)initWithPlexContainer:(PlexMediaContainer *)container {
+  
+  self = [self init];
+  [container retain];
+#if LOCAL_DEBUG_ENABLED
+  NSLog(@"initWithPlexContaner - converting to assets");
+#endif
+  [self convertContainerToMediaAssets:container];
+  
+#if LOCAL_DEBUG_ENABLED
+  NSLog(@"assets converted, constructing shelf control");
+#endif
+  
+  return self;
+}  
+
+- (void)convertContainerToMediaAssets:(PlexMediaContainer *)container {
+  NSLog(@"convertContainerToMediaAssets %@", container);
+  _assets = [[NSMutableArray alloc] initWithCapacity:5];
+  
+  for (int i=0; i < [container.directories count]; i++) {
+    PlexMediaObject *mediaObj = [container.directories objectAtIndex:i];
+    
+    NSURL* mediaURL = [mediaObj mediaStreamURL];
+    PlexPreviewAsset* pma = [[PlexPreviewAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:mediaObj];
+    [_assets addObject:pma];
+  }
+  
+#if LOCAL_DEBUG_ENABLED
+  NSLog(@"converted %d assets", [_assets count]);
+#endif
+}
+
 - (void) drawSelf
 {
   NSLog(@"drawSelf");
   _spinner=[[BRWaitSpinnerControl alloc]init];
   _cursorControl=[[BRCursorControl alloc] init];
   _scroller=[[BRScrollControl alloc] init];
-  _gridControl= [[BRGridControl alloc] init];
+  _gridControl= [[BRMediaShelfControl alloc] init];
   [self setGrid];
-  [_gridControl focusControlAtIndex:0];
+    //[_gridControl focusControlAtIndex:0];
 	[_gridControl setHorizontalGap:0.01f];
-  [_gridControl setVerticalGap:0.01f];
+    //[_gridControl setVerticalGap:0.01f];
   [_scroller setFollowsFocus:YES];
   [_scroller setContent:_gridControl];
   [self layoutSubcontrols];
@@ -42,26 +75,58 @@
   
 }
 
+-(id)getProviderForGrid
+{
+#if LOCAL_DEBUG_ENABLED
+  NSLog(@"getProviderForGrid_start");
+#endif
+  NSSet *_set = [NSSet setWithObject:[BRMediaType movie]];
+  NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType movie]];
+  BRDataStore *store = [[BRDataStore alloc] initWithEntityName:@"Hello" predicate:_pred mediaTypes:_set];
+  
+  for (int i=0;i<[_assets count];i++)
+  {
+    [store addObject:[_assets objectAtIndex:i]];
+  }
+#if LOCAL_DEBUG_ENABLED
+  NSLog(@"getProviderForGrid - have assets, creating datastore and provider");
+#endif
+
+  id tcControlFactory = [BRPhotoControlFactory standardFactory];
+  BRDataStoreProvider* provider = [BRDataStoreProvider providerWithDataStore:store controlFactory:tcControlFactory];
+  
+#if LOCAL_DEBUG_ENABLED
+  NSLog(@"getProviderForGrid_end");
+#endif
+  
+  return provider;
+}
+
 - (void) setGrid
 {
   
   NSLog(@"setGrid");
   NSArray *assets=[SMFPhotoMethods mediaAssetsForPath:DEFAULT_IMAGES_PATH];
   
-  BRDataStore *st = [SMFPhotoMethods dataStoreForAssets:assets];
-  BRPhotoDataStoreProvider* provider    = [BRPhotoDataStoreProvider providerWithDataStore:st 
+  BRDataStore *st = [SMFPhotoMethods dataStoreForAssets:_assets];
+  SMFPhotoCollectionProvider* provider = [SMFPhotoCollectionProvider providerWithDataStore:st 
                                                                            controlFactory:[BRPhotoControlFactory standardFactory]];
   
+  
+    //BRDataStoreProvider* provider = [self getProviderForGrid];
   
   
   NSLog(@"provider: %@", provider);
   [_gridControl setProvider:provider];
-  [_gridControl setColumnCount:5];
-  [_gridControl setWrapsNavigation:YES];
+  [_gridControl setColumnCount:1];
+    //[_gridControl setWrapsNavigation:YES];
+	[_gridControl setAcceptsFocus:YES];
+    //[_gridControl setProviderRequester:_gridControl];//[NSNotificationCenter defaultCenter]];
+
+  
   [self setControls:[NSArray arrayWithObjects:_spinner,_cursorControl,_scroller,nil]];
   CGRect masterFrame = [BRWindow interfaceFrame];
   NSLog(@"masterFrame: %f", masterFrame.size.width);
-	
 	
   CGRect frame;
   frame.origin.x = masterFrame.size.width  * 0.0f;
@@ -69,9 +134,6 @@
 	
   frame.size.width = masterFrame.size.width*1.f;
 	frame.size.height = masterFrame.size.height*1.f;
-	[_gridControl setAcceptsFocus:YES];
-  [_gridControl setWrapsNavigation:YES];
-  [_gridControl setProviderRequester:_gridControl];//[NSNotificationCenter defaultCenter]];
   [_scroller setFrame:frame];
   [_gridControl setFrame:frame];
   [_scroller setAcceptsFocus:YES];
@@ -81,8 +143,8 @@
     //[self addControl:_gridControl];
   
   NSLog(@"gridControl: %@", _gridControl);
-  NSLog(@"dataCount: %d", [_gridControl dataCount]);
-  NSLog(@"rowCount: %d", [_gridControl rowCount]);
+    //NSLog(@"dataCount: %d", [_gridControl dataCount]);
+    //NSLog(@"rowCount: %d", [_gridControl rowCount]);
   
   
 }

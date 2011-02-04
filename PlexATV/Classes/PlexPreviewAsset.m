@@ -225,6 +225,9 @@
 	return (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]);
 }
 
+- (id)coverArt {
+  return self.imageProxy;
+}
 - (id)imageProxy {
 	//NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
 	NSString *thumbURL = nil;
