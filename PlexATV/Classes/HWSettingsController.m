@@ -14,8 +14,8 @@
 //
 
 #import "HWSettingsController.h"
-#import "HWPmsListController.h"
-#import "HWRemoteServersController.h"
+#import "HWDefaultServerController.h"
+#import "HWServersController.h"
 #import "HWAdvancedSettingsController.h"
 #import "HWUserDefaults.h"
 #import "Constants.h"
@@ -27,7 +27,7 @@
 
 #define CombinedPmsCategoriesIndex 0
 #define DefaultServerIndex 1
-#define RemoteServersIndex 2
+#define ServersIndex 2
 #define QualitySettingIndex 3
 #define AdvancedSettingsIndex 4
 #define PluginVersionNumberIndex 5
@@ -81,10 +81,10 @@
 	[_items addObject:defaultServerMenuItem];
 	
 	
-	// =========== remote servers ===========
-	SMFMenuItem *remoteServersMenuItem = [SMFMenuItem folderMenuItem];
-	[remoteServersMenuItem setTitle:@"Remote Servers"];
-	[_items addObject:remoteServersMenuItem];
+	// =========== servers ===========
+	SMFMenuItem *serversMenuItem = [SMFMenuItem folderMenuItem];
+	[serversMenuItem setTitle:@"Servers"];
+	[_items addObject:serversMenuItem];
 	
 	
 	// =========== quality setting ===========
@@ -152,14 +152,14 @@
 		}
 		case DefaultServerIndex: {
 			// =========== default server ===========
-			HWPmsListController* menuController = [[HWPmsListController alloc] init];
+			HWDefaultServerController* menuController = [[HWDefaultServerController alloc] init];
 			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 			[menuController autorelease];
 			break;
 		}
-		case RemoteServersIndex: {
+		case ServersIndex: {
 			// =========== remote servers ===========
-			HWRemoteServersController* menuController = [[HWRemoteServersController alloc] init];
+			HWServersController* menuController = [[HWServersController alloc] init];
 			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 			[menuController autorelease];
 			break;
@@ -213,10 +213,10 @@
 			[asset setSummary:@"Shows the category's belonging to the default server (Only used if 'Default Server' view mode is selected"];
 			break;
 		}
-		case RemoteServersIndex: {
-			// =========== remote servers ===========
-			[asset setTitle:@"List of remote servers"];
-			[asset setSummary:@"Modify the list of servers not located on the local network"];
+		case ServersIndex: {
+			// =========== servers ===========
+			[asset setTitle:@"List of servers"];
+			[asset setSummary:@"Add new or modify current servers and their connections"];
 			break;
 		}
 		case QualitySettingIndex: {

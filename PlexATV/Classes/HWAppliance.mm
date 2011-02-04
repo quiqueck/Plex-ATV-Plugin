@@ -1,4 +1,4 @@
-#define LOCAL_DEBUG_ENABLED 0
+#define LOCAL_DEBUG_ENABLED 1
 
 #import "HWAppliance.h"
 #import "BackRowExtras.h"
@@ -9,6 +9,7 @@
 #import <plex-oss/PlexRequest + Security.h>
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
+#import <plex-oss/MachineConnectionBase.h>
 #import "SMFramework.h"
 #import "HWUserDefaults.h"
 #import "Constants.h"
@@ -20,7 +21,7 @@
 
 //dictionary keys
 NSString * const CategoryNameKey = @"PlexApplianceName";
-NSString * const MachineUIDKey = @"PlexMachineUID";
+NSString * const MachineIdKey = @"PlexMachineUID";
 NSString * const MachineNameKey = @"PlexMachineName";
 
 @interface UIDevice (ATV)
@@ -94,7 +95,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		freopen([logPath fileSystemRepresentation], "a+", stdout);
 		
 		_topShelfController = [[TopShelfController alloc] init];
-		//preload the main menu with the settings menu item
 		_applianceCategories = [[NSMutableArray alloc] init];
 		_machines = [[NSMutableArray alloc] init];
 		
@@ -103,38 +103,8 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		[[ProxyMachineDelegate shared] registerDelegate:self];
 		[[MachineManager sharedMachineManager] startAutoDetection];
-		
-		[self loadInPersistentMachines];
-		
 	} return self;
 }
-
-//- (void)loadInPersistentMachines {
-//	//load in persistent machines
-//	NSArray *persistentRemoteServers = [[HWUserDefaults preferences] arrayForKey:PreferencesRemoteServerList];
-//	
-//	NSArray *currentMachines = [[MachineManager sharedMachineManager] machines];
-//	for (NSDictionary *persistentRemoteServer in persistentRemoteServers) {
-//		NSString *hostName = [persistentRemoteServer objectForKey:PreferencesRemoteServerHostName];
-//		NSString *serverName = [persistentRemoteServer objectForKey:PreferencesRemoteServerName];
-//		
-//		//check if the machine manager already knows about this machine
-//		NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"hostName == %@ AND serverName == %@", hostName, serverName];
-//		NSArray *matchingMachines = [currentMachines filteredArrayUsingPredicate:machinePredicate];
-//		if ([matchingMachines count] == 0) {
-//#ifdef LOCAL_DEBUG_ENABLED
-//			NSLog(@"Adding persistant remote machine with hostName [%@] and serverName [%@] ", hostName, serverName);
-//#endif
-//			Machine *m = [[Machine alloc] initWithServerName:serverName hostName:hostName port:32400 role:MachineRoleServer manager:[MachineManager sharedMachineManager] etherID:nil];
-//			[m autorelease];
-//		} else {
-//#ifdef LOCAL_DEBUG_ENABLED
-//			NSLog(@"Machine already exists with hostName [%@] and serverName [%@] ", hostName, serverName);
-//#endif
-//		}
-//		
-//	}
-//}
 
 - (Machine *)machineFromUid:(NSString *)uid {
 	NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", uid];
@@ -160,7 +130,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		NSDictionary *compoundIdentifier = (NSDictionary *)identifier;
 		
 		NSString *categoryName = [compoundIdentifier objectForKey:CategoryNameKey];
-		NSString *machineUid = [compoundIdentifier objectForKey:MachineUIDKey];
+		NSString *machineUid = [compoundIdentifier objectForKey:MachineIdKey];
 		//NSString *machineName = [compoundIdentifier objectForKey:MachineNameKey];
 		
 		// ====== find the machine using the identifer (uid) ======
@@ -186,10 +156,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 }
 
 - (id)applianceCategories {
-	//  if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]){
-	//    NSLog(@"Fallback to classic menu");
-	//    return [NSArray arrayWithObjects:OTHERSERVERS_CAT,SETTINGS_CAT,nil];
-	//  }
 	//sort the array alphabetically
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
@@ -231,145 +197,70 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 }
 
 -(void) reloadCategories {
-	[self.applianceCat removeAllObjects];
-	
-	for (Machine* m in self.machines){
-		BOOL machineRunsServer = runsServer(m.role);
-		BOOL machineIsOnline = m.isOnline;
-		
-		if ( machineRunsServer && machineIsOnline ) {
-			//retrieve new categories
-			[self performSelectorInBackground:@selector(retrieveNewPlexCategories:) withObject:[m retain]];
+	NSArray *machines = [[MachineManager sharedMachineManager] machines];
+	for (Machine *machine in machines) {
+		//check if the machine has a valid connection and items
+		if (machine.bestConnection.canConnect && runsServer(machine.role) && machine.rootLevel && machine.librarySections) {
+			//================== machine is valid ==================
+			NSString *machineID = [machine.machineID copy];
+			NSString *machineName = [machine.serverName copy];
+			
+			//check whether user has selected to use default server, or the combined view
+			if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]
+				&& ![machineID isEqualToString:[[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid]])
+				continue;
+			
+			//================== add all it's categories to our appliances list ==================
+			for (PlexMediaObject *pmo in machine.rootLevel.directories) {
+				NSString *categoryName = [pmo.name copy];
+#if LOCAL_DEBUG_ENABLED
+				NSLog(@"Adding category [%@] for machine id [%@]", categoryName, machineID);
+#endif
+				
+				//create the compoundIdentifier for the appliance identifier
+				NSMutableDictionary *compoundIdentifier = [NSMutableDictionary dictionary];
+				[compoundIdentifier setObject:categoryName forKey:CategoryNameKey];
+				[compoundIdentifier setObject:machineID forKey:MachineIdKey];
+				[compoundIdentifier setObject:machineName forKey:MachineNameKey];
+				
+				//================== add the appliance ==================
+				
+				//the appliance order will be the highest number (ie it will be put at the end of the menu.
+				//this will be readjusted when the array is sorted in the (id)applianceCategories
+				float applianceOrder = [self.applianceCat count];
+				
+				BRApplianceCategory *appliance = [BRApplianceCategory categoryWithName:categoryName identifier:compoundIdentifier preferredOrder:applianceOrder];
+				[self.applianceCat addObject:appliance];
+				
+				// find any duplicate names of the one currently being added.
+				// if found, append machine name to them all
+				NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name == %@", categoryName];
+				NSArray *duplicateNameCategories = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
+				if ([duplicateNameCategories count] > 1) {
+					//================== found duplicate category names ==================
+					//iterate over all of them updating their names
+					for (BRApplianceCategory *appl in duplicateNameCategories) {			
+						
+						NSDictionary *compoundIdentifierBelongingToDuplicateAppliance = (NSDictionary *)appl.identifier;
+						NSString *nameOfMachineThatCategoryBelongsTo = [compoundIdentifierBelongingToDuplicateAppliance objectForKey:MachineNameKey];
+						if (!nameOfMachineThatCategoryBelongsTo) break;
+						
+						// update the name
+						// name had format:       "Movies"
+						// now changing it to be: "Movies (Office)"
+						NSString *nameWithPms = [[NSString alloc] initWithFormat:@"%@ (%@)", categoryName, nameOfMachineThatCategoryBelongsTo];
+						[appl setName:nameWithPms];
+						[nameWithPms release];
+					}
+				}
+				[categoryName release];
+			}
+			[machineID release];
+			[machineName release];
 		}
 	}
+	
 	[super reloadCategories];
-}
-
-#pragma mark -
-#pragma mark Sync Plex Categories With Appliances
-- (void)retrieveNewPlexCategories:(Machine *)m {
-	//autorelease pool to avoid memory leaks
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"Retrieving categories for machine %@", m);
-#endif
-	PlexMediaContainer *rootContainer = [m.request rootLevel];
-	NSMutableArray *directories = rootContainer.directories;
-	
-	for (PlexMediaObject *pmo in directories) {
-		NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-		[dict setObject:[pmo.name copy] forKey:CategoryNameKey];
-		[dict setObject:[m.machineID copy] forKey:MachineUIDKey];
-		[self performSelectorOnMainThread:@selector(addNewApplianceWithDict:) withObject:dict waitUntilDone:NO];
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"Adding category [%@] for machine uid [%@]", pmo.name, m.machineID);
-#endif
-	}
-	[pool drain];
-}
-
-- (void)addNewApplianceWithDict:(NSDictionary *)dict {
-	//argument is a dict due to objects being passed between threads
-	NSString *machineUid = [dict objectForKey:MachineUIDKey];
-	Machine *m = [self machineFromUid:machineUid];
-	
-	NSMutableDictionary *compoundIdentifier = [dict mutableCopy];
-	[compoundIdentifier setObject:m.serverName forKey:MachineNameKey];
-	
-	[self addNewApplianceWithCompoundIdentifier:compoundIdentifier];
-}
-
-- (void)addNewApplianceWithCompoundIdentifier:(NSDictionary *)compoundIdentifier {
-	// the compoundIdentifier will help us find back to the right machine and category.
-	NSString *categoryName = [compoundIdentifier objectForKey:CategoryNameKey];
-	NSString *machineUid = [compoundIdentifier objectForKey:MachineUIDKey];
-	//NSString *machineName = [compoundIdentifier objectForKey:MachineNameKey];
-	
-	//check if we should be adding appliances for this machine
-	if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]
-		&& ![machineUid isEqualToString:[[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid]])
-		return;
-	
-	//ensure that it is not already present
-	NSPredicate *appliancePredicate = [NSPredicate predicateWithFormat:@"(identifier.%@ like %@) AND (identifier.%@ like %@)", MachineUIDKey, machineUid, CategoryNameKey, categoryName];
-	NSArray *applianceAlreadyExists = [self.applianceCat filteredArrayUsingPredicate:appliancePredicate];
-	if ([applianceAlreadyExists count] > 0) {
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"Duplicate appliance not being added: %@", compoundIdentifier);
-#endif
-		return;
-	}
-	
-	
-	//the appliance order will be the highest number (ie it will be put at the end of the menu.
-	//this will be readjusted when the array is sorted in the (id)applianceCategories
-	float applianceOrder = [self.applianceCat count];
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"Adding appliance with name [%@] with identifier [%@]", categoryName, compoundIdentifier);
-#endif
-	BRApplianceCategory *appliance = [BRApplianceCategory categoryWithName:categoryName identifier:compoundIdentifier preferredOrder:applianceOrder];
-	[self.applianceCat addObject:appliance];
-	
-	// find any duplicate names of the one currently being added.
-	// if found, append pms name to them all
-	NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name == %@", categoryName];
-	NSArray *duplicateNameCategories = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
-	if ([duplicateNameCategories count] > 1) {
-		//found duplicates, iterate over all of them updating their names
-		for (BRApplianceCategory *appl in duplicateNameCategories) {			
-			
-			NSDictionary *compoundIdentifierBelongingToDuplicateAppliance = (NSDictionary *)appl.identifier;
-			NSString *nameOfMachineThatCategoryBelongsTo = [compoundIdentifierBelongingToDuplicateAppliance objectForKey:MachineNameKey];
-			if (!nameOfMachineThatCategoryBelongsTo) break;
-			
-			// update the name
-			// name had format:       "Movies"
-			// now changing it to be: "Movies (Office)"
-			NSString *nameWithPms = [[NSString alloc] initWithFormat:@"%@ (%@)", categoryName, nameOfMachineThatCategoryBelongsTo];
-			[appl setName:nameWithPms];
-			[nameWithPms release];
-		}
-	}
-	
-	[self redisplayCategories];
-}
-
-- (void)removeAppliancesBelongingToMachineWithUid:(NSString *)uid {
-	// called with actual UID (ie. "45E13AB3-E11C-44DD-B4F8-8A0DE1111990") of the
-	// machine rather than the compoundIdentifier's used for the categories	
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"Removing appliances with identifier [%@]", uid);
-#endif
-	
-	// find and remove all the appliances who's compoundIdentifers contain this machine's uid.
-	// this will be all the appliances who "belong" to this machine	
-	NSPredicate *appliancePredicate = [NSPredicate predicateWithFormat:@"identifier.%@ like %@", MachineUIDKey, uid];
-	NSArray *appliancesToRemove = [self.applianceCat filteredArrayUsingPredicate:appliancePredicate];
-	[self.applianceCat removeObjectsInArray:appliancesToRemove];
-	
-	// now they have been removed from the main menu. 
-	// Must check if any of these items had the machine name appended because then there might
-	// not be duplicates with that name left (ie we have gone from having 2x"Movies" to 1x"Movies)
-	// and the remaining "Movies" item no longer need the pms name appended.
-	// This means we go from "Movies (Office)" to just "Movies". Though we must check that there only
-	// is 1x"Movies", cause the case could have been that we had 3x"Movies", and now have 2x"Movies"
-	// and the pms name must remain.
-	for (BRApplianceCategory *appliance in appliancesToRemove) {
-		//category name will be just "Movies", even when applianceName is "Movies (Office)"
-		NSDictionary *compoundIdentifier = (NSDictionary *)appliance.identifier;
-		NSString *categoryName = [compoundIdentifier objectForKey:CategoryNameKey];
-		
-		//find all others with the same category name
-		NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"identifier.%@ like %@", CategoryNameKey, categoryName];
-		
-		NSArray *matchingAppliances = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
-		if ([matchingAppliances count] == 1) {
-			//there is now only 1x"Movies" left, remove the pms suffix
-			BRApplianceCategory *singleMatch = [matchingAppliances objectAtIndex:0];
-			[singleMatch setName:categoryName];
-		}
-	}
-	[self redisplayCategories];
 }
 
 #pragma mark -
@@ -378,55 +269,34 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Removed machine %@", m);
 #endif
-	[self removeAppliancesBelongingToMachineWithUid:m.machineID];
+	[self reloadCategories];
 }
 
 -(void)machineWasAdded:(Machine*)m {	
-    BOOL machineRunsServer = runsServer(m.role);
-    BOOL machineIsOnline = m.isOnline;
-    BOOL machinesListAlreadyContainsMachine = [self.machines containsObject:m];
-    
-    if ( machineRunsServer && machineIsOnline && !machinesListAlreadyContainsMachine ) {
-	    [self.machines addObject:m];
 #if LOCAL_DEBUG_ENABLED
-	    NSLog(@"MachineManager: Added machine %@", m);
+	NSLog(@"MachineManager: Added machine %@", m);
+	//new machine added, no need to take action until we have a valid connection
 #endif
-		
-	    //[m resolveAndNotify:self];
-		
-		//retrieve new categories
-		[self performSelectorInBackground:@selector(retrieveNewPlexCategories:) withObject:[m retain]];
-		//does not reload at this time as the background thread will tell the main thread to refresh
-		//once it has finished its work
-    }
+}
+
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con {
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
+#endif
+	//check if the connection is "valid" and machine has retrieved information
+	if (con.canConnect && m.rootLevel && m.librarySections) {
+		[self reloadCategories];
+	}
 }
 
 -(void)machineWasChanged:(Machine*)m {
 	if (m==nil) return;
-	
-	BOOL machineRunsServer = runsServer(m.role);
-    BOOL machineIsOnline = m.isOnline;
-    BOOL machinesListAlreadyContainsMachine = [self.machines containsObject:m];
-	
-	if ( machineRunsServer && machineIsOnline && !machinesListAlreadyContainsMachine ) {
-		[self machineWasAdded:m];
-		return;
-	} else  if ( (!machineRunsServer || !machineIsOnline) && machinesListAlreadyContainsMachine ) {
-		[self removeAppliancesBelongingToMachineWithUid:m.machineID];
 #if LOCAL_DEBUG_ENABLED
-		NSLog(@"MachineManager: Removed %@", m);
+	NSLog(@"MachineManager: Changed %@", m);
 #endif
-		[self.machines removeObject:m];
-	} else {
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"MachineManager: Changed %@", m);
-#endif
-	}
 }
 
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{
-}
-
--(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{
-}
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
+-(void)machine:(Machine*)m didAcceptConnection:(MachineConnectionBase*)con {}
+-(void)machine:(Machine*)m didNotAcceptConnection:(MachineConnectionBase*)con error:(NSError*)err {}
 @end

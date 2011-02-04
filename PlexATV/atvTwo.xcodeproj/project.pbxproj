@@ -24,6 +24,7 @@
 		01A0F58F12722877007A60B5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F58E12722877007A60B5 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		01A0F597127228BC007A60B5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F596127228BC007A60B5 /* Foundation.framework */; };
 		01A0F59D127228CC007A60B5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F59C127228CC007A60B5 /* libz.dylib */; };
+		7273929912FA891E008B4C86 /* HWServerConnectionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7273929812FA891E008B4C86 /* HWServerConnectionsController.m */; };
 		727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */; };
 		7297238412EE81000064E776 /* HWUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 7297238312EE81000064E776 /* HWUserDefaults.m */; };
 		729723AF12EE84810064E776 /* HWServersController.m in Sources */ = {isa = PBXBuildFile; fileRef = 729723AE12EE84810064E776 /* HWServersController.m */; };
@@ -533,6 +534,8 @@
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = atvTwo_Prefix.pch; sourceTree = "<group>"; };
+		7273929712FA891E008B4C86 /* HWServerConnectionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWServerConnectionsController.h; path = Classes/HWServerConnectionsController.h; sourceTree = "<group>"; };
+		7273929812FA891E008B4C86 /* HWServerConnectionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWServerConnectionsController.m; path = Classes/HWServerConnectionsController.m; sourceTree = "<group>"; };
 		727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWAdvancedSettingsController.h; path = Classes/HWAdvancedSettingsController.h; sourceTree = "<group>"; };
 		727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWAdvancedSettingsController.m; path = Classes/HWAdvancedSettingsController.m; sourceTree = "<group>"; };
 		727A3FAE12F7C93D00994193 /* SMFGridController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFGridController.h; sourceTree = "<group>"; };
@@ -1223,12 +1226,14 @@
 			children = (
 				72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */,
 				72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */,
-				729723AD12EE84810064E776 /* HWServersController.h */,
-				729723AE12EE84810064E776 /* HWServersController.m */,
 				72B2C71312DC1F0E00E23F8E /* HWDefaultServerController.h */,
 				72B2C71412DC1F0E00E23F8E /* HWDefaultServerController.m */,
+				729723AD12EE84810064E776 /* HWServersController.h */,
+				729723AE12EE84810064E776 /* HWServersController.m */,
 				727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */,
 				727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */,
+				7273929712FA891E008B4C86 /* HWServerConnectionsController.h */,
+				7273929812FA891E008B4C86 /* HWServerConnectionsController.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1415,6 +1420,7 @@
 				7297238412EE81000064E776 /* HWUserDefaults.m in Sources */,
 				729723AF12EE84810064E776 /* HWServersController.m in Sources */,
 				727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */,
+				7273929912FA891E008B4C86 /* HWServerConnectionsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

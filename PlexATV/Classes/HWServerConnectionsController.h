@@ -1,15 +1,17 @@
 //
-//  HWServersController.h
+//  HWServerConnectionsController.h
 //  atvTwo
 //
-//  Created by ccjensen on 10/01/2011.
+//  Created by Serendipity on 02/02/2011.
+//  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "SMFramework.h"
 
-@interface HWServersController : SMFMediaMenuController<MachineManagerDelegate> {
+@interface HWServerConnectionsController : SMFMediaMenuController<MachineManagerDelegate> {
 	NSMutableArray		*_machines;
+	NSMutableArray *persistentRemoteServers;
 	
 	//add new server variables
 	BOOL hasCompletedAddNewRemoteServerWizardStep1; //if completed proceed to step 2
@@ -22,8 +24,12 @@
 	NSString *_hostName;
 	int _portNumber;
 	NSString *_etherId;
+	
+	BOOL isEditingHostName;
+	BOOL isEditingServerName;
+	BOOL isEditingUserName;
+	BOOL isEditingPassword;
 }
-
 @property (copy) NSString *serverName;
 @property (copy) NSString *userName;
 @property (copy) NSString *password;
@@ -46,6 +52,7 @@
 - (void)showEnterUsernameDialogBoxWithInitialText:(NSString *)initalText;
 - (void)showEnterPasswordDialogBoxWithInitialText:(NSString *)initalText;
 - (void)showDialogBoxWithTitle:(NSString *)title secondaryInfoText:(NSString *)infoText textFieldLabel:(NSString *)textFieldLabel withInitialText:(NSString *)initialText;
+- (void)showEditServerViewForRow:(long)row;
 
 //list provider
 - (float)heightForRow:(long)row;

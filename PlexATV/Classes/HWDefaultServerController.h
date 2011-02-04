@@ -1,5 +1,5 @@
 //
-//  HWPmsListController.h
+//  HWDefaultServersController.h
 //  atvTwo
 //
 //  Created by ccjensen on 10/01/2011.
@@ -8,7 +8,7 @@
 
 #import <plex-oss/MachineManager.h>
 
-@interface HWPmsListController : BRMediaMenuController<MachineManagerDelegate> {
+@interface HWDefaultServerController : BRMediaMenuController<MachineManagerDelegate> {
 	NSMutableArray		*_names;
 	
 }

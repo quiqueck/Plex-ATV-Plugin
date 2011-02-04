@@ -1,5 +1,5 @@
 //
-//  HWPmsListController.m
+//  HWDefaultServersController.m
 //  atvTwo
 //
 //  Created by ccjensen on 10/01/2011.
@@ -7,14 +7,14 @@
 
 
 
-#import "HWPmsListController.h"
+#import "HWDefaultServerController.h"
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
 #import "HWUserDefaults.h"
 #import "Constants.h"
 
-@implementation HWPmsListController
+@implementation HWDefaultServerController
 
 - (id) init
 {
@@ -60,12 +60,10 @@
 	[super wasPopped];
 }
 
-
-
 - (id)previewControlForItem:(long)item
 
 {
-	BRImage *theImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[HWPmsListController class]] pathForResource:@"PlexLogo" ofType:@"png"]];
+	BRImage *theImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[HWDefaultServerController class]] pathForResource:@"PlexLogo" ofType:@"png"]];
 	BRImageAndSyncingPreviewController *obj = [[BRImageAndSyncingPreviewController alloc] init];
 	[obj setImage:theImage];
 	return [obj autorelease];
@@ -160,9 +158,7 @@
 	[self setNeedsUpdate];
 }
 
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{
-}
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{}
 
--(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{
-}
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
 @end
