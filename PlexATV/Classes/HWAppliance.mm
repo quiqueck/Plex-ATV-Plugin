@@ -70,7 +70,6 @@ NSString * const MachineNameKey = @"PlexMachineName";
 @implementation PlexAppliance
 @synthesize topShelfController = _topShelfController;
 @synthesize applianceCat = _applianceCategories;
-@synthesize machines = _machines;
 
 NSString * const CompoundIdentifierDelimiter = @"|||";
 
@@ -95,7 +94,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		_topShelfController = [[TopShelfController alloc] init];
 		_applianceCategories = [[NSMutableArray alloc] init];
-		_machines = [[NSMutableArray alloc] init];
 		
 		otherServersApplianceCategory = [OTHERSERVERS_CAT retain];
 		settingsApplianceCategory = [SETTINGS_CAT retain];
@@ -103,16 +101,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		[[ProxyMachineDelegate shared] registerDelegate:self];
 		[[MachineManager sharedMachineManager] startAutoDetection];
 	} return self;
-}
-
-- (Machine *)machineFromUid:(NSString *)uid {
-	NSPredicate *machinePredicate = [NSPredicate predicateWithFormat:@"uid == %@", uid];
-	NSArray *matchingMachines = [self.machines filteredArrayUsingPredicate:machinePredicate];
-	if ([matchingMachines count] != 1) {
-		NSLog(@"ERROR: incorrect number of machine matches to selected appliance with uid [%@]", uid);
-		return nil;
-	}
-	return [matchingMachines objectAtIndex:0];
 }
 
 - (id)controllerForIdentifier:(id)identifier args:(id)args {
@@ -133,7 +121,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		//NSString *machineName = [compoundIdentifier objectForKey:MachineNameKey];
 		
 		// ====== find the machine using the identifer (uid) ======
-		Machine *machineWhoCategoryBelongsTo = [self machineFromUid:machineId];
+		Machine *machineWhoCategoryBelongsTo = [[MachineManager sharedMachineManager] machineForMachineID:machineId];
 		if (!machineWhoCategoryBelongsTo) return nil;
 		
 		// ====== find the category selected ======		
@@ -198,7 +186,11 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 -(void) reloadCategories {
 	[self.applianceCat removeAllObjects];
 	
-	NSArray *machines = [[MachineManager sharedMachineManager] machines];
+	NSArray *machines;
+#warning can be removed once the MM supports a synchronized method of retrieving the machines
+	@synchronized([[MachineManager sharedMachineManager] machines]) {
+		machines = [[[MachineManager sharedMachineManager] machines] copy];
+	}
 	for (Machine *machine in machines) {
 		NSString *machineID = [machine.machineID copy];
 		NSString *machineName = [machine.serverName copy];

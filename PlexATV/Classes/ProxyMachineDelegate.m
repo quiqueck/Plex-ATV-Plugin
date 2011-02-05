@@ -82,10 +82,10 @@
   }
 }
 
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask{
   for (id<MachineManagerDelegate> d in delegates){
     NSLog(@"Send machine:receivedInfoForConnection to %@", d);
-      [d machine:m receivedInfoForConnection:con];
+      [d machine:m receivedInfoForConnection:con updated:updateMask];
   }
 }
 

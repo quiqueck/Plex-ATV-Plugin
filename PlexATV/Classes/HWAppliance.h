@@ -19,7 +19,4 @@
 }
 @property(nonatomic, readonly, retain) id topShelfController;
 @property(retain) NSMutableArray *applianceCat;
-@property(nonatomic, retain) NSMutableArray *machines;
-
-- (Machine *)machineFromUid:(NSString *)uid;
 @end
