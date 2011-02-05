@@ -59,19 +59,17 @@
 - (void) drawSelf
 {
   NSLog(@"drawSelf");
-  _panel=[[BRPanelControl alloc]init];
-  _box=[[BRBoxControl alloc] init];
+  _spinner=[[BRWaitSpinnerControl alloc]init];
+  _cursorControl=[[BRCursorControl alloc] init];
   _scroller=[[BRScrollControl alloc] init];
-  _gridControl= [[BRMediaShelfControl alloc] init];
+  _gridControl=[[BRGridControl alloc] init];
   [self setGrid];
-  //[_gridControl focusControlAtIndex:0];
+  [_gridControl focusControlAtIndex:0];
 	[_gridControl setHorizontalGap:0.01f];
-  //[_gridControl setVerticalGap:0.01f];
+  [_gridControl setVerticalGap:0.01f];
   [_scroller setFollowsFocus:YES];
-  [_scroller setContent:_panel];
+  [_scroller setContent:_gridControl];
   [self layoutSubcontrols];
-  [self setNeedsDisplay];
-  [self setNeedsLayout];
   
 }
 
@@ -92,9 +90,11 @@
   NSLog(@"getProviderForGrid - have assets, creating datastore and provider");
 #endif
 
-  id tcControlFactory = [BRMediaObjectControlFactory factory];
+  id tcControlFactory = [BRMetadataPreviewControlFactory factory];
 
-  BRMediaObjectProvider* provider = [BRMediaObjectProvider providerWithMediaObjects:_assets controlFactory:tcControlFactory];
+  SMFPhotoCollectionProvider* provider = [SMFPhotoCollectionProvider providerWithDataStore:store 
+                                                                            controlFactory:[BRPhotoControlFactory standardFactory]];
+
   
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"getProviderForGrid_end");
@@ -120,34 +120,27 @@
   
   NSLog(@"provider: %@", provider);
   [_gridControl setProvider:provider];
-  [_gridControl setShowTitleAndSubtitle:YES];
-  //[_gridControl setColumnCount:5];
-  //[_gridControl setWrapsNavigation:YES];
-	[_gridControl setAcceptsFocus:YES];
-  //[_gridControl setProviderRequester:_gridControl];//[NSNotificationCenter defaultCenter]];
-  [_gridControl setAccessibilityLabel:@"Alla filmer"];
-  
-  //[self setControls:[NSArray arrayWithObjects:_scroller,nil]];
-  [self setControls:[NSArray arrayWithObjects:_gridControl,nil]];
+  [_gridControl setColumnCount:5];
+  [_gridControl setWrapsNavigation:YES];
+  [self setControls:[NSArray arrayWithObjects:_spinner,_cursorControl,_scroller,nil]];
   CGRect masterFrame = [BRWindow interfaceFrame];
-  NSLog(@"masterFrame: %f", masterFrame.size.width);
-	
+  
+  
   CGRect frame;
   frame.origin.x = masterFrame.size.width  * 0.0f;
   frame.origin.y = (masterFrame.size.height * 0.0f);// - txtSize.height;
-	
+  
   frame.size.width = masterFrame.size.width*1.f;
-	frame.size.height = 200.0;
-  [_scroller setFrame:masterFrame];
-  [_panel setFrame:masterFrame];
-  [_box setFrame:frame];
+	frame.size.height = masterFrame.size.height*1.f;
+	[_gridControl setAcceptsFocus:YES];
+  [_gridControl setWrapsNavigation:YES];
+  [_gridControl setProviderRequester:_gridControl];//[NSNotificationCenter defaultCenter]];
+  [_scroller setFrame:frame];
   [_gridControl setFrame:frame];
   [_scroller setAcceptsFocus:YES];
-
-  [_box addControl:_gridControl];
-  [_panel addControl:_box];
-  [_scroller addControl:_panel];
-  [self addControl:_gridControl];
+  [self addControl:_scroller];
+  [self addControl:_spinner];
+  [self addControl:_cursorControl];
   
   NSLog(@"gridControl: %@", _gridControl);
   //NSLog(@"dataCount: %d", [_gridControl dataCount]);

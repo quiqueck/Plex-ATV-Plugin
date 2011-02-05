@@ -12,9 +12,9 @@
 
 @interface HWMediaShelfController : BRController {
   NSMutableArray	*_assets;
-  BRMediaShelfControl* _gridControl;
-  BRPanelControl *  _panel;
-  BRBoxControl *       _box;
+  BRGridControl*          _gridControl;
+  BRWaitSpinnerControl *  _spinner;
+  BRCursorControl *       _cursorControl;
   BRScrollControl *       _scroller;
 }
 -(void)drawSelf;
