@@ -1,5 +1,5 @@
 //
-//  HWServerConnectionsController.h
+//  HWServerDetailsController.h
 //  atvTwo
 //
 //  Created by Serendipity on 02/02/2011.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface HWServerConnectionsController : SMFMediaMenuController<MachineManagerDelegate> {
+@interface HWServerDetailsController : SMFMediaMenuController<MachineManagerDelegate> {
 	NSMutableArray		*_machines;
 	NSMutableArray *persistentRemoteServers;
 	
@@ -23,11 +23,6 @@
 	NSString *_hostName;
 	int _portNumber;
 	NSString *_etherId;
-	
-	BOOL isEditingHostName;
-	BOOL isEditingServerName;
-	BOOL isEditingUserName;
-	BOOL isEditingPassword;
 }
 @property (copy) NSString *serverName;
 @property (copy) NSString *userName;

@@ -1,5 +1,5 @@
 //
-//  HWServerConnectionsController.m
+//  HWServerDetailsController.m
 //  atvTwo
 //
 //  Created by ccjensen on 10/01/2011.
@@ -14,7 +14,7 @@
 #import "HWUserDefaults.h"
 #import "Constants.h"
 
-@implementation HWServerConnectionsController
+@implementation HWServerDetailsController
 
 #define EditServerDialog @"EditServerDialog"
 
@@ -253,77 +253,39 @@
 	NSLog(@"text string: %@", textEntered);
 #endif
 	
-	//check if the user was adding a new remote server, or editing details of previous one
-	if (isEditingHostName || isEditingServerName || isEditingUserName || isEditingPassword) {
-		//editing a previously created remote server
-		
-		long selected = [self getSelection];
-		Machine *m = [_machines objectAtIndex:selected-1]; //always -1 since we have "Add remote" as 0 in list
-		
-		//setup all the variables, and then we will be modifying just one of them
-		NSString *hostName = m.hostName;
-		NSString *serverName = m.serverName;
-		NSString *userName = m.userName;
-		NSString *password = m.password;
-		
-		if (isEditingHostName) {
-			//editing a previous entered remote server's host name
-			isEditingHostName = NO;
-			hostName = textEntered;
-		} else if (isEditingServerName) {
-			//editing a previous entered remote server's custom server name
-			isEditingServerName = NO;
-			serverName = textEntered;
-		} else if (isEditingUserName) {
-			isEditingUserName = NO;
-			userName = textEntered;
-		} else if (isEditingPassword) {
-			isEditingPassword = NO;
-			userName = textEntered;
-		}
-		
-		[self modifyRemoteMachine:m withHostName:hostName serverName:serverName userName:userName password:password];
-		
+	//adding a new remote server
+	
+	if (!hasCompletedAddNewRemoteServerWizardStep1) {
+		hasCompletedAddNewRemoteServerWizardStep1 = YES;
+		self.hostName = textEntered;
 		[[self stack] popController];
-		[self setNeedsUpdate];
+		
+		[self showEnterServerNameDialogBoxWithInitialText:@""];
+		
+	} else if (!hasCompletedAddNewRemoteServerWizardStep2) {
+		hasCompletedAddNewRemoteServerWizardStep2 = YES;
+		//if no custom name was entered, use the host name
+		self.serverName = [textEntered isEqualToString:@""] ? self.hostName : textEntered;
+		[[self stack] popController];
+		
+		[self showEnterUsernameDialogBoxWithInitialText:@""];
+		
+	} else if (!hasCompletedAddNewRemoteServerWizardStep3) {
+		hasCompletedAddNewRemoteServerWizardStep3 = YES;
+		self.userName = textEntered;
+		[[self stack] popController];
+		
+		[self showEnterPasswordDialogBoxWithInitialText:@""];
 		
 	} else {
-		//adding a new remote server
+		//final step completed
+		self.password = textEntered;
+		[[self stack] popController];
 		
-		if (!hasCompletedAddNewRemoteServerWizardStep1) {
-			hasCompletedAddNewRemoteServerWizardStep1 = YES;
-			self.hostName = textEntered;
-			[[self stack] popController];
-			
-			[self showEnterServerNameDialogBoxWithInitialText:@""];
-			
-		} else if (!hasCompletedAddNewRemoteServerWizardStep2) {
-			hasCompletedAddNewRemoteServerWizardStep2 = YES;
-			//if no custom name was entered, use the host name
-			self.serverName = [textEntered isEqualToString:@""] ? self.hostName : textEntered;
-			[[self stack] popController];
-			
-			[self showEnterUsernameDialogBoxWithInitialText:@""];
-			
-		} else if (!hasCompletedAddNewRemoteServerWizardStep3) {
-			hasCompletedAddNewRemoteServerWizardStep3 = YES;
-			self.userName = textEntered;
-			[[self stack] popController];
-			
-			[self showEnterPasswordDialogBoxWithInitialText:@""];
-			
-		} else {
-			//final step completed
-			self.password = textEntered;
-			[[self stack] popController];
-			
-			//add machine
-			[self addNewMachineWithServerName:self.serverName userName:self.userName password:self.password hostName:self.hostName portNumber:self.portNumber etherId:self.etherId];
-			[self addNewRemoteMachineWithHostName:self.hostName serverName:self.serverName userName:self.userName password:self.password];
-			
-			[self setNeedsUpdate];
-		}
+		//add machine
+		[self addNewMachineWithServerName:self.serverName userName:self.userName password:self.password hostName:self.hostName portNumber:self.portNumber etherId:self.etherId];
 		
+		[self setNeedsUpdate];		
 	}
 }
 
@@ -331,33 +293,10 @@
     //get the currently selected row
 	Machine* _machine = [_machines objectAtIndex:row-1]; //always -1 since we have "Add remote" as 0 in list
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"showEditRemoteServerViewForRow. row: %d, machine: %@, bonjour: %@", row, _machine, [_machine.bestConnection class]);
+	NSLog(@"showEditRemoteServerViewForRow. row: %d, machine: %@", row, _machine);
 #endif
 	
-#warning <Machine Manager Update> Please check this...
-	//if (!_machine.bonjour){
-	BROptionDialog *option = [[BROptionDialog alloc] init];
-	[option setIdentifier:EditServerDialog];
-	
-	[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
-						 _machine, @"machine",
-						 nil]];
-	
-	[option setPrimaryInfoText:@"Edit remote server"];
-	NSString *secondaryInfo = [NSString stringWithFormat:@"%@ (Host: %@)", _machine.serverName, _machine.hostName];
-	[option setSecondaryInfoText:secondaryInfo];
-	
-	[option addOptionText:@"Edit host name"];
-	[option addOptionText:@"Edit server name"];
-	[option addOptionText:@"Edit login username"];
-	[option addOptionText:@"Edit login password"];
-	[option addOptionText:@"Remove from server list"];
-	[option addOptionText:@"Go back"];
-	[option setActionSelector:@selector(optionSelected:) target:self];
-	[[self stack] pushController:option];
-	[option release];
-	//}
-	
+	HWServerConnectionsController *serverConnectionsController
 }
 
 - (void)optionSelected:(id)sender {
