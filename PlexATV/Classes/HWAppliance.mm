@@ -9,8 +9,6 @@
 #import <plex-oss/PlexRequest + Security.h>
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
-#import <plex-oss/MachineConnectionBase.h>
-#import "SMFramework.h"
 #import "HWUserDefaults.h"
 #import "Constants.h"
 
@@ -21,7 +19,7 @@
 
 //dictionary keys
 NSString * const CategoryNameKey = @"PlexApplianceName";
-NSString * const MachineIdKey = @"PlexMachineUID";
+NSString * const MachineUIDKey = @"PlexMachineUID";
 NSString * const MachineNameKey = @"PlexMachineName";
 
 @interface UIDevice (ATV)
@@ -130,7 +128,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		NSDictionary *compoundIdentifier = (NSDictionary *)identifier;
 		
 		NSString *categoryName = [compoundIdentifier objectForKey:CategoryNameKey];
-		NSString *machineUid = [compoundIdentifier objectForKey:MachineIdKey];
+		NSString *machineUid = [compoundIdentifier objectForKey:MachineUIDKey];
 		//NSString *machineName = [compoundIdentifier objectForKey:MachineNameKey];
 		
 		// ====== find the machine using the identifer (uid) ======

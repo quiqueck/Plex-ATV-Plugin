@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SMFramework.h"
 
 @interface HWServersController : SMFMediaMenuController<MachineManagerDelegate> {
 	NSMutableArray		*_machines;

@@ -26,7 +26,7 @@
 
 #import <Foundation/Foundation.h>
 #import <plex-oss/PlexMediaContainer.h>
-#import "SMFramework.h"
+
 
 
 @class PlexMediaObject;

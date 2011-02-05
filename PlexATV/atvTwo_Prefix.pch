@@ -4,7 +4,7 @@
 
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
-	#import "theos/include/BackRow/BackRow.h"
+#import <SMFramework/SMFramework.h>
 	#import <plex-oss/Preferences.h>
 	#import "ProxyMachineDelegate.h"
 #endif
