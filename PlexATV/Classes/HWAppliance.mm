@@ -9,6 +9,7 @@
 #import <plex-oss/PlexRequest + Security.h>
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexMediaContainer.h>
+#import <plex-oss/MachineConnectionBase.h>
 #import "HWUserDefaults.h"
 #import "Constants.h"
 
@@ -19,7 +20,7 @@
 
 //dictionary keys
 NSString * const CategoryNameKey = @"PlexApplianceName";
-NSString * const MachineUIDKey = @"PlexMachineUID";
+NSString * const MachineIDKey = @"PlexMachineID";
 NSString * const MachineNameKey = @"PlexMachineName";
 
 @interface UIDevice (ATV)
@@ -128,11 +129,11 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		NSDictionary *compoundIdentifier = (NSDictionary *)identifier;
 		
 		NSString *categoryName = [compoundIdentifier objectForKey:CategoryNameKey];
-		NSString *machineUid = [compoundIdentifier objectForKey:MachineUIDKey];
+		NSString *machineId = [compoundIdentifier objectForKey:MachineIDKey];
 		//NSString *machineName = [compoundIdentifier objectForKey:MachineNameKey];
 		
 		// ====== find the machine using the identifer (uid) ======
-		Machine *machineWhoCategoryBelongsTo = [self machineFromUid:machineUid];
+		Machine *machineWhoCategoryBelongsTo = [self machineFromUid:machineId];
 		if (!machineWhoCategoryBelongsTo) return nil;
 		
 		// ====== find the category selected ======		
@@ -212,7 +213,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		if (machine.isComplete) {						   
 			//================== add all it's categories to our appliances list ==================
 			//machine.request.rootLevel = machine.rootLevel + machine.librarySections
-			for (PlexMediaObject *pmo in machine.request.rootLevel) {
+			for (PlexMediaObject *pmo in machine.request.rootLevel.directories) {
 				NSString *categoryName = [pmo.name copy];
 #if LOCAL_DEBUG_ENABLED
 				NSLog(@"Adding category [%@] for machine id [%@]", categoryName, machineID);
@@ -221,7 +222,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 				//create the compoundIdentifier for the appliance identifier
 				NSMutableDictionary *compoundIdentifier = [NSMutableDictionary dictionary];
 				[compoundIdentifier setObject:categoryName forKey:CategoryNameKey];
-				[compoundIdentifier setObject:machineID forKey:MachineIdKey];
+				[compoundIdentifier setObject:machineID forKey:MachineIDKey];
 				[compoundIdentifier setObject:machineName forKey:MachineNameKey];
 				
 				//================== add the appliance ==================
@@ -285,33 +286,30 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #endif
 }
 
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask;
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask {
 #if LOCAL_DEBUG_ENABLED
-NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
+	NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
 #endif
-if (machine.isComplete && [machine.bestConnection isEqual:con] 
-	&& (updateMask == ConnectionInfoTypeRootLevel || updateMask == ConnectionInfoTypeLibrarySections) {
+	if (m.isComplete && [m.bestConnection isEqual:con] 
+		&& (updateMask == ConnectionInfoTypeRootLevel || updateMask == ConnectionInfoTypeLibrarySections)) {
 		[self reloadCategories];
 	}
-	}
+}
+
+-(void)machineWasChanged:(Machine*)m {
+	if (m==nil) return;
 	
-	-(void)machineWasChanged:(Machine*)m {
-		if (m==nil) return;
-		
-		BOOL machineRunsServer = runsServer(m.role);
-		BOOL machineIsOnline = m.isOnline;
-		
-		if (machine.isComplete) {
+	if (m.isComplete) {
 #if LOCAL_DEBUG_ENABLED
-			NSLog(@"MachineManager: Changed %@", m);
+		NSLog(@"MachineManager: Changed %@", m);
 #endif
-		} else {
+	} else {
 #if LOCAL_DEBUG_ENABLED
-			NSLog(@"MachineManager: Machine %@ offline", m);
+		NSLog(@"MachineManager: Machine %@ offline", m);
 #endif
-			[self reloadCategories];
-		}
+		[self reloadCategories];
 	}
-	
-	-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
-	@end
+}
+
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
+@end
