@@ -6,9 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <plex-oss/Machine.h>
 
-@interface HWServersController : SMFMediaMenuController<MachineManagerDelegate> {
-	NSMutableArray		*_machines;
+@interface HWServersController : SMFMediaMenuController<MachineManagerDelegate, TestAndConditionallyAddConnectionProtocol> {
+	NSMutableArray *_machines;
 	
 	//add new server variables
 	BOOL hasCompletedAddNewRemoteServerWizardStep1; //if completed proceed to step 2
@@ -23,6 +24,7 @@
 	NSString *_etherId;
 }
 
+@property (copy) NSMutableArray *machines;
 @property (copy) NSString *serverName;
 @property (copy) NSString *userName;
 @property (copy) NSString *password;
@@ -31,9 +33,6 @@
 @property (copy) NSString *etherId;
 
 //custom methods
-- (void)loadInPersistentMachines;
-- (NSDictionary *)persistentRemoteServerWithHostName:(NSString *)aHostName andServerName:(NSString *)aServerName;
-
 - (void)resetDialogFlags;
 - (void)resetMachineSettingVariables;
 

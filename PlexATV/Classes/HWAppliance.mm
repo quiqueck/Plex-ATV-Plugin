@@ -186,11 +186,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 -(void) reloadCategories {
 	[self.applianceCat removeAllObjects];
 	
-	NSArray *machines;
-#warning can be removed once the MM supports a synchronized method of retrieving the machines
-	@synchronized([[MachineManager sharedMachineManager] machines]) {
-		machines = [[[MachineManager sharedMachineManager] machines] copy];
-	}
+	NSArray *machines = [[MachineManager sharedMachineManager] threadSaveMachines];
 	for (Machine *machine in machines) {
 		NSString *machineID = [machine.machineID copy];
 		NSString *machineName = [machine.serverName copy];

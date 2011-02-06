@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <plex-oss/Machine.h>
 
 @interface HWServerDetailsController : SMFMediaMenuController<MachineManagerDelegate> {
-	NSMutableArray		*_machines;
-	NSMutableArray *persistentRemoteServers;
+	Machine *machine;
 	
 	//add new server variables
 	BOOL hasCompletedAddNewRemoteServerWizardStep1; //if completed proceed to step 2

@@ -9,7 +9,6 @@
 
 #import "HWServersController.h"
 #import <plex-oss/MachineManager.h>
-#import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
 #import "HWUserDefaults.h"
 #import "Constants.h"
@@ -18,6 +17,7 @@
 
 #define EditServerDialog @"EditServerDialog"
 
+@synthesize machines = _machines;
 @synthesize serverName = _serverName;
 @synthesize userName = _userName;
 @synthesize password = _password;
@@ -45,8 +45,6 @@
 		
 		//start the auto detection
 		[[MachineManager sharedMachineManager] startAutoDetection];
-		
-		//[self loadInPersistentMachines];
 	}
 	return self;
 }
@@ -54,7 +52,7 @@
 -(void)dealloc
 {
 	[[MachineManager sharedMachineManager] stopAutoDetection];
-	[_machines release];
+	self.machines = nil;
 	self.serverName = nil;
 	self.userName = nil;
 	self.password = nil;
@@ -67,16 +65,24 @@
 
 - (void)wasPushed {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"--- Did push controller %@ %@", self, _machines);
+	NSLog(@"--- Did push controller");
 #endif
 	[[ProxyMachineDelegate shared] registerDelegate:self];
+	
+	[self.machines removeAllObjects];
+	self.machines = [[MachineManager sharedMachineManager] threadSaveMachines];
+	for (Machine *m in allMachines) {
+		if (runsServer(m.role)) {
+			[self.machines addObject:[m copy]];
+		}
+	}
+	
 	[self.list reload];
-	[super wasPushed];
 }
 
 - (void)wasPopped {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"--- Did pop controller %@ %@", self, _machines);
+	NSLog(@"--- Did pop controller");
 #endif
 	[[ProxyMachineDelegate shared] removeDelegate:self];
 	
@@ -89,6 +95,10 @@
 {
 	Machine *machine = [[Machine alloc] initWithServerName:serverName manager:[MachineManager sharedMachineManager] machineID:nil];	
 	[machine testAndConditionallyAddConnectionForHostName:hostName port:portNumber etherID:etherId notify:self];
+}
+
+- (void)modifyMachine:(Machine *)m {
+	
 }
 
 - (void)resetDialogFlags
@@ -133,11 +143,11 @@
 		[self showEnterHostNameDialogBoxWithInitialText:@""];
 		
 	} else {
-		Machine* m = [_machines objectAtIndex:selected -1]; //-1 'cause of the "Add remote server" that screws up things
+		Machine* m = [self.machines objectAtIndex:selected -1]; //-1 'cause of the "Add remote server" that screws up things
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"machine selected: %@", m);
 #endif
-		//[self showEditServerViewForRow:selected];
+		[self showEditServerViewForRow:selected];
 	}
 }
 
@@ -146,7 +156,7 @@
 }
 
 - (long)itemCount {
-	return _machines.count + 1;
+	return self.machines.count + 1;
 }
 
 - (id)itemForRow:(long)row {
@@ -156,9 +166,8 @@
 		[result setText:@"Add server" withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 		[result addAccessoryOfType:0];
 	} else {
-		Machine *m = [_machines objectAtIndex:row-1];
-		NSString* name = [NSString stringWithFormat:@"%@ (Host: %@)", m.serverName, m.hostName];
-		[result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+		Machine *m = [self.machines objectAtIndex:row-1];
+		[result setText:m.serverName withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 		
 		[result addAccessoryOfType:1]; //folder
 	}	
@@ -171,9 +180,9 @@
 }
 
 - (id)titleForRow:(long)row {
-	if (row >= [_machines count] || row<0)
+	if (row >= [self.machines count] || row<0)
 		return @"";
-	Machine* m = [_machines objectAtIndex:row];
+	Machine* m = [self.machines objectAtIndex:row];
 	return m.serverName;
 }
 
@@ -322,53 +331,53 @@
 }
 
 #pragma mark -
-#pragma mark Machine Manager Delegate
+#pragma mark Machine Delegate Methods
 -(void)machineWasRemoved:(Machine*)m{
-#ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"Removed %@", m);
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"MachineManager: Removed machine %@", m);
 #endif
-	[_machines removeObject:m];
+	//[self.machines removeObject:m];	
+	[self.list reload];
 }
 
--(void)machineWasAdded:(Machine*)m{
-	if (!runsServer(m.role)) 
-		return;
-	
-	[_machines addObject:m];
-#ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"Added %@", m);
+-(void)machineWasAdded:(Machine*)m {	
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"MachineManager: Added machine %@", m);
 #endif
-	
-    //[m resolveAndNotify:self];
-	[self setNeedsUpdate];
+	//[self.machines addObject:m];
+	[self.list reload];
 }
 
--(void)machineWasChanged:(Machine*)m{
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask {
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
+#endif
+}
+
+-(void)machineWasChanged:(Machine*)m {
 	if (m==nil) return;
 	
-	if (runsServer(m.role) && ![_machines containsObject:m]){
-		[self machineWasAdded:m];
-		return;
-	} else if (!runsServer(m.role) && [_machines containsObject:m]){
-		[_machines removeObject:m];
-#ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Removed %@", m);
+	if (m.isComplete) {
+#if LOCAL_DEBUG_ENABLED
+		NSLog(@"MachineManager: Changed %@", m);
 #endif
 	} else {
-#ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Changed %@", m);
+#if LOCAL_DEBUG_ENABLED
+		NSLog(@"MachineManager: Machine %@ offline", m);
 #endif
 	}
-	
-	[self setNeedsUpdate];
 }
 
--(void)machine:(Machine*) m didAcceptConnection:(MachineConnectionBase*) con {}
-
--(void)machine:(Machine*) m didNotAcceptConnection:(MachineConnectionBase*) con error:(NSError*)err {}
-
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{}
-
 -(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
+
+#pragma mark -
+#pragma mark TestAndConditionallyAddConnectionProtocol Methods
+-(void)machine:(Machine*) m didAcceptConnection:(MachineConnectionBase*) con {
+	
+}
+
+-(void)machine:(Machine*) m didNotAcceptConnection:(MachineConnectionBase*) con error:(NSError*)err {
+	
+}
 
 @end
