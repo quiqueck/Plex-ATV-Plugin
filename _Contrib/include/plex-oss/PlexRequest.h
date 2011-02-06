@@ -38,6 +38,7 @@ extern const NSString* plexClientsKey ;
 	NSMutableDictionary* flagCache;
 	BOOL transcoderRunning;
 	BOOL authWasExpected;
+    BOOL canStartTranscoder;
 	
 	PlexServer* serverObject;
 	Machine* machine;
@@ -46,6 +47,7 @@ extern const NSString* plexClientsKey ;
 @property (readwrite, assign) Machine* machine;
 @property (readonly) NSString* base;
 @property (readwrite) BOOL transcoderRunning;
+@property (readwrite) BOOL canStartTranscoder;
 @property (readwrite) BOOL authWasExpected;
 @property (readonly) PlexServer* serverObject;
 

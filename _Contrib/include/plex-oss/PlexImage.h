@@ -27,10 +27,6 @@ extern const PlexImageType PlexImageTypeOfflineThumbnail;
 @property (readwrite, nonatomic) BOOL isVisibleOnShelf;
 @property (readwrite) BOOL waitsForImage;
 @property (readwrite, assign, nonatomic) PlexImage* attachedImage;
-//CALayer
-@property(retain) id contents;
-@property CGRect frame;
-@property CGPoint position;
 @end
 
 @class Machine, BackgroundOperation;
@@ -48,7 +44,7 @@ extern const PlexImageType PlexImageTypeOfflineThumbnail;
     
 	MemoryImage* image;
 	
-	id<TraceableLayerProtocol> layer;
+	CALayer<TraceableLayerProtocol>* layer;
 	UIImageView* imageView;
 	BOOL cancelBackgroundLoad;
 	BackgroundOperation* backgroundOperation;
@@ -69,7 +65,7 @@ extern const PlexImageType PlexImageTypeOfflineThumbnail;
 @property (readonly) NSString* hostMachine;
 @property (readonly) NSString* relativePath;
 @property (readwrite) CGSize maxImageSize;
-@property (readwrite, retain, nonatomic) id<TraceableLayerProtocol> layer;
+@property (readwrite, retain, nonatomic) CALayer<TraceableLayerProtocol>* layer;
 @property (readwrite, retain) UIImageView* imageView;
 @property (readwrite) BOOL cancelBackgroundLoad;;
 

@@ -45,7 +45,7 @@ extern const MachineRole MachineRoleClientServer;
 
 @property (readwrite, assign) id<MachineManagerDelegate> delegate;
 @property (readwrite, retain) Machine* localhost;
-@property (readonly, retain) NSArray* threadSaveMachines;
+@property (readonly, retain) NSArray* threadSafeMachines;
 
 SINGLETON_INTERFACE(MachineManager)
 
@@ -58,7 +58,7 @@ SINGLETON_INTERFACE(MachineManager)
 -(void)addConnection:(MachineConnectionBase*)con;
 -(void)removeConnection:(MachineConnectionBase*)con;
 
--(NSArray*)threadSaveMachines;
+-(NSArray*)threadSafeMachines;
 -(NSUInteger)machineCount;
 
 -(void)addMachine:(Machine*)m;

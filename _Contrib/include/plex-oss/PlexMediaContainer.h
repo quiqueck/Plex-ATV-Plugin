@@ -78,11 +78,8 @@ struct _PlexMediaContainerFlags{
 };
 typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 
-#ifdef __IPHONE_4_0
+
 @interface PlexMediaContainer : PlexObject<NSXMLParserDelegate> {
-#else
-@interface PlexMediaContainer : PlexObject {
-#endif
 	id formatter;
 	NSMutableArray* directories;
 	PlexMediaContainer* parentFilterContainer;
@@ -126,6 +123,7 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 @property (readonly) NSString* header;
 @property (readonly) NSString* message;
 @property (readonly) NSString* identifier;
+@property (readonly) NSString* imageRatingKey;
 @property (readonly) BOOL requestsMessage;
 @property (readonly) BOOL replaceParent;
 @property (readonly) BOOL hasSummaries;
@@ -157,7 +155,6 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 -(void)freeBannersAndArt;
 -(void)updateRequest:(PlexRequest*)req;
 	
--(void)displayMessage;
 -(PlexMediaContainer*)reload;
 -(void)loadAllThumbnailsInBackground;
 -(PlexMediaObject*)findEqualObject:(PlexObject*)o;
