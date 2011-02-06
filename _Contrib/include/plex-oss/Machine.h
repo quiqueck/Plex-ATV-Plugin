@@ -129,6 +129,7 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
 @property (readonly) NSString* hostName;
 @property (readonly) MachineRole role;
 @property (readonly) BOOL isOnline;
+@property (readonly) BOOL canConnect;
 @property (readonly) BOOL isComplete;
 -(void)renewPasswordHash;
 

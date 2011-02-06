@@ -50,6 +50,7 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 @property (readonly) BOOL search;
 @property (readonly) NSString* summary;
 @property (readonly) NSString* ratingKey;
+@property (readonly) NSString* imageRatingKey;
 @property (readonly) PlexMediaObjectTypes type;
 @property (readwrite, assign) UIView* popoverView;
 @property (readonly) PlexMediaObject* parentObject;
@@ -64,22 +65,19 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 -(void)processReceivedContents:(PlexMediaContainer*)contents;
 -(LoadPlexObjectBackgroundContentOperation*)loadContentAndNotify:(id<BackgroundOperationDelegate>)objOrNil;
 
--(IBAction)openMenuScreen:(UIView*)container;
--(void)openMenu;
 -(void)postMediaProgress:(NSTimeInterval)tm;
--(void)openWithoutAskDownload:(UIView<PlexPosterView>*)sender;
--(IBAction)open:(UIView<PlexPosterView>*)sender;
--(void)playInPlex;
--(IBAction)playOnDevice;
--(void)makeAvailableOffline;
 -(PlexMediaContainer*)loadDetails;
 
--(BOOL)canPlayOnDevice;
--(BOOL)canPlayOnPlex;
+-(BOOL)canPlayOnDevicePredicate;
+-(BOOL)canPlayOnPlexPredicate;
 -(BOOL)canPlayWithoutTranscoder;
 -(BOOL)localFile;
+
 -(NSURL*)mediaURL;
 -(NSURL*)mediaStreamURL;
+-(NSURL*)mediaPlexPlayURL;
+-(NSURL*)audioPlexPlayURL;
+
 -(int)rating;
 -(PlexMediaObjectSeenState)seenState;
 
