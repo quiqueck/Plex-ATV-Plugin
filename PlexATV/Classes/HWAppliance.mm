@@ -1,4 +1,4 @@
-#define LOCAL_DEBUG_ENABLED 1
+#define LOCAL_DEBUG_ENABLED 0
 
 #import "HWAppliance.h"
 #import "BackRowExtras.h"
@@ -100,6 +100,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		[[ProxyMachineDelegate shared] registerDelegate:self];
 		[[MachineManager sharedMachineManager] startAutoDetection];
+		[[MachineManager sharedMachineManager] startMonitoringMachineState];
 	} return self;
 }
 
@@ -186,7 +187,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 -(void) reloadCategories {
 	[self.applianceCat removeAllObjects];
 	
-	NSArray *machines = [[MachineManager sharedMachineManager] threadSaveMachines];
+	NSArray *machines = [[MachineManager sharedMachineManager] threadSafeMachines];
 	for (Machine *machine in machines) {
 		NSString *machineID = [machine.machineID copy];
 		NSString *machineName = [machine.serverName copy];
@@ -252,7 +253,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 			[machineName release];
 		}
 	}
-	[machines release];
 	
 	[super reloadCategories];
 }
@@ -295,7 +295,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #if LOCAL_DEBUG_ENABLED
 		NSLog(@"MachineManager: Machine %@ offline", m);
 #endif
-		[self reloadCategories];
 	}
 }
 

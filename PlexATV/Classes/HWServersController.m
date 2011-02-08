@@ -5,17 +5,15 @@
 //  Created by ccjensen on 10/01/2011.
 //
 
-#define LOCAL_DEBUG_ENABLED 0
+#define LOCAL_DEBUG_ENABLED 1
 
 #import "HWServersController.h"
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/PlexRequest.h>
-#import "HWUserDefaults.h"
 #import "Constants.h"
+#import "HWServerDetailsController.h"
 
 @implementation HWServersController
-
-#define EditServerDialog @"EditServerDialog"
 
 @synthesize machines = _machines;
 @synthesize serverName = _serverName;
@@ -23,7 +21,6 @@
 @synthesize password = _password;
 @synthesize hostName = _hostName;
 @synthesize portNumber = _portNumber;
-@synthesize etherId = _etherId;
 
 - (id) init
 {
@@ -37,6 +34,10 @@
 		
 		_machines = [[NSMutableArray alloc] init];
 		
+		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"serverName" ascending:YES];
+		_machineSortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+		[sortDescriptor release];
+		
 		[[self list] setDatasource:self];
  		[[self list] addDividerAtIndex:1 withLabel:@"List of Servers"];
 		
@@ -45,6 +46,7 @@
 		
 		//start the auto detection
 		[[MachineManager sharedMachineManager] startAutoDetection];
+		[[MachineManager sharedMachineManager] startMonitoringMachineState];
 	}
 	return self;
 }
@@ -52,13 +54,16 @@
 -(void)dealloc
 {
 	[[MachineManager sharedMachineManager] stopAutoDetection];
+	[[MachineManager sharedMachineManager] stopMonitoringMachineState];
+
 	self.machines = nil;
 	self.serverName = nil;
 	self.userName = nil;
 	self.password = nil;
 	self.hostName = nil;
-	self.etherId = nil;
 	self.portNumber = 0;
+	
+	[_machineSortDescriptors release];
 	
 	[super dealloc];
 }
@@ -68,14 +73,9 @@
 	NSLog(@"--- Did push controller");
 #endif
 	[[ProxyMachineDelegate shared] registerDelegate:self];
-	
 	[self.machines removeAllObjects];
-	self.machines = [[MachineManager sharedMachineManager] threadSaveMachines];
-	for (Machine *m in allMachines) {
-		if (runsServer(m.role)) {
-			[self.machines addObject:[m copy]];
-		}
-	}
+	[self.machines addObjectsFromArray:[[MachineManager sharedMachineManager] threadSafeMachines]];
+	[self.machines sortUsingDescriptors:_machineSortDescriptors];
 	
 	[self.list reload];
 }
@@ -91,21 +91,26 @@
 
 #pragma mark -
 #pragma mark Modify Machine Methods
-- (void)addNewMachineWithServerName:(NSString *)serverName userName:(NSString *)userName password:(NSString *)password hostName:(NSString *)hostName portNumber:(int)portNumber etherId:(NSString *)etherId
-{
-	Machine *machine = [[Machine alloc] initWithServerName:serverName manager:[MachineManager sharedMachineManager] machineID:nil];	
-	[machine testAndConditionallyAddConnectionForHostName:hostName port:portNumber etherID:etherId notify:self];
+- (void)showEditMachineView:(Machine *)machine {
+	HWServerDetailsController *serverDetailsController = [[[HWServerDetailsController alloc] init] autorelease];
+	serverDetailsController.machine = machine;
+	[[[BRApplicationStackManager singleton] stack] pushController:serverDetailsController];
 }
 
-- (void)modifyMachine:(Machine *)m {
+- (void)addNewMachineWithServerName:(NSString *)serverName userName:(NSString *)userName password:(NSString *)password
+{
+	Machine *machine = [[Machine alloc] initWithServerName:serverName manager:[MachineManager sharedMachineManager] machineID:nil];	
+	[machine setUsername:userName andPassword:password];
 	
+	//show server details
+	[self showEditMachineView:machine];
 }
 
 - (void)resetDialogFlags
 {	
-	hasCompletedAddNewRemoteServerWizardStep1 = NO;
-	hasCompletedAddNewRemoteServerWizardStep2 = NO;
-	hasCompletedAddNewRemoteServerWizardStep3 = NO;	
+	hasCompletedAddNewServerWizardStep1 = NO;
+	hasCompletedAddNewServerWizardStep2 = NO;
+	hasCompletedAddNewServerWizardStep3 = NO;	
 }
 
 - (void)resetMachineSettingVariables
@@ -115,7 +120,6 @@
 	self.password = nil;
 	self.hostName = nil;
 	self.portNumber = NSNotFound;
-	self.etherId = nil;
 }
 
 #pragma mark -
@@ -139,7 +143,7 @@
 		[self resetDialogFlags];
 		[self resetMachineSettingVariables];
 		
-		//start the "add remote server" wizard
+		//start the "add server" wizard
 		[self showEnterHostNameDialogBoxWithInitialText:@""];
 		
 	} else {
@@ -147,7 +151,7 @@
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"machine selected: %@", m);
 #endif
-		[self showEditServerViewForRow:selected];
+		[self showEditMachineView:m];
 	}
 }
 
@@ -170,6 +174,12 @@
 		[result setText:m.serverName withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 		
 		[result addAccessoryOfType:1]; //folder
+		if (m.canConnect) {
+			[result addAccessoryOfType:18]; //online
+		} else {
+			[result addAccessoryOfType:19]; //offline
+		}
+
 	}	
 	
 	return [result autorelease];
@@ -190,8 +200,6 @@
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"Updating UI");
 #endif
-    //  [self updatePreviewController];
-    //	[self refreshControllerForModelUpdate];
 	[self.list reload];
 }
 
@@ -247,25 +255,23 @@
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"text string: %@", textEntered);
 #endif
-	//adding a new remote server
-	
-	if (!hasCompletedAddNewRemoteServerWizardStep1) {
-		hasCompletedAddNewRemoteServerWizardStep1 = YES;
+	if (!hasCompletedAddNewServerWizardStep1) {
+		hasCompletedAddNewServerWizardStep1 = YES;
 		self.hostName = textEntered;
 		[[self stack] popController];
 		
 		[self showEnterServerNameDialogBoxWithInitialText:@""];
 		
-	} else if (!hasCompletedAddNewRemoteServerWizardStep2) {
-		hasCompletedAddNewRemoteServerWizardStep2 = YES;
+	} else if (!hasCompletedAddNewServerWizardStep2) {
+		hasCompletedAddNewServerWizardStep2 = YES;
 		//if no custom name was entered, use the host name
 		self.serverName = [textEntered isEqualToString:@""] ? self.hostName : textEntered;
 		[[self stack] popController];
 		
 		[self showEnterUsernameDialogBoxWithInitialText:@""];
 		
-	} else if (!hasCompletedAddNewRemoteServerWizardStep3) {
-		hasCompletedAddNewRemoteServerWizardStep3 = YES;
+	} else if (!hasCompletedAddNewServerWizardStep3) {
+		hasCompletedAddNewServerWizardStep3 = YES;
 		self.userName = textEntered;
 		[[self stack] popController];
 		
@@ -277,7 +283,7 @@
 		[[self stack] popController];
 		
 		//add machine
-		[self addNewMachineWithServerName:self.serverName userName:self.userName password:self.password hostName:self.hostName portNumber:self.portNumber etherId:self.etherId];
+		[self addNewMachineWithServerName:self.serverName userName:self.userName password:self.password];
 		
 		[self setNeedsUpdate];
 	}
@@ -336,7 +342,8 @@
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Removed machine %@", m);
 #endif
-	//[self.machines removeObject:m];	
+	[self.machines removeObject:m];
+	[self.machines sortUsingDescriptors:_machineSortDescriptors];
 	[self.list reload];
 }
 
@@ -344,7 +351,8 @@
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Added machine %@", m);
 #endif
-	//[self.machines addObject:m];
+	[self.machines addObject:m];
+	[self.machines sortUsingDescriptors:_machineSortDescriptors];
 	[self.list reload];
 }
 
@@ -355,17 +363,9 @@
 }
 
 -(void)machineWasChanged:(Machine*)m {
-	if (m==nil) return;
-	
-	if (m.isComplete) {
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"MachineManager: Changed %@", m);
-#endif
-	} else {
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"MachineManager: Machine %@ offline", m);
-#endif
-	}
+	if (m==nil) return;	
+	//something changed, refresh
+	[self.list reload];
 }
 
 -(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}

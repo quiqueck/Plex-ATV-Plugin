@@ -45,7 +45,7 @@
     NSLog(@"Added machine Delegate %@", del);
     [delegates addObject:del];
     
-    NSArray* mc = [[MachineManager sharedMachineManager] machines];
+    NSArray* mc = [[MachineManager sharedMachineManager] threadSafeMachines];
     for (Machine* m in mc){
       [del machineWasAdded:m];
     }

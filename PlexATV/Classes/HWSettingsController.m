@@ -117,15 +117,15 @@
 	[_items addObject:pluginVersionNumberMenuItem];
 	
 	//this code can be used to find all the accessory types
-	//	for (int i = 0; i<32; i++) {
-	//		BRMenuItem *tempSettingMenuItem = [[BRMenuItem alloc] init];
-	//		[tempSettingMenuItem addAccessoryOfType:i];
-	//		
-	//		NSString *tempSettingTitle = [[NSString alloc] initWithFormat:@"temp %d", i];
-	//		[tempSettingMenuItem setText:tempSettingTitle withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
-	//		[tempSettingTitle release];
-	//		[_items addObject:tempSettingMenuItem];
-	//	}
+//	for (int i = 0; i<32; i++) {
+//		BRMenuItem *tempSettingMenuItem = [[BRMenuItem alloc] init];
+//		[tempSettingMenuItem addAccessoryOfType:i];
+//		
+//		NSString *tempSettingTitle = [[NSString alloc] initWithFormat:@"temp %d", i];
+//		[tempSettingMenuItem setText:tempSettingTitle withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+//		[tempSettingTitle release];
+//		[_items addObject:tempSettingMenuItem];
+//	}
 }
 
 - (void)dealloc {

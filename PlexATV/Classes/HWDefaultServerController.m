@@ -29,9 +29,6 @@
 		//make sure we are the delegate
 		[[ProxyMachineDelegate shared] registerDelegate:self];
 		
-		//start the auto detection
-		[[MachineManager sharedMachineManager] startAutoDetection];
-		
 		[[self list] setDatasource:self];
 	}
 	return self;
@@ -40,7 +37,6 @@
 
 -(void)dealloc
 {
-	[[MachineManager sharedMachineManager] stopAutoDetection];
 	[_names release];
 	
 	[super dealloc];

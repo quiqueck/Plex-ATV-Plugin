@@ -10,34 +10,33 @@
 
 @interface HWServersController : SMFMediaMenuController<MachineManagerDelegate, TestAndConditionallyAddConnectionProtocol> {
 	NSMutableArray *_machines;
+	NSArray *_machineSortDescriptors;
 	
 	//add new server variables
-	BOOL hasCompletedAddNewRemoteServerWizardStep1; //if completed proceed to step 2
-	BOOL hasCompletedAddNewRemoteServerWizardStep2; //if completed proceed to step 3
-	BOOL hasCompletedAddNewRemoteServerWizardStep3; //if completed proceed to step 4
+	BOOL hasCompletedAddNewServerWizardStep1; //if completed proceed to step 2
+	BOOL hasCompletedAddNewServerWizardStep2; //if completed proceed to step 3
+	BOOL hasCompletedAddNewServerWizardStep3; //if completed proceed to step 4
 	
 	NSString *_serverName;
 	NSString *_userName;
 	NSString *_password;
 	NSString *_hostName;
 	int _portNumber;
-	NSString *_etherId;
 }
 
-@property (copy) NSMutableArray *machines;
+@property (assign) NSMutableArray *machines;
 @property (copy) NSString *serverName;
 @property (copy) NSString *userName;
 @property (copy) NSString *password;
 @property (copy) NSString *hostName;
 @property (assign) int portNumber;
-@property (copy) NSString *etherId;
 
 //custom methods
 - (void)resetDialogFlags;
 - (void)resetMachineSettingVariables;
 
-- (void)addNewMachineWithServerName:(NSString *)serverName userName:(NSString *)userName password:(NSString *)password hostName:(NSString *)hostName portNumber:(int)portNumber etherId:(NSString *)etherId;
-- (void)modifyMachine:(Machine *)m;
+- (void)showEditMachineView:(Machine *)machine;
+- (void)addNewMachineWithServerName:(NSString *)serverName userName:(NSString *)userName password:(NSString *)password;
 
 - (void)showEnterHostNameDialogBoxWithInitialText:(NSString *)initalText;
 - (void)showEnterServerNameDialogBoxWithInitialText:(NSString *)initalText;
