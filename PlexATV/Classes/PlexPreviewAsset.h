@@ -26,7 +26,7 @@
 #import "BRBaseMediaAsset.h"
 
 @class PlexMediaObject;
-@interface PlexPreviewAsset : BRBaseMediaAsset<BRMediaAsset> {
+@interface PlexPreviewAsset : BRPhotoMediaAsset {//BRBaseMediaAsset<BRMediaAsset> {
   //BRBaseMediaAsset* bma;
 	NSURL* url;
 	PlexMediaObject* pmo;
