@@ -4,6 +4,16 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>All.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>Install.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>atvTwo.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -13,6 +23,16 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>8D5B49AC048680CD000E48DA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DD02DEB212FCACCC0019FBEE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DD02DEB712FCACEC0019FBEE</key>
 		<dict>
 			<key>primary</key>
 			<true/>

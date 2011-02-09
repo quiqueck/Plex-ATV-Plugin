@@ -23,7 +23,7 @@
 //  
 
 #import <Foundation/Foundation.h>
-#import "BRBaseMediaProvider.h"
+#import <BackRow/BRBaseMediaProvider.h>
 
 
 @class PlexMediaAsset;

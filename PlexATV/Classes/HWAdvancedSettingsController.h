@@ -1,5 +1,5 @@
 //
-//  HWSettingsController.h
+//  HWAdvancedSettingsController.h
 //  atvTwo
 //
 //  Created by ccjensen on 10/01/2011.
@@ -14,11 +14,7 @@
 //
 
 
-@interface HWSettingsController : SMFMediaMenuController {
-  BRBaseAppliance* topLevelController;
-}
-
-@property(readwrite, assign) BRBaseAppliance* topLevelController;
+@interface HWAdvancedSettingsController : SMFMediaMenuController {}
 - (void)setupList;
 
 @end
