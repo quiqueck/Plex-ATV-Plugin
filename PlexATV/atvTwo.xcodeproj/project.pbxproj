@@ -1476,7 +1476,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../../ATV2Includes;
+				HEADER_SEARCH_PATHS = (
+					../../SMFramework,
+					../../ATV2Includes,
+				);
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.2;
 				STRIP_INSTALLED_PRODUCT = NO;

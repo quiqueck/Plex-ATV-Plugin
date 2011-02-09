@@ -12,6 +12,7 @@
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import "SMFramework.h"
+#import "SMFControlFactory.h"
 
 #define LOCAL_DEBUG_ENABLED 1
 #define DEFAULT_IMAGES_PATH		@"/System/Library/PrivateFrameworks/AppleTV.framework/DefaultFlowerPhotos/"
@@ -110,7 +111,7 @@
    *  First Divider
    */
   BRDividerControl *div1 = [[BRDividerControl alloc]init];
-  CGRect div1Frame = CGRectMake(mf.origin.x+mf.size.width+5.f , 
+  CGRect div1Frame = CGRectMake(mf.origin.x+mf.size.width+10.f , 
                                 mf.origin.y-3.f, 
                                 masterFrame.size.width*0.74f, 
                                 masterFrame.size.height*0.02f);
@@ -159,9 +160,10 @@
   [_cursorControl release];
  /* 
   [_scroller setFollowsFocus:YES];
-  [_scroller setContent:_panelControl];  
-  [self layoutSubcontrols];
+  [_scroller setContent:_panelControl]; 
    */ 
+  [self layoutSubcontrols];
+  
   
   
 }
@@ -185,8 +187,8 @@
   NSLog(@"getProviderForShelf - have assets, creating datastore and provider");
 #endif
 
-  BRPhotoDataStoreProvider* provider = [BRPhotoDataStoreProvider providerWithDataStore:store 
-                                                                            controlFactory:[BRPosterControlFactory factory]];
+    // BRPhotoDataStoreProvider* provider = [BRPhotoDataStoreProvider providerWithDataStore:store 
+    //                                                                        controlFactory:[BRPosterControlFactory factory]];
   
   
 #if LOCAL_DEBUG_ENABLED
@@ -202,8 +204,8 @@
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"getProviderForGrid_start");
 #endif
-  NSSet *_set = [NSSet setWithObject:[BRMediaType movie]];
-  NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType movie]];
+  NSSet *_set = [NSSet setWithObject:[BRMediaType photo]];
+  NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType photo]];
   BRDataStore *store = [[BRDataStore alloc] initWithEntityName:@"Hello" predicate:_pred mediaTypes:_set];
   
   for (int i=0;i<[_assets count];i++)
@@ -217,7 +219,7 @@
 #endif
 
   BRDataStoreProvider* provider = [BRDataStoreProvider providerWithDataStore:store 
-                                                                            controlFactory:[BRPhotoControlFactory standardFactory]];
+                                                                            controlFactory:[SMFconot ]];
 
   
 #if LOCAL_DEBUG_ENABLED
