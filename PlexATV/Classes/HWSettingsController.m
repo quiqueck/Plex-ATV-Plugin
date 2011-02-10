@@ -25,9 +25,9 @@
 
 #define PlexPluginVersion @"0.6.7"
 
-#define CombinedPmsCategoriesIndex 0
-#define DefaultServerIndex 1
-#define ServersIndex 2
+#define ServersIndex 0
+#define CombinedPmsCategoriesIndex 1
+#define DefaultServerIndex 2
 #define QualitySettingIndex 3
 #define AdvancedSettingsIndex 4
 #define PluginVersionNumberIndex 5
@@ -142,6 +142,13 @@
 #pragma mark List Delegate Methods
 - (void)itemSelected:(long)selected {
 	switch (selected) {
+		case ServersIndex: {
+			// =========== remote servers ===========
+			HWServersController* menuController = [[HWServersController alloc] init];
+			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
+			[menuController autorelease];
+			break;
+		}
 		case CombinedPmsCategoriesIndex: {
 			// =========== combined PMS category view ===========
 			BOOL isTurnedOn = [[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView];
@@ -153,13 +160,6 @@
 		case DefaultServerIndex: {
 			// =========== default server ===========
 			HWDefaultServerController* menuController = [[HWDefaultServerController alloc] init];
-			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
-			[menuController autorelease];
-			break;
-		}
-		case ServersIndex: {
-			// =========== remote servers ===========
-			HWServersController* menuController = [[HWServersController alloc] init];
 			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 			[menuController autorelease];
 			break;
@@ -201,6 +201,12 @@
 {
 	SMFBaseAsset *asset = [[SMFBaseAsset alloc] init];
 	switch (item) {
+		case ServersIndex: {
+			// =========== servers ===========
+			[asset setTitle:@"List of servers"];
+			[asset setSummary:@"Add new or modify current servers and their connections"];
+			break;
+		}
 		case CombinedPmsCategoriesIndex: {
 			// =========== combined PMS category view ===========
 			[asset setTitle:@"Switch between main menu view modes"];
@@ -211,12 +217,6 @@
 			// =========== default server ===========
 			[asset setTitle:@"Select the default server"];
 			[asset setSummary:@"Shows the category's belonging to the default server (Only used if 'Default Server' view mode is selected"];
-			break;
-		}
-		case ServersIndex: {
-			// =========== servers ===========
-			[asset setTitle:@"List of servers"];
-			[asset setSummary:@"Add new or modify current servers and their connections"];
 			break;
 		}
 		case QualitySettingIndex: {

@@ -36,7 +36,6 @@
 #import "PlexSongAsset.h"
 #import "SongListController.h"
 #import "HWUserDefaults.h"
-#import "HWMovieListing.h"
 
 #define LOCAL_DEBUG_ENABLED 1
 
@@ -250,10 +249,6 @@ PlexMediaProvider* __provider = nil;
 		SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
 		[songlist autorelease];
-	} else if ([@"secondary" isEqualToString:pmo.mediaContainer.content]) {
-		HWMovieListing* menuController = [[HWMovieListing alloc] initWithRootContainer:[pmo contents]];
-		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
-		[menuController autorelease];
 	}
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]){
 		NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);

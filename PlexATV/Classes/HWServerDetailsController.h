@@ -7,48 +7,53 @@
 
 #import <Foundation/Foundation.h>
 #import <plex-oss/Machine.h>
-#import <plex-oss/MachineConnectionBase.h>
 
 @interface HWServerDetailsController : SMFMediaMenuController <TestAndConditionallyAddConnectionProtocol> {
 	Machine *_machine;
-	MachineConnectionBase *_selectedConnection;
 	
-	BOOL hasCompletedAddNewConnectionWizardStep1;
-	NSMutableArray *connectionsBeingTested;
+	//add new machine flags
+	BOOL isCreatingNewMachine;
+	BOOL hasCompletedAddNewMachineWithConnectionWizardStep1; //if completed proceed to step 2
+	BOOL hasCompletedAddNewMachineWithConnectionWizardStep2; //if completed proceed to step 3
+	BOOL hasCompletedAddNewMachineWithConnectionWizardStep3; //if completed proceed to step 4
+	BOOL hasCompletedAddNewMachineWithConnectionWizardStep4; //if completed proceed to step 5
 	
+	//editing machine specific flags
 	BOOL isEditingServerName;
 	BOOL isEditingUserName;
 	BOOL isEditingPassword;
 	
-	BOOL isEditingConnectionHostName;
-	BOOL isEditingConnectionPortNumber;
+	//add new connection flags
+	BOOL isCreatingNewConnection;
+	BOOL hasCompletedAddNewConnectionWizardStep1; //if completed proceed to step 2
 	
 	NSString *_serverName;
 	NSString *_userName;
 	NSString *_password;
-	
 	NSString *_hostName;
-	int _portNumber;
+	uint _portNumber;
 }
 @property (retain) Machine *machine;
-@property (retain) MachineConnectionBase *selectedConnection;
 @property (copy) NSString *serverName;
 @property (copy) NSString *userName;
 @property (copy) NSString *password;
 @property (copy) NSString *hostName;
-@property (assign) int portNumber;
+@property (assign) uint portNumber;
 
 //custom methods
-- (void)saveAndDismissView;
-- (void)dismissView;
-- (void)resetServerSettings;
-- (void)resetDialogVariables;
+- (id)initAndShowAddNewMachineWizard;
+- (id)initWithMachine:(Machine *)machine;
 
+- (void)startAddNewMachineWizard;
+- (void)addNewMachineWizardWithInput:(NSString *)input;
+- (void)startAddNewConnectionWizard;
+- (void)addNewConnectionWizardWithInput:(NSString *)input;
+
+- (void)showEnterHostNameDialogBoxWithInitialText:(NSString *)initalText;
+- (void)showEnterPortNumberDialogBoxWithInitialText:(NSString *)initalText;
 - (void)showEnterServerNameDialogBoxWithInitialText:(NSString *)initalText;
 - (void)showEnterUsernameDialogBoxWithInitialText:(NSString *)initalText;
 - (void)showEnterPasswordDialogBoxWithInitialText:(NSString *)initalText;
-- (void)showEnterHostNameDialogBoxWithInitialText:(NSString *)initalText;
-- (void)showEnterPortNumberDialogBoxWithInitialText:(NSString *)initalText;
 
 - (void)showDialogBoxWithTitle:(NSString *)title secondaryInfoText:(NSString *)infoText textFieldLabel:(NSString *)textFieldLabel withInitialText:(NSString *)initialText;
 

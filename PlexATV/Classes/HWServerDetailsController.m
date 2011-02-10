@@ -5,54 +5,59 @@
 //  Created by ccjensen on 10/01/2011.
 //
 //
-#define LOCAL_DEBUG_ENABLED 0
+#define LOCAL_DEBUG_ENABLED 1
 
 #import "HWServerDetailsController.h"
 #import <plex-oss/PlexRequest.h>
+#import <plex-oss/MachineConnectionBase.h>
 #import "Constants.h"
 
 @implementation HWServerDetailsController
 
 #define ConnectionDialogIdentifier @"ConnectionDialogIdentifier"
+#define DefaultServerPortNumber @"32400"
 
 #define ServerPropertyServerNameIndex 0
 #define ServerPropertyUserNameIndex 1
 #define ServerPropertyPasswordIndex 2
 
-#define ListSaveIndex 3
-#define ListResetIndex 4
-#define ListCancelIndex 5
+#define ListAddNewConnection 3
 
-#define ListAddNewConnection 6
-
-#define ListItemCount 7
+#define ListItemCount 4
 
 
 @synthesize machine = _machine;
-@synthesize selectedConnection = _selectedConnection;
 @synthesize serverName = _serverName;
 @synthesize userName = _userName;
 @synthesize password = _password;
 @synthesize hostName = _hostName;
 @synthesize portNumber = _portNumber;
 
-- (id) init
-{
+- (id) init {
 	if((self = [super init]) != nil) {
 		BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		[[self list] setDatasource:self];
 		[[self list] addDividerAtIndex:ListItemCount-1 withLabel:@"Connections"];
-		
-		connectionsBeingTested = [[NSMutableArray alloc] init];
+		[[self list] addDividerAtIndex:ListItemCount withLabel:@"Current connections"];
 	}
 	return self;
 }
 
--(void)dealloc
-{
+- (id)initAndShowAddNewMachineWizard {
+	self = [self init];
+	isCreatingNewMachine = YES;
+	return self;
+}
+
+- (id)initWithMachine:(Machine *)machine {
+	self = [self init];
+	self.machine = machine;
+	return self;
+}
+
+-(void)dealloc {
 	self.machine = nil;
-	self.selectedConnection = nil;
 	self.serverName = nil;
 	self.userName = nil;
 	self.password = nil;
@@ -65,10 +70,12 @@
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"--- Did push controller %@ %@", self, _machine);
 #endif
-	[self setListTitle:self.machine.serverName];
-	isEditingServerName, isEditingUserName, isEditingPassword = NO;
-	[self resetServerSettings];
-	[self.list reload];
+	if (isCreatingNewMachine) {
+		[self startAddNewMachineWizard];
+	} else {
+		[self setListTitle:self.machine.serverName];
+		[self.list reload];
+	}
 	[super wasPushed];
 }
 
@@ -79,32 +86,101 @@
 	[super wasPopped];
 }
 
-- (void)saveAndDismissView {
-	self.machine.serverName = self.serverName;
-#warning frank, how can I set these attributes?
-	//	self.machine.userName = self.userName;
-	//	self.machine.password = self.password;
-	[self dismissView];
-}
-
-- (void)dismissView {
-	[[self stack] popController];
-}
 
 #pragma mark -
-#pragma mark Modify Attributes Methods
-- (void)resetServerSettings
-{	
-	self.serverName = self.machine.serverName;
-	self.userName = self.machine.userName ? self.machine.userName : @"None";
-	self.password = self.machine.password ? self.machine.password : @"None";
+#pragma mark Adding Wizard Methods
+- (void)startAddNewMachineWizard {
+	//reset wizard variables
+	hasCompletedAddNewMachineWithConnectionWizardStep1 = NO;
+	hasCompletedAddNewMachineWithConnectionWizardStep2 = NO;
+	hasCompletedAddNewMachineWithConnectionWizardStep3 = NO;
+	hasCompletedAddNewMachineWithConnectionWizardStep4 = NO;
+	self.hostName, self.userName, self.password = nil;
+	self.portNumber = NSNotFound;
+	
+	[self showEnterServerNameDialogBoxWithInitialText:@""];
 }
 
-- (void)resetDialogVariables
-{	
+- (void)addNewMachineWizardWithInput:(NSString *)input {
+	if (!hasCompletedAddNewMachineWithConnectionWizardStep1) {
+		hasCompletedAddNewMachineWithConnectionWizardStep1 = YES;		
+		self.serverName = input;
+		[[self stack] popController];
+		
+		[self showEnterHostNameDialogBoxWithInitialText:@""];
+		
+	} else if (!hasCompletedAddNewMachineWithConnectionWizardStep2) {
+		hasCompletedAddNewMachineWithConnectionWizardStep2 = YES;
+		self.hostName = input;
+		[[self stack] popController];
+		
+		[self showEnterPortNumberDialogBoxWithInitialText:DefaultServerPortNumber];
+	
+	} else if (!hasCompletedAddNewMachineWithConnectionWizardStep3) {
+		hasCompletedAddNewMachineWithConnectionWizardStep3 = YES;
+		self.portNumber = [input intValue];
+		[[self stack] popController];
+		
+		[self showEnterUsernameDialogBoxWithInitialText:@""];
+		
+	} else if (!hasCompletedAddNewMachineWithConnectionWizardStep4) {
+		hasCompletedAddNewMachineWithConnectionWizardStep4 = YES;
+		self.userName = input;
+		[[self stack] popController];
+		
+		[self showEnterPasswordDialogBoxWithInitialText:@""];
+		
+	} else {
+		//final step completed, create a "dummy" machine and test the connection
+		self.password = input;
+		
+		Machine *machine = [[Machine alloc] initWithServerName:self.serverName manager:[MachineManager sharedMachineManager] machineID:nil];
+		[machine setUsername:self.userName andPassword:self.password];
+		
+		[machine testAndConditionallyAddConnectionForHostName:self.hostName port:self.portNumber notify:self];
+		
+		[[self stack] popController];
+		isCreatingNewMachine = NO;
+	}
+}
+
+- (void)startAddNewConnectionWizard {
+	isCreatingNewConnection = YES;
+	
+	//reset wizard variables
 	hasCompletedAddNewConnectionWizardStep1 = NO;
 	self.hostName = nil;
 	self.portNumber = NSNotFound;
+	
+	[self showEnterHostNameDialogBoxWithInitialText:@""];
+}
+
+- (void)addNewConnectionWizardWithInput:(NSString *)input {
+	
+	if (!hasCompletedAddNewConnectionWizardStep1) {
+		hasCompletedAddNewConnectionWizardStep1 = YES;
+		self.hostName = input;
+		[[self stack] popController];
+		
+		[self showEnterPortNumberDialogBoxWithInitialText:DefaultServerPortNumber];
+		
+	} else {
+		//final step completed, test the connection
+		self.portNumber = [input intValue];
+		
+		[self.machine testAndConditionallyAddConnectionForHostName:self.hostName port:self.portNumber notify:self];
+		
+		//show information screen with spinner
+		
+		/*[ATMessageView showMessage:NSLocalizedString(@"testing the connection before adding it...", nil) 
+		 caption:NSLocalizedString(@"Please Wait", nil) 
+		 icon:nil 
+		 canClose:NO];
+		 */
+		
+		[[self stack] popController];
+		isCreatingNewConnection = NO;
+	}
 }
 
 #pragma mark -
@@ -130,36 +206,24 @@
 		
 	} else if (selected == ServerPropertyUserNameIndex) {
 		isEditingUserName = YES;
-		[self showEnterUsernameDialogBoxWithInitialText:self.serverName];
+		[self showEnterUsernameDialogBoxWithInitialText:self.userName];
 		
 	} else if (selected == ServerPropertyPasswordIndex) {
 		isEditingPassword = YES;
-		[self showEnterPasswordDialogBoxWithInitialText:self.serverName];
-		
-	} else if (selected == ListSaveIndex) {
-		[self saveAndDismissView];
-		
-	} else if (selected == ListResetIndex) {
-		[self resetServerSettings];
-		[self.list reload];
-		
-	} else if (selected == ListCancelIndex) {
-		[self dismissView];
+		[self showEnterPasswordDialogBoxWithInitialText:self.userName];
 		
 	} else if (selected == ListAddNewConnection) {
-		[self resetDialogVariables];
 		//start the "add new connection" wizard
-		[self showEnterHostNameDialogBoxWithInitialText:@""];
+		[self startAddNewConnectionWizard];
 		
 	} else {
 		//connection selected
 		int adjustedSelected = selected - ListItemCount;
 		MachineConnectionBase *connection = [self.machine.connections objectAtIndex:adjustedSelected];
-		self.selectedConnection = connection;
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"connection selected: %@", connection);
 #endif
-		[self showEditConnectionViewForConnection:self.selectedConnection];
+		[self showEditConnectionViewForConnection:connection];
 	}
 	
 }
@@ -176,15 +240,7 @@
 - (id)itemForRow:(long)row {
 	SMFMenuItem *result;
 	NSString *title = [self titleForRow:row];
-	for (NSString *connectionsBeingTested in connectionsBeingTested) {
-		if ([title isEqualToString:connectionsBeingTested]) {
-			//show spinner as it's still being evaluated
-			result = [SMFMenuItem progressMenuItem];
-		} else {
-			//not in progress
-			result = [SMFMenuItem folderMenuItem];
-		}
-	}
+	result = [SMFMenuItem folderMenuItem];
 	[result setTitle:title];
 	return result;
 }
@@ -196,22 +252,13 @@
 - (id)titleForRow:(long)row {
 	NSString *title;
 	if (row == ServerPropertyServerNameIndex) {
-		title = [NSString stringWithFormat:@"Servername [%@]", self.serverName];
+		title = [NSString stringWithFormat:@"Servername     %@", self.machine.serverName ? self.machine.serverName : self.machine.usersServerName];
 		
 	} else if (row == ServerPropertyUserNameIndex) {
-		title = [NSString stringWithFormat:@"Username [%@]", self.userName];
+		title = [NSString stringWithFormat:@"Username       %@", self.machine.userName ? self.machine.userName : @"None"];
 		
 	} else if (row == ServerPropertyPasswordIndex) {
-		title = [NSString stringWithFormat:@"Password [%@]", self.password];
-		
-	} else if (row == ListSaveIndex) {
-		title = @"Save";
-		
-	} else if (row == ListResetIndex) {
-		title = @"Reset changes";
-		
-	} else if (row == ListCancelIndex) {
-		title = @"Cancel";
+		title = [NSString stringWithFormat:@"Password       %@", self.machine.password ? self.machine.password : @"None"];
 		
 	} else if (row == ListAddNewConnection) {
 		title = @"Add new connection";
@@ -219,7 +266,7 @@
 	} else {
 		int adjustedRow = row - ListItemCount;
 		MachineConnectionBase *connection = [self.machine.connections objectAtIndex:adjustedRow];
-		title = [NSString stringWithFormat:@"%@ [%d]", connection.hostName, connection.port];
+		title = [NSString stringWithFormat:@"%@ : %d", connection.hostName, connection.port];
 	}
 	return title;
 }
@@ -233,35 +280,35 @@
 #pragma mark Dialog Boxes and Data Entry
 - (void)showEnterServerNameDialogBoxWithInitialText:(NSString *)initalText {
 	[self showDialogBoxWithTitle:@"Server - Name" 
-			   secondaryInfoText:@"You may enter a custom server name to be associated with this remote server" 
+			   secondaryInfoText:@"You may enter a custom server name to be associated with this new server" 
 				  textFieldLabel:@"Server name (optional)" 
 				 withInitialText:initalText];
 }
 
 - (void)showEnterUsernameDialogBoxWithInitialText:(NSString *)initalText {
 	[self showDialogBoxWithTitle:@"Server - Secure Server Access - Username" 
-			   secondaryInfoText:@"Supply the username to log in to the PMS if Secure Server Access is enabled" 
+			   secondaryInfoText:@"Supply the username to log in to the server if Secure Server Access is enabled" 
 				  textFieldLabel:@"Username"
 				 withInitialText:initalText];
 }
 
 - (void)showEnterPasswordDialogBoxWithInitialText:(NSString *)initalText {
 	[self showDialogBoxWithTitle:@"Server - Secure Server Access - Password" 
-			   secondaryInfoText:@"Supply the password to log in to the PMS if Secure Server Access is enabled" 
+			   secondaryInfoText:@"Supply the password to log in to the server if Secure Server Access is enabled" 
 				  textFieldLabel:@"Password"
 				 withInitialText:initalText];
 }
 
 - (void)showEnterHostNameDialogBoxWithInitialText:(NSString *)initalText {
 	[self showDialogBoxWithTitle:@"Server - IP/Hostname" 
-			   secondaryInfoText:@"Please enter the IP address or hostname to a remote server. Port number will be added automatically" 
+			   secondaryInfoText:@"Please enter the IP address or hostname to access the server" 
 				  textFieldLabel:@"IP/Hostname"
 				 withInitialText:initalText];
 }
 
 - (void)showEnterPortNumberDialogBoxWithInitialText:(NSString *)initalText {
 	[self showDialogBoxWithTitle:@"Server - Port Number" 
-			   secondaryInfoText:@"Please enter the IP address or hostname to a remote server. Port number will be added automatically" 
+			   secondaryInfoText:@"Please enter the port number to access the server (default is 32400)" 
 				  textFieldLabel:@"Port Number"
 				 withInitialText:initalText];
 }
@@ -287,47 +334,26 @@
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"text string: %@", textEntered);
 #endif
-	if (isEditingServerName || isEditingUserName || isEditingPassword || isEditingConnectionHostName || isEditingConnectionPortNumber) {
+	if (isCreatingNewMachine) {
+		[self addNewMachineWizardWithInput:textEntered];
+	} else if (isCreatingNewConnection) {
+		[self addNewConnectionWizardWithInput:textEntered];
+	} else {
 		//editing current property
 		if (isEditingServerName) {
 			isEditingServerName = NO;
-			self.serverName = textEntered;
+			self.machine.serverName = textEntered;
 			
 		} else if (isEditingUserName) {
 			isEditingUserName = NO;
-			self.userName = textEntered;
+			[self.machine setUsername:textEntered andPassword:self.machine.password];
 			
 		} else if (isEditingPassword) {
 			isEditingPassword = NO;
-			self.password = textEntered;
-			
-		} else if (isEditingConnectionHostName) {
-			isEditingConnectionHostName = NO;
-			self.selectedConnection.hostName = textEntered;
-			
-		} else if (isEditingConnectionPortNumber) {
-			isEditingConnectionPortNumber = NO;
-			self.selectedConnection.port = [textEntered intValue];
+			[self.machine setUsername:self.machine.userName andPassword:textEntered];
 		}
-	} else {
-		//creating new connection
-		if (!hasCompletedAddNewConnectionWizardStep1) {
-			hasCompletedAddNewConnectionWizardStep1 = YES;
-			self.hostName = textEntered;
-			[[self stack] popController];
-			[self showEnterPortNumberDialogBoxWithInitialText:@""];
-		} else {
-			//final step completed
-			self.portNumber = [textEntered intValue];
-			//add and test connection
-			[self.machine testAndConditionallyAddConnectionForHostName:self.hostName port:self.portNumber notify:self];
-			[connectionsBeingTested addObject:self.hostName];
-			
-			[[self stack] popController];
-		}
+		[[self stack] popController];
 	}
-	
-	
 	[self.list reload];
 }
 
@@ -341,12 +367,10 @@
 						 connection, @"connection",
 						 nil]];
 	
-	[option setPrimaryInfoText:@"Edit connection"];
+	[option setPrimaryInfoText:@"Remove connection"];
 	NSString *secondaryInfo = [NSString stringWithFormat:@"%@ [%d]", connection.hostName, connection.port];
 	[option setSecondaryInfoText:secondaryInfo];
 	
-	[option addOptionText:@"Edit IP/host name"];
-	[option addOptionText:@"Edit port number"];
 	[option addOptionText:@"Remove connection"];
 	[option addOptionText:@"Go back"];
 	[option setActionSelector:@selector(optionSelected:) target:self];
@@ -356,23 +380,15 @@
 
 - (void)optionSelected:(id)sender {
 	BROptionDialog *option = sender;
-	MachineConnectionBase *connection = [option.userInfo objectForKey:@"connection"];
 	
-	if([[sender selectedText] isEqualToString:@"Edit IP/host name"]) {
-		[[self stack] popController];
-		isEditingConnectionHostName = YES;
-		[self showEnterHostNameDialogBoxWithInitialText:connection.hostName];
-		
-	} else if([[sender selectedText] isEqualToString:@"Edit port number"]) {
-		[[self stack] popController];
-		isEditingConnectionPortNumber = YES;
-		[self showEnterPortNumberDialogBoxWithInitialText:[NSString stringWithFormat:@"%d", connection.port]];
-		
-	} else if([[sender selectedText] isEqualToString:@"Remove from server list"]) {
-		[[self stack] popController]; //need this so we don't go back to option dialog when going back
+	if([[sender selectedText] isEqualToString:@"Remove from server list"]) {
 		//remove the connection
-		[self setNeedsUpdate];
+		MachineConnectionBase *connection = [option.userInfo objectForKey:@"connection"];
+		[self.machine removeConnection:connection];
 		
+		
+		[self setNeedsUpdate];
+		[[self stack] popController]; //need this so we don't go back to option dialog when going back
 		//set the selection to the to top of the connections list to avoid a weird UI bug where the selection box
 		//goes halfway off the screen
 		[self.list setSelection:ListItemCount-1];
@@ -385,12 +401,49 @@
 
 #pragma mark -
 #pragma mark TestAndConditionallyAddConnectionProtocol Methods
--(void)machine:(Machine*)m didAcceptConnection:(MachineConnectionBase*)con {
+-(void)machine:(Machine*) m didAcceptConnection:(MachineConnectionBase*) con {
+#ifdef LOCAL_DEBUG_ENABLED
+	NSLog(@"machine %@ didAcceptConnection %@", m, con);
+#endif
+	// add machine to MM (because so far you did not have a machine 
+	// for the PMS you were just connecting to)
 	
 }
 
--(void)machine:(Machine*)m didNotAcceptConnection:(MachineConnectionBase*)con error:(NSError*)err {
-	
+-(void)machine:(Machine*) m didNotAcceptConnection:(MachineConnectionBase*) con error:(NSError*)err {
+#ifdef LOCAL_DEBUG_ENABLED
+	NSLog(@"machine %@ didNotAcceptConnection %@ with error %@", m, con, err);
+#endif
+	if (err.code==ConditionallyAddErrorCodeCouldNotConnect) {
+		// We could not establish a connection to that machine. 
+		// It is either firewalled, not running or the connection data is wrong
+#ifdef LOCAL_DEBUG_ENABLED
+		NSLog(@"Machine is either firewalled, not running or the connection data is wrong");
+#endif
+		
+	} else if (err.code==ConditionallyAddErrorCodeNeedCredentials) {
+		// We were able to connect, but it looks like the username/password 
+		// was wrong, so we were unable to determine which PMS it is
+#ifdef LOCAL_DEBUG_ENABLED
+		NSLog(@"Machine login details are incorrect");
+#endif
+		
+	} else if (err.code==ConditionallyAddErrorCodeWrongMachineID) {
+		// the connection just added is another way to contact a machine we 
+		// already know. In this case, you should add the connection 
+		// (using testAndConditionallyAddConnectionForHostName again) 
+		// to the machine stored in err.userInfo[machineForConnection]
+		//Machine *m = [err.userInfo objectForKey:@"machineForConnection"];
+#ifdef LOCAL_DEBUG_ENABLED
+		NSLog(@"Machine is a duplicate. Add this connection to the other machine");
+#endif
+		
+	} else {
+		//other kind of failure, cancel operation and reset
+#ifdef LOCAL_DEBUG_ENABLED
+		NSLog(@"Connection failed for uknown reason");
+#endif
+	}	
 }
 
 @end
