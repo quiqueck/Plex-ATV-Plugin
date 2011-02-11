@@ -73,8 +73,8 @@
   _panelControl = [[BRPanelControl alloc]init];
   
 
-  //[self addControl:_scroller];
-  //[self addControl:_spinner];
+  [self addControl:_scroller];
+  [self addControl:_spinner];
   
   [_panelControl setFrame:masterFrame];
   [_panelControl setPanelMode:1];
@@ -184,7 +184,7 @@
   [_scroller setContent:_panelControl]; 
   [_scroller setAcceptsFocus:YES];
   
-  [_panelControl addControl:_scroller];
+  //[_panelControl addControl:_scroller];
   [_panelControl layoutSubcontrols];
   [self layoutSubcontrols];
   
