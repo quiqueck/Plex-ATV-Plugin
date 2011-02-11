@@ -50,7 +50,6 @@
 		01A0F58F12722877007A60B5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F58E12722877007A60B5 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		01A0F597127228BC007A60B5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F596127228BC007A60B5 /* Foundation.framework */; };
 		01A0F59D127228CC007A60B5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F59C127228CC007A60B5 /* libz.dylib */; };
-		727A3F0812F7859200994193 /* HWMediaShelfController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 727A3F0712F7859200994193 /* HWMediaShelfController2.m */; };
 		727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */; };
 		7297238412EE81000064E776 /* HWUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 7297238312EE81000064E776 /* HWUserDefaults.m */; };
 		729723AF12EE84810064E776 /* HWRemoteServersController.m in Sources */ = {isa = PBXBuildFile; fileRef = 729723AE12EE84810064E776 /* HWRemoteServersController.m */; };
@@ -325,8 +324,6 @@
 				72B2C71412DC1F0E00E23F8E /* HWPmsListController.m */,
 				C43F0B0412F4CD8E004D0D68 /* HWMediaShelfController.h */,
 				C43F0B0512F4CD8E004D0D68 /* HWMediaShelfController.m */,
-				727A3F0612F7859200994193 /* HWMediaShelfController2.h */,
-				727A3F0712F7859200994193 /* HWMediaShelfController2.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -445,7 +442,6 @@
 				7297238412EE81000064E776 /* HWUserDefaults.m in Sources */,
 				729723AF12EE84810064E776 /* HWRemoteServersController.m in Sources */,
 				C43F0B0612F4CD8E004D0D68 /* HWMediaShelfController.m in Sources */,
-				727A3F0812F7859200994193 /* HWMediaShelfController2.m in Sources */,
 				727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

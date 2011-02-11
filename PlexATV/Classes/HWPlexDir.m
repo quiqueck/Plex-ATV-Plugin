@@ -37,7 +37,6 @@
 #import "SongListController.h"
 #import "HWUserDefaults.h"
 #import "HWMediaShelfController.h"
-#import "HWMediaShelfController2.h"
 
 #define LOCAL_DEBUG_ENABLED 1
 

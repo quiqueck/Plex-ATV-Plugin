@@ -230,7 +230,7 @@
 }
 
 - (id)coverArt {
-    return [self.imageProxy defaultImage];
+  return [BRImage imageWithURL:[self.imageProxy url]];// [self.imageProxy defaultImage];
 }
 - (id)imageProxy {
 	//NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
