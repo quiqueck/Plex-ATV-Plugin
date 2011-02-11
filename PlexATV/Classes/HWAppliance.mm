@@ -180,10 +180,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 - (id)moduleName { return @"Plex"; }
 - (id)applianceKey { return @"Plex"; }
 
--(void) redisplayCategories{
-	[super reloadCategories];
-}
-
 -(void) reloadCategories {
 	[self.applianceCat removeAllObjects];
 	
@@ -291,6 +287,8 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #if LOCAL_DEBUG_ENABLED
 		NSLog(@"MachineManager: Changed %@", m);
 #endif
+#warning question for frank regarding necessity of next line of code
+		[self reloadCategories];
 	} else {
 #if LOCAL_DEBUG_ENABLED
 		NSLog(@"MachineManager: Machine %@ offline", m);

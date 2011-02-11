@@ -55,6 +55,12 @@
 - (void)setupList {
 	[_items removeAllObjects];
 	
+	// =========== servers ===========
+	SMFMenuItem *serversMenuItem = [SMFMenuItem folderMenuItem];
+	[serversMenuItem setTitle:@"Servers"];
+	[_items addObject:serversMenuItem];
+	
+	
 	// =========== combined PMS category view ===========
 	SMFMenuItem *combinedPmsCategoriesMenuItem = [SMFMenuItem menuItem];
 	
@@ -79,12 +85,6 @@
 	[defaultServerMenuItem setTitle:defaultServerTitle];
 	[defaultServerTitle release];
 	[_items addObject:defaultServerMenuItem];
-	
-	
-	// =========== servers ===========
-	SMFMenuItem *serversMenuItem = [SMFMenuItem folderMenuItem];
-	[serversMenuItem setTitle:@"Servers"];
-	[_items addObject:serversMenuItem];
 	
 	
 	// =========== quality setting ===========
