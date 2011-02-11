@@ -273,7 +273,7 @@
 
 - (BOOL)isHD{
 	int videoResolution = [[pmo listSubObjects:@"Media" usingKey:@"videoResolution"] intValue];
-	return videoResolution >= 720;
+	return YES;//videoResolution >= 720;
 }
 
 - (BOOL)isInappropriate {
@@ -337,12 +337,6 @@
 	else 
 		mediaType = [BRMediaType movie];
 	return mediaType;
-}
-
-- (NSString*)mediaURL{
-    //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-	//NSLog(@"Wanted URL %@", [url description]);	
-	return [url description];
 }
 
 - (long)parentalControlRatingRank {
@@ -529,5 +523,68 @@
 }
 
 - (void)willBeDeleted {}
+
+
+#pragma mark -
+#pragma mark Additional Metadata Methods
+- (BOOL)hasClosedCaptioning {
+	return YES;
+}
+
+- (BOOL)hasDolbyDigitalAudioTrack {
+	return YES;
+}
+
+- (NSString *)mediaURL{
+    //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+	//NSLog(@"Wanted URL %@", [url description]);	
+	return [url description];
+}
+
+- (BRImage *)starRatingImage {
+	BRImage *result = nil;
+	float starRating = [self starRating];
+	if (1.0 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] oneStar];
+		
+	} else if (1.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] onePointFiveStars];
+		
+	} else if (2 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] twoStars];
+		
+	} else if (2.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] twoPointFiveStars];
+		
+	} else if (3 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] threeStar];
+		
+	} else if (3.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] threePointFiveStars];
+		
+	} else if (4 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fourStar];
+		
+	} else if (4.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fourPointFiveStars];
+		
+	} else if (5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fiveStars];
+	}
+	return result;
+}
+
+- (NSArray *)writers {
+	NSString *result = [pmo listSubObjects:@"Writer" usingKey:@"tag"];
+	return [result componentsSeparatedByString:@", "];
+}
+
+- (NSString *)yearCreated {
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"yyyy"];
+	NSString *yearCreated = [dateFormat stringFromDate:[self dateCreated]];
+	[dateFormat release];
+	return yearCreated;
+}
 
 @end
