@@ -76,10 +76,10 @@
 //}
 
 - (id)artist {
-  if ([pmo.attributes objectForKey:@"artist" != nil])
-    return [pmo.attributes objectForKey:@"artist"];
-  else
-    return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+	if ([pmo.attributes objectForKey:@"artist" != nil])
+		return [pmo.attributes objectForKey:@"artist"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 }
 
 - (id)artistCollection {
@@ -225,13 +225,6 @@
 	return (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]);
 }
 
-- (id)thumbURL {
-  return [self.imageProxy url];
-}
-
-- (id)coverArt {
-  return [BRImage imageWithURL:[self.imageProxy url]];// [self.imageProxy defaultImage];
-}
 - (id)imageProxy {
 	//NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
 	NSString *thumbURL = nil;
@@ -280,7 +273,7 @@
 
 - (BOOL)isHD{
 	int videoResolution = [[pmo listSubObjects:@"Media" usingKey:@"videoResolution"] intValue];
-	return videoResolution >= 720;
+	return YES;//videoResolution >= 720;
 }
 
 - (BOOL)isInappropriate {
@@ -333,7 +326,6 @@
 }
 
 - (id)mediaType {	
-  /*
 	NSString *plexMediaType = [pmo.attributes valueForKey:@"type"];
 	BRMediaType *mediaType;
 	if ([@"track" isEqualToString:plexMediaType])
@@ -345,14 +337,6 @@
 	else 
 		mediaType = [BRMediaType movie];
 	return mediaType;
-   */
-  return [BRMediaType movie];
-}
-
-- (NSString*)mediaURL{
-    //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-	//NSLog(@"Wanted URL %@", [url description]);	
-	return [url description];
 }
 
 - (long)parentalControlRatingRank {
@@ -383,8 +367,8 @@
 			self.assetID, @"id",
 			self.mediaSummary, @"mediaSummary",
 			self.mediaDescription, @"mediaDescription",
-      self.rating, @"rating",
-      self.starRating, @"starRating",
+			self.rating, @"rating",
+			self.starRating, @"starRating",
 			nil];
 }
 
@@ -409,9 +393,9 @@
 
 - (id)primaryCollectionTitle {
 	if ([pmo.attributes objectForKey:@"album"] != nil)
-    return [pmo.attributes objectForKey:@"album"];
-  else
-    return [pmo.mediaContainer.attributes valueForKey:@"title2"];
+		return [pmo.attributes objectForKey:@"album"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 }
 
 - (id)primaryCollectionTitleForSorting {
@@ -468,11 +452,11 @@
 - (id)seriesName {
     //grandparentTitle is usually populated for episodes when coming from dynamic views like "Recently added"
     //whereas mediacontainer.backTitle is used in "All shows->Futurama-Season 1->Episode 4"
-  if ([pmo.attributes objectForKey:@"grandparentTitle"] != nil) {
-    return [pmo.attributes objectForKey:@"grandparentTitle"];    
-  }
-  else
-    return pmo.mediaContainer.backTitle;
+	if ([pmo.attributes objectForKey:@"grandparentTitle"] != nil) {
+		return [pmo.attributes objectForKey:@"grandparentTitle"];    
+	}
+	else
+		return pmo.mediaContainer.backTitle;
 }
 
 - (id)seriesNameForSorting {
@@ -539,5 +523,68 @@
 }
 
 - (void)willBeDeleted {}
+
+
+#pragma mark -
+#pragma mark Additional Metadata Methods
+- (BOOL)hasClosedCaptioning {
+	return YES;
+}
+
+- (BOOL)hasDolbyDigitalAudioTrack {
+	return YES;
+}
+
+- (NSString *)mediaURL{
+    //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+	//NSLog(@"Wanted URL %@", [url description]);	
+	return [url description];
+}
+
+- (BRImage *)starRatingImage {
+	BRImage *result = nil;
+	float starRating = [self starRating];
+	if (1.0 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] oneStar];
+		
+	} else if (1.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] onePointFiveStars];
+		
+	} else if (2 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] twoStars];
+		
+	} else if (2.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] twoPointFiveStars];
+		
+	} else if (3 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] threeStar];
+		
+	} else if (3.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] threePointFiveStars];
+		
+	} else if (4 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fourStar];
+		
+	} else if (4.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fourPointFiveStars];
+		
+	} else if (5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fiveStars];
+	}
+	return result;
+}
+
+- (NSArray *)writers {
+	NSString *result = [pmo listSubObjects:@"Writer" usingKey:@"tag"];
+	return [result componentsSeparatedByString:@", "];
+}
+
+- (NSString *)yearCreated {
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"yyyy"];
+	NSString *yearCreated = [dateFormat stringFromDate:[self dateCreated]];
+	[dateFormat release];
+	return yearCreated;
+}
 
 @end
