@@ -11,6 +11,7 @@
 #import <plex-oss/PlexMediaContainer.h>
 #import "HWUserDefaults.h"
 #import "Constants.h"
+#import "HWMediaShelfController.h"
 
 #define OTHERSERVERS_ID @"hwOtherServer"
 #define SETTINGS_ID @"hwSettings"
@@ -180,8 +181,16 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		//HAZAA! we found it! Push new view
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
-		HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
-		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
+    NSLog(@"matchingCategory: %@", [matchingCategory type]);
+ /*   if ([@"movie" isEqualToString:[matchingCategory type]]) {
+      NSLog(@"pushing shelfController");
+      HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexContainer:[matchingCategory contents]];
+      [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
+    }
+    else {*/
+      HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
+      [[[BRApplicationStackManager singleton] stack] pushController:menuController];      
+      //}
 	}
 	
 	return [menuController autorelease];

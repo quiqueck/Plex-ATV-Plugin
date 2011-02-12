@@ -225,6 +225,10 @@
 	return (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]);
 }
 
+- (id)coverArt {
+  return [BRImage imageWithURL:[self.imageProxy url]];
+}
+
 - (id)imageProxy {
 	NSString *thumbURL = nil;
 	
@@ -237,6 +241,8 @@
 	
 	NSURL* turl = [pmo.request pathForScaledImage:thumbURL ofSize:CGSizeMake(512, 512)];
 	BRURLImageProxy *imageProxy = [BRURLImageProxy proxyWithURL:turl];
+  [imageProxy setDefaultImage:[[BRThemeInfo sharedTheme] storeRentalPlaceholderImage]];
+  NSLog(@"imageProxy_defaultImage: %@",[imageProxy defaultImage]);
 	return imageProxy;
 }
 

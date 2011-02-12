@@ -85,9 +85,8 @@
   /* Scroller
    * - Panel
    *  - Spacer (44px)
-   *  - Box1 (divider+shelf)
-   *  - Box2
-   *  - Grid?
+   *  - Box1 (divider + shelf)
+   *  - Box2 (divider + grid)
    *  - Spacer
    */
   BRSpacerControl *spacerTop=[BRSpacerControl spacerWithPixels:44.f];
@@ -184,39 +183,7 @@
   
   [_panelControl addControl:gridBox];
   
-  /*
-  NSLog(@"txt-ctrl: all movies");
-  
-  BRTextControl *allMoviesCtrl =[[BRTextControl alloc] init];
-  [allMoviesCtrl setText:@"All movies" withAttributes:[[BRThemeInfo sharedTheme]metadataSummaryFieldAttributes]];
-  CGRect allMoviesFrame;
-  allMoviesFrame.size = [allMoviesCtrl renderedSize];
-  allMoviesFrame.origin.x=gridFrame.origin.x;
-  allMoviesFrame.origin.y=gridFrame.origin.y+gridFrame.size.height+8.f;
-  
-  logFrame(allMoviesFrame);
-  [allMoviesCtrl setFrame:allMoviesFrame];
-    //[_panelControl addControl:allMoviesCtrl];
-  [allMoviesCtrl release];
-  
-  
-  /*
-   *  Second Divider
-   
-  NSLog(@"second divider");
-  BRDividerControl *div2 = [[BRDividerControl alloc]init];
-  CGRect div2Frame = CGRectMake(allMoviesFrame.origin.x+allMoviesFrame.size.width+10.f , 
-                                allMoviesFrame.origin.y+7.f, 
-                                masterFrame.size.width*0.74f, 
-                                masterFrame.size.height*0.02f);
-  logFrame(div2Frame);
-  [div2 setFrame:div2Frame];
-    //[_panelControl addControl:div2];
-  [div2 release];
-  
-  
-  */
-  
+    
   
   BRSpacerControl *spacerBottom=[BRSpacerControl spacerWithPixels:44.f];
   [_panelControl addControl:spacerBottom];
@@ -230,9 +197,7 @@
   [_scroller setFollowsFocus:YES];
   [_scroller setContent:_panelControl]; 
   [_scroller setAcceptsFocus:YES];
-  
-    //[_panelControl addControl:_scroller];
-    //[_panelControl layoutSubcontrols];
+
   [self layoutSubcontrols];
   
   

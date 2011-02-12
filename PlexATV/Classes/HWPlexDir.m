@@ -75,7 +75,7 @@ PlexMediaProvider* __provider = nil;
 
 - (id) initWithRootContainer:(PlexMediaContainer*)container {
   self = [self init];
-  self.rootContainer = container;//[self applySkipFilteringOnContainer:container];
+  self.rootContainer = [self applySkipFilteringOnContainer:container];
   return self;
 }
 
@@ -293,7 +293,7 @@ PlexMediaProvider* __provider = nil;
 			[option release];
 		}
 		else
-			[self playbackVideoWithMediaObject:pmo andOffset:0]; //not previously unwatched, just start playback from beginning
+			[self playbackVideoWithMediaObject:pmo andOffset:0]; //not previously watched, just start playback from beginning
 		
 	}
   else {
