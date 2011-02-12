@@ -1,9 +1,9 @@
 //
-//  PlexMediaAsset.m
+//  PlexPreviewAsset.m
 //  atvTwo
 //
 //  Created by Frank Bauer on 27.10.10.
-//  Modified by Bob Jelica
+//  Modified by Bob Jelica & ccjensen
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
