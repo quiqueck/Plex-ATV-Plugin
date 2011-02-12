@@ -12,6 +12,7 @@
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import "SMFramework/SMFControlFactory.h"
+#import "HWDetailedMovieMetadataController.h"
 
 #define LOCAL_DEBUG_ENABLED 1
 
@@ -59,6 +60,7 @@
 {
   NSLog(@"drawSelf");
   CGRect masterFrame = [BRWindow interfaceFrame];
+  logFrame(masterFrame);
   
   /*
    * Controls init
@@ -78,50 +80,72 @@
   [_panelControl setFrame:masterFrame];
   [_panelControl setPanelMode:1];
   
+  /* Scroller
+   * - Panel
+   *  - Spacer (44px)
+   *  - Box1 (divider+shelf)
+   *  - Box2
+   *  - Grid?
+   *  - Spacer
+   */
+  BRSpacerControl *spacerTop=[BRSpacerControl spacerWithPixels:44.f];
+  [_panelControl addControl:spacerTop];
+
+  /*
+   *  Text control (recently added)
+   */
+  BRDividerControl *div1=[[BRDividerControl alloc] init];
+  div1.drawsLine = YES;
+  [div1 setStartOffsetText:0];
+  [div1 setAlignmentFactor:0.5f];
+  [div1 setLabel:@"Recently added"];
+  
+  logFrame(div1.frame);
   
   /*
    * Shelf
    */
-  
+  NSLog(@"shelf");
   _shelfControl = [[BRMediaShelfControl alloc] init];
   [_shelfControl setProvider:[self getProviderForShelf]];
   [_shelfControl setColumnCount:7];
   [_shelfControl setCentered:NO];
   [_shelfControl setHorizontalGap:23];
     //    [_shelfControl setCoverflowMargin:.021746988594532013];
-  CGRect gframe=CGRectMake(0, 
-                           masterFrame.origin.y+masterFrame.size.height*0.90f, 
-                           masterFrame.size.width*1.f,
-                           masterFrame.size.height*0.24f);
-  [_shelfControl setFrame:gframe];
-  [_panelControl addControl:_shelfControl];
+
+  logFrame(_shelfControl.frame);
   
-  BRTextControl *recentlyAddedTextCtrl =[[BRTextControl alloc] init];
-  [recentlyAddedTextCtrl setText:@"Recently added" withAttributes:[[BRThemeInfo sharedTheme]metadataSummaryFieldAttributes]];
-  CGRect recentlyAddedTextFrame;
-  recentlyAddedTextFrame.size = [recentlyAddedTextCtrl renderedSize];
-  recentlyAddedTextFrame.origin.x=gframe.origin.x+masterFrame.size.width*0.05;
-  recentlyAddedTextFrame.origin.y=gframe.origin.y+gframe.size.height+5.f,
-  [recentlyAddedTextCtrl setFrame:recentlyAddedTextFrame];
-  [_panelControl addControl:recentlyAddedTextCtrl];
-  [recentlyAddedTextCtrl release];
+  NSLog(@"box");
+  BRBoxControl *shelfBox = [[BRBoxControl alloc] init];
+  [shelfBox setAcceptsFocus:YES];
+  [shelfBox setDividerMargin:0.05f];
+  [shelfBox setContent:_shelfControl];
+  [shelfBox setDivider:div1];
+  [shelfBox layoutSubcontrols];
+  CGRect boxFrame = shelfBox.frame;
+  boxFrame.size.height = 255.0f;
+  [shelfBox setFrame:boxFrame];
+    //shelfBox.frame.size.width = 255.f;
+  [_panelControl addControl:shelfBox];
   
-  /*
-   *  First Divider
-   */
-  BRDividerControl *div1 = [[BRDividerControl alloc]init];
-  CGRect div1Frame = CGRectMake(recentlyAddedTextFrame.origin.x+recentlyAddedTextFrame.size.width+10.f , 
-                                recentlyAddedTextFrame.origin.y+7.f, 
-                                masterFrame.size.width*0.74f, 
-                                masterFrame.size.height*0.02f);
-  [div1 setFrame:div1Frame];
-  [self addControl:div1];
-  [div1 release];
   
+    
   
   /*
    * Grid
-   */  
+    */ 
+  BRDividerControl *div2=[[BRDividerControl alloc] init];
+  div2.drawsLine = YES;
+  [div2 setStartOffsetText:0];
+  [div2 setAlignmentFactor:0.5f];
+  [div2 setLabel:@"All movies"];
+  
+  CGRect dividerFrame;
+  dividerFrame.origin.x = 0;
+  dividerFrame.origin.y = boxFrame.size.height+10.f;
+  [div2 setFrame:dividerFrame];
+  
+  
   NSLog(@"grid");
   [_gridControl setProvider:[self getProviderForGrid]];
   [_gridControl setColumnCount:7];
@@ -130,50 +154,72 @@
   [_gridControl setVerticalGap:5];
   [_gridControl setLeftMargin:0.05f];
   [_gridControl setRightMargin:0.05f];
-  [_gridControl setAccessibilityLabel:@"All movies"];
   
-  CGRect gridFrame;
-  gridFrame.origin.x = 0;
-  gridFrame.origin.y = 0;
-  
-  gridFrame.size.width = masterFrame.size.width;
-	gridFrame.size.height = masterFrame.size.height-gframe.size.height;
+
 	[_gridControl setAcceptsFocus:YES];
   [_gridControl setWrapsNavigation:YES];
-  [_gridControl setProviderRequester:_gridControl];//[NSNotificationCenter defaultCenter]];
-  
+  [_gridControl setProviderRequester:_gridControl];
+  CGRect gridFrame;
+  gridFrame.size.height = 5000.f;
   [_gridControl setFrame:gridFrame];
-    //[_gridControl focusControlAtIndex:0];
   
-  [_panelControl addControl:_gridControl];
+  CGRect gridBoxFrame;
+  gridBoxFrame.origin.x = 0;
+    //gridBoxFrame.origin.y = dividerFrame.size.height+5.f;
+    //[_gridControl setFrame:gridFrame];
   
+  BRBoxControl *gridBox = [[BRBoxControl alloc] init];
+  [gridBox setAcceptsFocus:YES];
+  [gridBox setDividerSuggestedHeight:46.f];
+  [gridBox setDividerMargin:0.05f];
+  [gridBox setContent:_gridControl];
+  [gridBox setDivider:div2];
+  [gridBox setFrame:gridFrame];
+  
+
+
+  [gridBox layoutSubcontrols];
+  
+  [_panelControl addControl:gridBox];
+  
+  /*
+  NSLog(@"txt-ctrl: all movies");
   
   BRTextControl *allMoviesCtrl =[[BRTextControl alloc] init];
   [allMoviesCtrl setText:@"All movies" withAttributes:[[BRThemeInfo sharedTheme]metadataSummaryFieldAttributes]];
-  CGRect allMoviesRect;
-  allMoviesRect.size = [allMoviesCtrl renderedSize];
-  allMoviesRect.origin.x=gridFrame.origin.x+masterFrame.size.width*0.05;
-  allMoviesRect.origin.y=gridFrame.origin.y+gridFrame.size.height+8.f,
-  [allMoviesCtrl setFrame:allMoviesRect];
-  [_panelControl addControl:allMoviesCtrl];
+  CGRect allMoviesFrame;
+  allMoviesFrame.size = [allMoviesCtrl renderedSize];
+  allMoviesFrame.origin.x=gridFrame.origin.x;
+  allMoviesFrame.origin.y=gridFrame.origin.y+gridFrame.size.height+8.f;
+  
+  logFrame(allMoviesFrame);
+  [allMoviesCtrl setFrame:allMoviesFrame];
+    //[_panelControl addControl:allMoviesCtrl];
   [allMoviesCtrl release];
+  
   
   /*
    *  Second Divider
-   */
+   
+  NSLog(@"second divider");
   BRDividerControl *div2 = [[BRDividerControl alloc]init];
-  CGRect div2Frame = CGRectMake(allMoviesRect.origin.x+allMoviesRect.size.width+10.f , 
-                                allMoviesRect.origin.y+7.f, 
+  CGRect div2Frame = CGRectMake(allMoviesFrame.origin.x+allMoviesFrame.size.width+10.f , 
+                                allMoviesFrame.origin.y+7.f, 
                                 masterFrame.size.width*0.74f, 
                                 masterFrame.size.height*0.02f);
+  logFrame(div2Frame);
   [div2 setFrame:div2Frame];
-  [_panelControl addControl:div2];
+    //[_panelControl addControl:div2];
   [div2 release];
   
   
+  */
   
   
+  BRSpacerControl *spacerBottom=[BRSpacerControl spacerWithPixels:44.f];
+  [_panelControl addControl:spacerBottom];
   
+  [_panelControl layoutSubcontrols];
   
   [self addControl:_cursorControl];
   [_cursorControl release];
@@ -184,7 +230,7 @@
   [_scroller setAcceptsFocus:YES];
   
     //[_panelControl addControl:_scroller];
-  [_panelControl layoutSubcontrols];
+    //[_panelControl layoutSubcontrols];
   [self layoutSubcontrols];
   
   
@@ -202,16 +248,18 @@
   for (int i=0;i<[_assets count];i++)
   {
     PlexPreviewAsset *asset = [_assets objectAtIndex:i];
-    NSLog(@"asset_title: %@", [asset title]);
+      //NSLog(@"asset_title: %@", [asset title]);
     [store addObject:asset];
       //[asset release];
   }
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"getProviderForShelf - have assets, creating datastore and provider");
 #endif
+  BRPosterControlFactory *tcControlFactory = [BRPosterControlFactory factory];
+	[tcControlFactory setDefaultImage:[[BRThemeInfo sharedTheme] storeRentalPlaceholderImage]];
   
   BRPhotoDataStoreProvider* provider = [BRPhotoDataStoreProvider providerWithDataStore:store 
-                                                                        controlFactory:[BRPosterControlFactory factory]];
+                                                                        controlFactory:tcControlFactory];
   
   
 #if LOCAL_DEBUG_ENABLED
@@ -227,8 +275,8 @@
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"getProviderForGrid_start");
 #endif
-  NSSet *_set = [NSSet setWithObject:[BRMediaType movie]];
-  NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType movie]];
+  NSSet *_set = [NSSet setWithObject:[BRMediaType photo]];
+  NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType photo]];
   BRDataStore *store = [[BRDataStore alloc] initWithEntityName:@"Hello" predicate:_pred mediaTypes:_set];
   
   for (int i=0;i<[_assets count];i++)
@@ -259,9 +307,15 @@
   int remoteAction = [action remoteAction];
   if (remoteAction==kBREventRemoteActionPlay && action.value==1)
   {
+      //NSLog(@"ctrl selected: %@", [_panelControl focusedControl]);
+    NSLog(@"selected index: %d", [_gridControl _indexOfFocusedControl]);
+    int index = [_gridControl _indexOfFocusedControl];
+    PlexPreviewAsset *selectedAsset = [_assets objectAtIndex:index];
+    NSLog(@"title: %@",selectedAsset.title);
+
     SMFMoviePreviewController* previewController = [[SMFMoviePreviewController alloc] init];
-    PlexPreviewAsset *prevAsset = [_assets objectAtIndex:0];
-    HWMovieListing *dataSource = [[HWMovieListing alloc] initWithRootContainer: [prevAsset.pmo contents]];
+    
+    HWDetailedMovieMetadataController *dataSource = [[HWDetailedMovieMetadataController alloc] initWithPlexContainer:[selectedAsset.pmo contents]];
     previewController.datasource = dataSource;
     
     [[[BRApplicationStackManager singleton] stack] pushController:previewController];
@@ -279,6 +333,10 @@
 	[self drawSelf];
   [super controlWasActivated];
 	
+}
+
+void logFrame(CGRect frame) {
+  NSLog(@"x:%f, y:%f - width:%f, height:%f",frame.origin.x,frame.origin.y,frame.size.width,frame.size.height);
 }
 
 @end
