@@ -38,45 +38,10 @@
 @end
 
 @implementation HWDetailedMovieMetadataController
-@synthesize container;
 @synthesize assets;
-@synthesize mediaObjects;
-@synthesize selectedMediaItem;
 @synthesize selectedMediaItemPreviewData;
 
-
-- (id) initWithPlexContainer:(PlexMediaContainer*)aContainer {
-	if (self = [super init]) {
-		self.container = aContainer;
-		self.mediaObjects = aContainer.directories;
-		self.assets = [self assetsForMediaObjects:self.mediaObjects];
-		
-		if ([self.mediaObjects count] > 0) {
-			selectedIndex = 0;
-			self.selectedMediaItem = [self.mediaObjects objectAtIndex:selectedIndex];
-			self.selectedMediaItemPreviewData = [self.assets objectAtIndex:selectedIndex];
-		}
-		
-		self.datasource = self;
-		self.delegate = self;
-	}
-	return self;
-}
-
--(void)dealloc {
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"deallocing HWMovieListing");
-#endif
-	self.container = nil;
-	self.assets = nil;
-	self.mediaObjects = nil;
-	self.selectedMediaItem = nil;
-	self.selectedMediaItemPreviewData = nil;
-	
-	[super dealloc];
-}
-
-- (NSArray *)assetsForMediaObjects:(NSArray *)mObjects {
++ (NSArray *)assetsForMediaObjects:(NSArray *)mObjects {
 	NSMutableArray *newAssets = [NSMutableArray arrayWithCapacity:[mObjects count]];
 	
 	for (PlexMediaObject *mediaObj in mObjects) {		
@@ -90,6 +55,41 @@
 	NSLog(@"converted %d assets", [newAssets count]);
 #endif
 	return newAssets;
+}
+
+- (id)initWithPreviewAssets:(NSArray*)previewAssets withSelectedIndex:(int)selIndex {
+	if (self = [super init]) {
+		self.assets = previewAssets;
+		
+		if ([self.assets count] > selIndex) {
+			selectedIndex = selIndex;
+			self.selectedMediaItemPreviewData = [self.assets objectAtIndex:selectedIndex];
+		} else if ([self.assets count] > 0) {
+			selectedIndex = 0;
+			self.selectedMediaItemPreviewData = [self.assets objectAtIndex:selectedIndex];
+		} else {
+			//fail, container has no items
+		}
+		
+		self.datasource = self;
+		self.delegate = self;
+	}
+	return self;
+}
+
+- (id)initWithPlexContainer:(PlexMediaContainer*)aContainer withSelectedIndex:(int)selIndex {
+	NSArray *previewAssets = [HWDetailedMovieMetadataController assetsForMediaObjects:aContainer.directories];	
+	return [self initWithPreviewAssets:previewAssets withSelectedIndex:selIndex];
+}
+
+-(void)dealloc {
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"deallocing HWMovieListing");
+#endif
+	self.assets = nil;
+	self.selectedMediaItemPreviewData = nil;
+	
+	[super dealloc];
 }
 
 #pragma mark -
@@ -107,10 +107,9 @@
 		
 	} else if ([ctrl isKindOfClass:[BRMediaShelfControl class]]) {
 		//one of the other media items have been selected
-		mediaShelfControl = (BRMediaShelfControl *)ctrl;
+		BRMediaShelfControl *mediaShelfControl = (BRMediaShelfControl *)ctrl;
 		selectedIndex = mediaShelfControl.focusedIndex;
 		
-		self.selectedMediaItem = [self.mediaObjects objectAtIndex:selectedIndex];
 		self.selectedMediaItemPreviewData = [self.assets objectAtIndex:selectedIndex];
 		
 		//[mediaShelfControl _saveCurrentSelection];
@@ -223,7 +222,7 @@
 -(BRImage *)coverArt {
 	BRImage *coverArt = nil;
 	if ([self.selectedMediaItemPreviewData hasCoverArt]) {
-		NSString *coverArtPath = [NSString stringWithFormat:@"%@%@",[self.selectedMediaItem.request base], [self.selectedMediaItem.attributes valueForKey:@"thumb"]];
+		NSString *coverArtPath = [NSString stringWithFormat:@"%@%@",[self.selectedMediaItemPreviewData.pmo.request base], [self.selectedMediaItemPreviewData.pmo.attributes valueForKey:@"thumb"]];
 #if LOCAL_DEBUG_ENABLED
 		NSLog(@"coverArtPath: %@", coverArtPath);
 #endif

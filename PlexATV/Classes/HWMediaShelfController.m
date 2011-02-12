@@ -318,7 +318,7 @@
     PlexPreviewAsset *selectedAsset = [_assets objectAtIndex:index];
     NSLog(@"title: %@",selectedAsset.title);
 
-    HWDetailedMovieMetadataController* previewController = [[HWDetailedMovieMetadataController alloc] initWithPlexContainer:[selectedAsset.pmo contents]];    
+	  HWDetailedMovieMetadataController* previewController = [[HWDetailedMovieMetadataController alloc] initWithPreviewAssets:_assets withSelectedIndex:index];
     [[[BRApplicationStackManager singleton] stack] pushController:[previewController autorelease]];
     
     return YES;
