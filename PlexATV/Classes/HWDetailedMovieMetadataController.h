@@ -9,25 +9,24 @@
 #import <plex-oss/PlexMediaContainer.h>
 #import "PlexPreviewAsset.h"
 
-@interface HWDetailedMovieMetadataController : NSObject<SMFMoviePreviewControllerDatasource, SMFMoviePreviewControllerDelegate> {
-	PlexMediaContainer* rootContainer;
-	PlexMediaObject* selectedMediaItem;
+@interface HWDetailedMovieMetadataController : SMFMoviePreviewController<SMFMoviePreviewControllerDatasource, SMFMoviePreviewControllerDelegate> {
+	PlexMediaContainer *_container;
+	NSArray *_mediaObjects;
+	NSArray *_assets;
+	BRMediaShelfControl *mediaShelfControl;
+	
+	int selectedIndex;
+	PlexMediaObject *selectedMediaItem;
 	PlexPreviewAsset *selectedMediaItemPreviewData;
 }
-@property (readwrite, retain) PlexMediaContainer* rootContainer;
+@property (retain) PlexMediaContainer *container;
+@property (retain) NSArray *mediaObjects;
+@property (retain) NSArray *assets;
+
 @property (retain) PlexMediaObject *selectedMediaItem;
 @property (retain) PlexPreviewAsset *selectedMediaItemPreviewData;
 
-- (id) initWithRootContainer:(PlexMediaContainer*)container;
+- (id) initWithPlexContainer:(PlexMediaContainer*)aContainer;
+- (NSArray *)assetsForMediaObjects:(NSArray *)mediaObjects;
 
 @end
-
-
-/* code to instantiate one of these views, where [pmo contents] is a container full of movies
- SMFMoviePreviewController* menuController = [[SMFMoviePreviewController alloc] init];
- HWMovieListing *dataSource = [[HWMovieListing alloc] initWithRootContainer:[pmo contents]];
- menuController.datasource = dataSource;
- 
- [[[BRApplicationStackManager singleton] stack] pushController:menuController];
- [menuController autorelease];
- */

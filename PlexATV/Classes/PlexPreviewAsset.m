@@ -33,6 +33,12 @@
 #import <plex-oss/Machine.h>
 #import <ambertation-plex/Ambertation.h>
 
+//these are in the AppleTV.framework, but cannot #import <AppleTV/AppleTV.h> due to
+//naming conflicts with Backrow.framework. below is a hack!
+@interface BRThemeInfo (PlexExtentions)
+- (id)storeRentalPlaceholderImage;
+@end
+
 @implementation PlexPreviewAsset
 @synthesize pmo;
 
@@ -226,7 +232,6 @@
 }
 
 - (id)imageProxy {
-	//NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
 	NSString *thumbURL = nil;
 	
 	if ([pmo.attributes valueForKey:@"thumb"] != nil){
@@ -234,13 +239,11 @@
 	}
 	else if ([pmo.attributes valueForKey:@"art"] != nil) {
 		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
-	}  
-	
-	if (thumbURL==nil)
-		return nil;
+	}
 	
 	NSURL* turl = [pmo.request pathForScaledImage:thumbURL ofSize:CGSizeMake(512, 512)];
-	return [BRURLImageProxy proxyWithURL:turl];
+	BRURLImageProxy *imageProxy = [BRURLImageProxy proxyWithURL:turl];
+	return imageProxy;
 }
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
