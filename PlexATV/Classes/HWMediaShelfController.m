@@ -59,6 +59,8 @@
 - (void) drawSelf
 {
   NSLog(@"drawSelf");
+  [self _removeAllControls];
+  
   CGRect masterFrame = [BRWindow interfaceFrame];
   logFrame(masterFrame);
   
@@ -307,19 +309,18 @@
   int remoteAction = [action remoteAction];
   if (remoteAction==kBREventRemoteActionPlay && action.value==1)
   {
-      //NSLog(@"ctrl selected: %@", [_panelControl focusedControl]);
-    NSLog(@"selected index: %d", [_gridControl _indexOfFocusedControl]);
-    int index = [_gridControl _indexOfFocusedControl];
+    int index;
+    if ([_shelfControl isFocused])
+      index = [_shelfControl focusedIndex];
+    else if ([_gridControl isFocused])
+      index = [_gridControl _indexOfFocusedControl];      
+
     PlexPreviewAsset *selectedAsset = [_assets objectAtIndex:index];
     NSLog(@"title: %@",selectedAsset.title);
 
-    SMFMoviePreviewController* previewController = [[SMFMoviePreviewController alloc] init];
+    HWDetailedMovieMetadataController* previewController = [[HWDetailedMovieMetadataController alloc] initWithPlexContainer:[selectedAsset.pmo contents]];    
+    [[[BRApplicationStackManager singleton] stack] pushController:[previewController autorelease]];
     
-    HWDetailedMovieMetadataController *dataSource = [[HWDetailedMovieMetadataController alloc] initWithPlexContainer:[selectedAsset.pmo contents]];
-    previewController.datasource = dataSource;
-    
-    [[[BRApplicationStackManager singleton] stack] pushController:previewController];
-    [previewController autorelease];
     return YES;
   }
   return [super brEventAction:action];
