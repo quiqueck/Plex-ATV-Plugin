@@ -65,7 +65,7 @@
 - (NSDate *)dateFromPlexDateString:(NSString *)dateString {
 	//format is 2001-11-06
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-	[dateFormat setDateFormat:@"yyyy-mm-dd"];
+	[dateFormat setDateFormat:@"yyyy-MM-dd"];
 	return [dateFormat dateFromString:dateString];
 }
 
@@ -76,7 +76,7 @@
 //}
 
 - (id)artist {
-	if ([pmo.attributes objectForKey:@"artist" != nil])
+	if ([pmo.attributes objectForKey:@"artist"])
 		return [pmo.attributes objectForKey:@"artist"];
 	else
 		return [pmo.mediaContainer.attributes valueForKey:@"title1"];
@@ -273,7 +273,7 @@
 
 - (BOOL)isHD{
 	int videoResolution = [[pmo listSubObjects:@"Media" usingKey:@"videoResolution"] intValue];
-	return YES;//videoResolution >= 720;
+	return videoResolution >= 720;
 }
 
 - (BOOL)isInappropriate {
