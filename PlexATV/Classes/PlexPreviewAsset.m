@@ -226,7 +226,6 @@
 }
 
 - (id)imageProxy {
-	//NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
 	NSString *thumbURL = nil;
 	
 	if ([pmo.attributes valueForKey:@"thumb"] != nil){
@@ -234,13 +233,11 @@
 	}
 	else if ([pmo.attributes valueForKey:@"art"] != nil) {
 		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
-	}  
-	
-	if (thumbURL==nil)
-		return nil;
+	}
 	
 	NSURL* turl = [pmo.request pathForScaledImage:thumbURL ofSize:CGSizeMake(512, 512)];
-	return [BRURLImageProxy proxyWithURL:turl];
+	BRURLImageProxy *imageProxy = [BRURLImageProxy proxyWithURL:turl];
+	return imageProxy;
 }
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
