@@ -65,7 +65,7 @@
 - (NSDate *)dateFromPlexDateString:(NSString *)dateString {
 	//format is 2001-11-06
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-	[dateFormat setDateFormat:@"yyyy-mm-dd"];
+	[dateFormat setDateFormat:@"yyyy-MM-dd"];
 	return [dateFormat dateFromString:dateString];
 }
 
