@@ -25,16 +25,5 @@
   //our own stuff
 - (id)initWithPlexContainer:(PlexMediaContainer *)container;
 - (void)convertContainerToMediaAssets:(PlexMediaContainer *)container;
- /* 
-  NSMutableArray	*_assets;
-  BRMediaShelfControl *_shelfControl;
-	
-}
-@property (nonatomic, retain) NSMutableArray *_assets;
 
-  //our own stuff
-- (id)initWithPlexContainer:(PlexMediaContainer *)container;
-- (id)getProviderForGrid;
-- (void)convertContainerToMediaAssets:(PlexMediaContainer *)container;
-*/
 @end

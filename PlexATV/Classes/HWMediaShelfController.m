@@ -14,7 +14,6 @@
 #import "SMFramework/SMFControlFactory.h"
 
 #define LOCAL_DEBUG_ENABLED 1
-#define DEFAULT_IMAGES_PATH		@"/System/Library/PrivateFrameworks/AppleTV.framework/DefaultFlowerPhotos/"
 
 @implementation HWMediaShelfController
 
@@ -72,7 +71,7 @@
   _shelfControl = [[BRMediaShelfControl alloc]init];
   _panelControl = [[BRPanelControl alloc]init];
   
-
+  
   [self addControl:_scroller];
   [self addControl:_spinner];
   
@@ -145,7 +144,7 @@
   
   [_gridControl setFrame:gridFrame];
     //[_gridControl focusControlAtIndex:0];
-
+  
   [_panelControl addControl:_gridControl];
   
   
@@ -178,13 +177,13 @@
   
   [self addControl:_cursorControl];
   [_cursorControl release];
-
+  
   [_scroller setFrame:masterFrame];
   [_scroller setFollowsFocus:YES];
   [_scroller setContent:_panelControl]; 
   [_scroller setAcceptsFocus:YES];
   
-  //[_panelControl addControl:_scroller];
+    //[_panelControl addControl:_scroller];
   [_panelControl layoutSubcontrols];
   [self layoutSubcontrols];
   
@@ -210,9 +209,9 @@
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"getProviderForShelf - have assets, creating datastore and provider");
 #endif
-
-    BRPhotoDataStoreProvider* provider = [BRPhotoDataStoreProvider providerWithDataStore:store 
-                                                                            controlFactory:[BRPosterControlFactory factory]];
+  
+  BRPhotoDataStoreProvider* provider = [BRPhotoDataStoreProvider providerWithDataStore:store 
+                                                                        controlFactory:[BRPosterControlFactory factory]];
   
   
 #if LOCAL_DEBUG_ENABLED
@@ -235,22 +234,42 @@
   for (int i=0;i<[_assets count];i++)
   {
     PlexPreviewAsset *asset = (PlexPreviewAsset*)[_assets objectAtIndex:i];
-
+    
     [store addObject:asset];
   }
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"getProviderForGrid - have assets, creating datastore and provider");
 #endif
-
-      BRPhotoDataStoreProvider* provider = [BRPhotoDataStoreProvider providerWithDataStore:store 
-                                                                           controlFactory:[SMFPhotoControlFactory posterControlFactory]];
-
+  
+  BRPhotoDataStoreProvider* provider = [BRPhotoDataStoreProvider providerWithDataStore:store 
+                                                                        controlFactory:[SMFPhotoControlFactory posterControlFactory]];
+  
   
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"getProviderForGrid_end");
 #endif
   
   return provider;
+}
+
+-(BOOL)brEventAction:(BREvent *)action
+{
+  if ([[self stack] peekController]!=self)
+    return [super brEventAction:action];
+  int remoteAction = [action remoteAction];
+  if (remoteAction==kBREventRemoteActionPlay && action.value==1)
+  {
+    SMFMoviePreviewController* previewController = [[SMFMoviePreviewController alloc] init];
+    PlexPreviewAsset *prevAsset = [_assets objectAtIndex:0];
+    HWMovieListing *dataSource = [[HWMovieListing alloc] initWithRootContainer: [prevAsset.pmo contents]];
+    previewController.datasource = dataSource;
+    
+    [[[BRApplicationStackManager singleton] stack] pushController:previewController];
+    [previewController autorelease];
+    return YES;
+  }
+  return [super brEventAction:action];
+  
 }
 
 
