@@ -322,7 +322,7 @@ PlexMediaProvider* __provider = nil;
   if (recent && allMovies){
     NSLog(@"pushing shelfController");
     HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
-    [[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
+    [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
   }
   
 }

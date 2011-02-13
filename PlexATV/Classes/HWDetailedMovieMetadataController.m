@@ -60,7 +60,9 @@
 - (id)initWithPreviewAssets:(NSArray*)previewAssets withSelectedIndex:(int)selIndex {
 	if (self = [super init]) {
 		self.assets = previewAssets;
-		
+#if LOCAL_DEBUG_ENABLED
+    NSLog(@"init with asset count:%d and index:%d", [self.assets count], selIndex);
+#endif
 		if ([self.assets count] > selIndex) {
 			selectedIndex = selIndex;
 			self.selectedMediaItemPreviewData = [self.assets objectAtIndex:selectedIndex];
@@ -73,6 +75,10 @@
 		
 		self.datasource = self;
 		self.delegate = self;
+    
+#if LOCAL_DEBUG_ENABLED
+    NSLog(@"init done. assets rigged");
+#endif
 	}
 	return self;
 }
