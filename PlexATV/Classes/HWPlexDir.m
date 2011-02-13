@@ -255,8 +255,8 @@ PlexMediaProvider* __provider = nil;
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
 		[songlist autorelease];
 	}
-  else if ([@"secondary" isEqualToString:pmo.mediaContainer.content]) {
-    NSLog(@"pushing shelfController");
+  else if ([@"movie" isEqualToString:pmo.type]) {
+    NSLog(@"pushing shelfController: %@", [pmo.subObjects objectForKey:@"all"]);
 	  HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexContainer:[pmo contents]];
 	  [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
   }

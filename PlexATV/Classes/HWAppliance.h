@@ -8,7 +8,7 @@
 
 
 #import "BackRowExtras.h"
-@class TopShelfController;
+@class TopShelfController, PlexMediaObject;
 
 @interface PlexAppliance: BRBaseAppliance <MachineManagerDelegate> {
 	TopShelfController *_topShelfController;
@@ -24,6 +24,7 @@
 
 - (void)loadInPersistentMachines;
 - (Machine *)machineFromUid:(NSString *)uid;
+- (void)showGridListControl:(PlexMediaObject *)movieCategory;
 
 - (void)retrieveNewPlexCategories:(Machine *)m;
 - (void)addNewApplianceWithDict:(NSDictionary *)dict;
