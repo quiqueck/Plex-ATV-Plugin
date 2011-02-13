@@ -183,7 +183,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
     NSLog(@"matchingCategory: %@", [matchingCategory type]);
     if ([@"movie" isEqualToString:[matchingCategory type]]) {
-      [self showGridListControl:matchingCategory];
+      [self showGridListControl:[matchingCategory contents]];
     }
     else {
       HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
@@ -195,19 +195,28 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 }
 
 
-- (void)showGridListControl:(PlexMediaObject*)movieCategory {
-  PlexDirectory *pmd = [movieCategory mediaResource];
-  NSArray* parts = [pmd.subObjects objectForKey:@"all"];
-  NSLog(@"showGridListControl_parts: %@",parts);
-  /*
-   if (parts && parts.count>0){
-   PlexMediaObject* pmo = [parts objectAtIndex:0];
-   }
-   
-   NSLog(@"pushing shelfController");
-   HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexContainer:[matchingCategory contents]];
-   [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
-   */
+- (void)showGridListControl:(PlexMediaContainer*)movieCategory {
+  PlexMediaObject *recent=nil;
+  PlexMediaObject *allMovies=nil;
+    //NSLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
+  if (movieCategory.directories > 0) {
+    NSUInteger i, count = [movieCategory.directories count];
+    for (i = 0; i < count; i++) {
+      PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
+      NSString *key = [obj.attributes objectForKey:@"key"];
+      NSLog(@"obj_type: %@",key);
+      if ([key isEqualToString:@"all"])
+        allMovies = obj;
+      else if ([key isEqualToString:@"recentlyAdded"])
+        recent = obj;
+    }
+  }
+  
+  if (recent && allMovies){
+    NSLog(@"pushing shelfController");
+    HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
+    [[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
+  }
 }
 
 - (id)applianceCategories {

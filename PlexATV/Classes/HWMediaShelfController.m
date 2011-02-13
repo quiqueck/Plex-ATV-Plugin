@@ -23,37 +23,37 @@
   return self;
 }
 
-- (id)initWithPlexContainer:(PlexMediaContainer *)container {
+- (id)initWithPlexAllMovies:(PlexMediaContainer *)allMovies andRecentMovies:(PlexMediaContainer *)recentMovies {
   
   self = [self init];
-  [container retain];
+  [allMovies retain];
+  [recentMovies retain];
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"initWithPlexContaner - converting to assets");
 #endif
-  [self convertContainerToMediaAssets:container];
-  
-#if LOCAL_DEBUG_ENABLED
-  NSLog(@"assets converted, constructing shelf control");
-#endif
-  
+
+  _shelfAssets = [self convertContainerToMediaAssets:recentMovies];
+  _gridAssets = [self convertContainerToMediaAssets:allMovies];
+
   return self;
 }  
 
-- (void)convertContainerToMediaAssets:(PlexMediaContainer *)container {
+- (NSArray *)convertContainerToMediaAssets:(PlexMediaContainer *)container {
   NSLog(@"convertContainerToMediaAssets %@", container);
-  _assets = [[NSMutableArray alloc] initWithCapacity:5];
+  NSMutableArray *assets = [[NSMutableArray alloc] initWithCapacity:5];
   
   for (int i=0; i < [container.directories count]; i++) {
     PlexMediaObject *mediaObj = [container.directories objectAtIndex:i];
     
     NSURL* mediaURL = [mediaObj mediaStreamURL];
     PlexPreviewAsset* pma = [[PlexPreviewAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:mediaObj];
-    [_assets addObject:pma];
+    [assets addObject:pma];
   }
   
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"converted %d assets", [_assets count]);
+  NSLog(@"converted %d assets", [assets count]);
 #endif
+  return assets;
 }
 
 - (void) drawSelf
@@ -212,9 +212,9 @@
   NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType photo]];
   BRDataStore *store = [[BRDataStore alloc] initWithEntityName:@"Hello" predicate:_pred mediaTypes:_set];
   
-  for (int i=0;i<[_assets count];i++)
+  for (int i=0;i<[_shelfAssets count];i++)
   {
-    PlexPreviewAsset *asset = [_assets objectAtIndex:i];
+    PlexPreviewAsset *asset = [_shelfAssets objectAtIndex:i];
       //NSLog(@"asset_title: %@", [asset title]);
     [store addObject:asset];
       //[asset release];
@@ -246,9 +246,9 @@
   NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType photo]];
   BRDataStore *store = [[BRDataStore alloc] initWithEntityName:@"Hello" predicate:_pred mediaTypes:_set];
   
-  for (int i=0;i<[_assets count];i++)
+  for (int i=0;i<[_gridAssets count];i++)
   {
-    PlexPreviewAsset *asset = (PlexPreviewAsset*)[_assets objectAtIndex:i];
+    PlexPreviewAsset *asset = (PlexPreviewAsset*)[_gridAssets objectAtIndex:i];
     
     [store addObject:asset];
   }
@@ -275,16 +275,26 @@
   if (remoteAction==kBREventRemoteActionPlay && action.value==1)
   {
     int index;
-    if ([_shelfControl isFocused])
+    NSArray *assets;
+    
+    if ([_shelfControl isFocused]) {
       index = [_shelfControl focusedIndex];
-    else if ([_gridControl isFocused])
-      index = [_gridControl _indexOfFocusedControl];      
+      assets = _shelfAssets;
+    }
+    
+    else if ([_gridControl isFocused]) {
+      index = [_gridControl _indexOfFocusedControl];
+      assets = _gridAssets;
+    }
 
-    PlexPreviewAsset *selectedAsset = [_assets objectAtIndex:index];
-    NSLog(@"title: %@",selectedAsset.title);
+    if (assets) {
+      HWDetailedMovieMetadataController* previewController = [[HWDetailedMovieMetadataController alloc] initWithPreviewAssets:assets withSelectedIndex:index];
+      [[[BRApplicationStackManager singleton] stack] pushController:[previewController autorelease]];      
+    }
+    else {
+      NSLog(@"error: no selected asset");
+    }
 
-	  HWDetailedMovieMetadataController* previewController = [[HWDetailedMovieMetadataController alloc] initWithPreviewAssets:_assets withSelectedIndex:index];
-    [[[BRApplicationStackManager singleton] stack] pushController:[previewController autorelease]];
     
     return YES;
   }

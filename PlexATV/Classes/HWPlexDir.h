@@ -44,6 +44,7 @@
 - (void)showModifyViewedStatusViewForRow:(long)row;
 - (id) initWithRootContainer:(PlexMediaContainer*)container;
 - (PlexMediaContainer*) applySkipFilteringOnContainer:(PlexMediaContainer*)container;
+- (void)showGridListControl:(PlexMediaContainer *)movieCategory;
 
 //list provider
 - (float)heightForRow:(long)row;
