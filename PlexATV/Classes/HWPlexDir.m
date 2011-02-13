@@ -311,7 +311,7 @@ PlexMediaProvider* __provider = nil;
     for (i = 0; i < count; i++) {
       PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
       NSString *key = [obj.attributes objectForKey:@"key"];
-      NSLog(@"obj_type: %@",key);
+        //NSLog(@"obj_type: %@",key);
       if ([key isEqualToString:@"all"])
         allMovies = obj;
       else if ([key isEqualToString:@"recentlyAdded"])
@@ -594,7 +594,6 @@ PlexMediaProvider* __provider = nil;
 	id result;
 	
 	PlexMediaObject *pmo = [rootContainer.directories objectAtIndex:row];
-  NSLog(@"pmo address: %p", &pmo);
 	NSString *mediaType = [pmo.attributes valueForKey:@"type"];
 	
 	if (pmo.hasMedia || [@"Video" isEqualToString:mediaType]) {

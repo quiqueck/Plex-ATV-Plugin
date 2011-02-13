@@ -15,6 +15,7 @@
 #import "HWDetailedMovieMetadataController.h"
 
 #define LOCAL_DEBUG_ENABLED 1
+#define MAX_RECENT_ITEMS 20
 
 @implementation HWMediaShelfController
 
@@ -32,7 +33,14 @@
   NSLog(@"initWithPlexContaner - converting to assets");
 #endif
 
-  _shelfAssets = [self convertContainerToMediaAssets:recentMovies];
+    // we'll cut the recent movies down to MAX_RECENT_ITEMS, since recent actually has all movies, only sorted by added date
+    //and shelf isn't actually usable with bunch of items
+  NSArray *fullRecentMovies = [self convertContainerToMediaAssets:recentMovies];
+  NSRange theRange;  
+  theRange.location = 0;
+  theRange.length = [fullRecentMovies count] > MAX_RECENT_ITEMS ? MAX_RECENT_ITEMS : [fullRecentMovies count];
+  
+  _shelfAssets = [fullRecentMovies subarrayWithRange:theRange];
   _gridAssets = [self convertContainerToMediaAssets:allMovies];
 
   return self;

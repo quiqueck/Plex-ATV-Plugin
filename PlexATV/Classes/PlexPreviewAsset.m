@@ -242,7 +242,7 @@
 	NSURL* turl = [pmo.request pathForScaledImage:thumbURL ofSize:CGSizeMake(512, 512)];
 	BRURLImageProxy *imageProxy = [BRURLImageProxy proxyWithURL:turl];
   [imageProxy setDefaultImage:[[BRThemeInfo sharedTheme] storeRentalPlaceholderImage]];
-  NSLog(@"imageProxy_defaultImage: %@",[imageProxy defaultImage]);
+    //NSLog(@"imageProxy_defaultImage: %@",[imageProxy defaultImage]);
 	return imageProxy;
 }
 
