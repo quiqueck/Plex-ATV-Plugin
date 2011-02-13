@@ -40,7 +40,7 @@
   theRange.location = 0;
   theRange.length = [fullRecentMovies count] > MAX_RECENT_ITEMS ? MAX_RECENT_ITEMS : [fullRecentMovies count];
   
-  _shelfAssets = [fullRecentMovies subarrayWithRange:theRange];
+  _shelfAssets = [[fullRecentMovies subarrayWithRange:theRange] retain];
   _gridAssets = [self convertContainerToMediaAssets:allMovies];
 
   return self;

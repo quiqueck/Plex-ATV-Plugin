@@ -215,7 +215,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
   if (recent && allMovies){
     NSLog(@"pushing shelfController");
     HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
-    [[[BRApplicationStackManager singleton] stack] pushController:shelfController];
+    [[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
   }
 }
 
