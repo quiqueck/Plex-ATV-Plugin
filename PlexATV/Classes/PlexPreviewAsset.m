@@ -33,6 +33,10 @@
 #import <plex-oss/Machine.h>
 #import <ambertation-plex/Ambertation.h>
 
+@interface BRThemeInfo (PlexExtentions)
+- (id)storeRentalPlaceholderImage;
+@end
+
 @implementation PlexPreviewAsset
 @synthesize pmo;
 
@@ -120,6 +124,7 @@
 
 - (id)cast {
 	NSString *result = [pmo listSubObjects:@"Role" usingKey:@"tag"];
+	NSLog(@"cast members: %@", result);
 	return [result componentsSeparatedByString:@", "];
 }
 

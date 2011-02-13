@@ -222,13 +222,11 @@
 -(BRImage *)coverArt {
 	BRImage *coverArt = nil;
 	if ([self.selectedMediaItemPreviewData hasCoverArt]) {
-		NSString *coverArtPath = [NSString stringWithFormat:@"%@%@",[self.selectedMediaItemPreviewData.pmo.request base], [self.selectedMediaItemPreviewData.pmo.attributes valueForKey:@"thumb"]];
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"coverArtPath: %@", coverArtPath);
-#endif
-		NSURL *coverArtUrl = [NSURL URLWithString:coverArtPath];
-		coverArt = [BRImage imageWithURL:coverArtUrl];
+		coverArt = [self.selectedMediaItemPreviewData coverArt];
 	}
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"coverArt: %@", coverArt);
+#endif
 	return coverArt;
 }
 
