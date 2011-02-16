@@ -281,7 +281,7 @@
 
 - (BOOL)isHD{
 	int videoResolution = [[pmo listSubObjects:@"Media" usingKey:@"videoResolution"] intValue];
-	return videoResolution >= 720;
+	return YES;//videoResolution >= 720;
 }
 
 - (BOOL)isInappropriate {
