@@ -22,10 +22,7 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
-//  
-#import <BackRow/BRBaseMediaAsset.h>
-#import <BackRow/BRImageManager.h>
-#import <BackRow/BRMediaAsset.h>
+// 
 #import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
@@ -68,7 +65,7 @@
 #pragma mark Helper Methods
 - (NSDate *)dateFromPlexDateString:(NSString *)dateString {
 	//format is 2001-11-06
-	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	NSDateFormatter *dateFormat = [[[NSDateFormatter alloc] init] autorelease];
 	[dateFormat setDateFormat:@"yyyy-MM-dd"];
 	return [dateFormat dateFromString:dateString];
 }
@@ -124,7 +121,6 @@
 
 - (id)cast {
 	NSString *result = [pmo listSubObjects:@"Role" usingKey:@"tag"];
-	NSLog(@"cast members: %@", result);
 	return [result componentsSeparatedByString:@", "];
 }
 
@@ -152,6 +148,10 @@
 
 - (id)copyright {
 	return nil;
+}
+
+- (id)coverArt {
+  return [BRImage imageWithURL:[self.imageProxy url]];
 }
 
 - (id)dateAcquired {
@@ -228,10 +228,6 @@
 
 - (BOOL)hasVideoContent {
 	return (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]);
-}
-
-- (id)coverArt {
-  return [BRImage imageWithURL:[self.imageProxy url]];
 }
 
 - (id)imageProxy {
@@ -414,7 +410,7 @@
 	NSArray *allGenres = [self genres];
 	BRGenre *result = nil;
 	if ([allGenres count] > 0) {
-		result = [[BRGenre alloc] initWithString:[allGenres objectAtIndex:0]];
+		result = [[[BRGenre alloc] initWithString:[allGenres objectAtIndex:0]] autorelease];
 	}
 	return result;
 }

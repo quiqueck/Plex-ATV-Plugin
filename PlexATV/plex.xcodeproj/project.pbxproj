@@ -114,7 +114,7 @@
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = atvTwo_Prefix.pch; sourceTree = "<group>"; };
+		32DBCF630370AF2F00C91783 /* plex_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plex_Prefix.pch; sourceTree = "<group>"; };
 		727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWAdvancedSettingsController.h; path = Classes/HWAdvancedSettingsController.h; sourceTree = "<group>"; };
 		727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWAdvancedSettingsController.m; path = Classes/HWAdvancedSettingsController.m; sourceTree = "<group>"; };
 		7297238212EE81000064E776 /* HWUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWUserDefaults.h; path = Classes/HWUserDefaults.h; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 		32C88E010371C26100C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */,
+				32DBCF630370AF2F00C91783 /* plex_Prefix.pch */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -343,9 +343,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D5B49AC048680CD000E48DA /* atvTwo */ = {
+		8D5B49AC048680CD000E48DA /* plex */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "atvTwo" */;
+			buildConfigurationList = 1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "plex" */;
 			buildPhases = (
 				8D5B49AF048680CD000E48DA /* Resources */,
 				8D5B49B1048680CD000E48DA /* Sources */,
@@ -355,7 +355,7 @@
 			);
 			dependencies = (
 			);
-			name = atvTwo;
+			name = plex;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = atvTwo;
 			productReference = 8D5B49B6048680CD000E48DA /* plex.frappliance */;
@@ -366,7 +366,7 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "atvTwo" */;
+			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "plex" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -380,7 +380,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D5B49AC048680CD000E48DA /* atvTwo */,
+				8D5B49AC048680CD000E48DA /* plex */,
 				DD02DEB212FCACCC0019FBEE /* All */,
 				DD02DEB712FCACEC0019FBEE /* Install */,
 			);
@@ -449,7 +449,7 @@
 /* Begin PBXTargetDependency section */
 		DD02DEB512FCACD00019FBEE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8D5B49AC048680CD000E48DA /* atvTwo */;
+			target = 8D5B49AC048680CD000E48DA /* plex */;
 			targetProxy = DD02DEB412FCACD00019FBEE /* PBXContainerItemProxy */;
 		};
 		DD02DEBA12FCAD020019FBEE /* PBXTargetDependency */ = {
@@ -483,7 +483,7 @@
 				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = atvTwo_Prefix.pch;
+				GCC_PREFIX_HEADER = plex_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"BUILD_ATV_LIB=1",
 					"HTTP_SERVER_PORT=32400",
@@ -554,7 +554,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "atvTwo" */ = {
+		1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "plex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB913C08733D840010E9CD /* Release */,
@@ -562,7 +562,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "atvTwo" */ = {
+		1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "plex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB914008733D840010E9CD /* Release */,

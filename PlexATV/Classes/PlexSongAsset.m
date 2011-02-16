@@ -21,9 +21,6 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //  
-#import <BackRow/BRBaseMediaAsset.h>
-#import <BackRow/BRImageManager.h>
-#import <BackRow/BRMediaAsset.h>
 #import "PlexSongAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
@@ -82,12 +79,12 @@
 
 -(long int)duration{
 	NSLog(@"Duration: %d, Totaltime: %d",[pmo.attributes integerForKey:@"duration"]/1000, [pmo.attributes integerForKey:@"totalTime"]/1000);
-
-  int _duration = [pmo.attributes integerForKey:@"duration"]/1000;
-  if (!(_duration > 0))
-    _duration = [pmo.attributes integerForKey:@"totalTime"]/1000;
-  
-  return _duration;
+	
+	int _duration = [pmo.attributes integerForKey:@"duration"]/1000;
+	if (!(_duration > 0))
+		_duration = [pmo.attributes integerForKey:@"totalTime"]/1000;
+	
+	return _duration;
 }
 
 
@@ -170,7 +167,7 @@
 	else
 		return nil;};
 - (BOOL)hasCoverArt {
-		return YES;
+	return YES;
 };
 
 - (id)trickPlayURL {
@@ -179,29 +176,29 @@
 
 - (id)artist {
 	NSLog(@"artist");
-  if ([pmo.attributes objectForKey:@"artist"] != nil)
-    return [pmo.attributes objectForKey:@"artist"];
-  else
-    return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+	if ([pmo.attributes objectForKey:@"artist"] != nil)
+		return [pmo.attributes objectForKey:@"artist"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 };
 - (id)artistForSorting {
-  return self.artist;
+	return self.artist;
 };
 
 - (id)AlbumName {
     NSLog(@"AlbumNAme");
-  if ([pmo.attributes objectForKey:@"album"] != nil)
-    return [pmo.attributes objectForKey:@"album"];
-  else
-    return [pmo.mediaContainer.attributes valueForKey:@"title2"];
+	if ([pmo.attributes objectForKey:@"album"] != nil)
+		return [pmo.attributes objectForKey:@"album"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 };
 
 - (id)primaryCollectionTitle {
     NSLog(@"primaryCollectionTitle");
 	if ([pmo.attributes objectForKey:@"album"] != nil)
-    return [pmo.attributes objectForKey:@"album"];
-  else
-    return [pmo.mediaContainer.attributes valueForKey:@"title2"];
+		return [pmo.attributes objectForKey:@"album"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 };
 
 - (id)AlbumID {
