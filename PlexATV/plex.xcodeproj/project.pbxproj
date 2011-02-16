@@ -312,14 +312,14 @@
 		C4EA913312DCD74600DCC798 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				C4EA913412DCD77700DCC798 /* PlexPreviewAsset.h */,
+				C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */,
 				C4D55A9112D7E22A00877755 /* PlexSongAsset.h */,
 				C4D55A9212D7E22A00877755 /* PlexSongAsset.m */,
 				C4ADAFA912D46CA9002DA507 /* PlexMediaAsset.h */,
 				C4ADAFAA12D46CA9002DA507 /* PlexMediaAsset.m */,
 				015D320812E11C80001A32C1 /* PlexMediaAssetOld.h */,
 				015D320912E11C80001A32C1 /* PlexMediaAssetOld.m */,
-				C4EA913412DCD77700DCC798 /* PlexPreviewAsset.h */,
-				C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */,
 			);
 			name = Assets;
 			sourceTree = "<group>";

@@ -73,7 +73,7 @@ PlexMediaProvider* __provider = nil;
 
 - (id) initWithRootContainer:(PlexMediaContainer*)container {
   self = [self init];
-  self.rootContainer = container;//[self applySkipFilteringOnContainer:container];
+  self.rootContainer = [self applySkipFilteringOnContainer:container];
   return self;
 }
 
