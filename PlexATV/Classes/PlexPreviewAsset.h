@@ -23,6 +23,7 @@
   //  
 
 #import <Foundation/Foundation.h>
+#import <Backrow/Backrow.h>
 
 @class PlexMediaObject;
 @interface PlexPreviewAsset : BRPhotoMediaAsset<BRMediaAsset> {
@@ -33,7 +34,13 @@
 @property (nonatomic, retain) PlexMediaObject* pmo;
 
 - (id) initWithURL:(NSURL*)url mediaProvider:(id)mediaProvider mediaObject:(PlexMediaObject*)pmo;
-- (NSString*)mediaURL;
-
 - (NSDate *)dateFromPlexDateString:(NSString *)dateString;
+
+//other metadata methods
+- (BOOL)hasClosedCaptioning;
+- (BOOL)hasDolbyDigitalAudioTrack;
+- (NSString*)mediaURL;
+- (BRImage *)starRatingImage;
+- (NSArray *)writers;
+- (NSString *)yearCreated;
 @end

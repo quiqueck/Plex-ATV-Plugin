@@ -73,7 +73,7 @@ PlexMediaProvider* __provider = nil;
 
 - (id) initWithRootContainer:(PlexMediaContainer*)container {
   self = [self init];
-  self.rootContainer = [self applySkipFilteringOnContainer:container];
+  self.rootContainer = container;//[self applySkipFilteringOnContainer:container];
   return self;
 }
 
@@ -239,12 +239,15 @@ PlexMediaProvider* __provider = nil;
 	if ([type empty]) type = pmo.containerType;
 	type = [type lowercaseString];
 	
-  NSLog(@"Item Selected: %@, type:%@", pmo.mediaContainer, type);
+  NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, pmo.containerType);
 	
 	NSLog(@"viewgroup: %@, viewmode:%@",pmo.mediaContainer.viewGroup, pmo.containerType);
 	
-	
-	if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"albums" isEqualToString:pmo.mediaContainer.content] || [@"playlists" isEqualToString:pmo.mediaContainer.content]) {
+  if ([@"Track" isEqualToString:pmo.containerType]){
+    NSLog(@"ITS A TRAP(CK)!");
+    [self playbackAudioWithMediaObject:pmo];
+  }
+	else if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"albums" isEqualToString:pmo.mediaContainer.content] || [@"playlists" isEqualToString:pmo.mediaContainer.content]) {
 		NSLog(@"Accessing Artist/Album %@", pmo);
 		SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
@@ -473,6 +476,20 @@ PlexMediaProvider* __provider = nil;
 	
 	return;
 	
+}
+
+-(void)playbackAudioWithMediaObject:(PlexMediaObject*)mediaObj {
+    NSLog(@"playbackAudioWithMediaObject");
+    
+    NSError *error;
+  
+    NSLog(@"track_url: %@", [mediaObj mediaStreamURL]);
+    NSLog(@"key: %@", [mediaObj.attributes objectForKey:@"key"]);
+  
+    PlexSongAsset *psa = [[PlexSongAsset alloc] initWithURL:[mediaObj.attributes objectForKey:@"key"] mediaProvider:nil mediaObject:mediaObj];
+    BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAsset:psa error:&error];
+    //BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAssetAtIndex:index inTrackList:songList error:&error];
+    [[BRMediaPlayerManager singleton] presentPlayer:player options:nil];	
 }
 
 -(void)reportProgress:(NSTimer*)tm{
