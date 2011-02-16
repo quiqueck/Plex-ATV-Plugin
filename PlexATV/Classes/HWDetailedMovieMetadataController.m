@@ -257,7 +257,7 @@
 	// ======= director column ======
 	NSMutableArray *directorAndWriters = [NSMutableArray arrayWithArray:[self.selectedMediaItemPreviewData directors]];
 	[directorAndWriters addObject:@" "];
-	NSAttributedString *subHeadingWriters = [[NSAttributedString alloc]initWithString:@"Writers" attributes:[[BRThemeInfo sharedTheme]metadataSummaryFieldAttributes]];
+	NSAttributedString *subHeadingWriters = [[NSAttributedString alloc]initWithString:@"Writers" attributes:[SMFMoviePreviewController columnHeaderAttributes]];
 	[directorAndWriters addObject:subHeadingWriters];
 	[subHeadingWriters release];
 	[directorAndWriters addObjectsFromArray:[self.selectedMediaItemPreviewData writers]];
