@@ -45,7 +45,14 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
 -(void)machine:(Machine*) m didNotAcceptConnection:(MachineConnectionBase*) con error:(NSError*)err;
 @end
 
-@class MachineConnectionBase, ClientConnection, PlexMediaContainer, PlexRequest;
+typedef struct _MachineStateRecord{
+    BOOL inLocalNetwork;
+    BOOL canConnect;
+    BOOL isOnline;
+    BOOL authenticationNeeded;
+} MachineStateRecord;
+
+@class MachineConnectionBase, ClientConnection, PlexMediaContainer, PlexRequest, PlexMediaObject;
 @interface Machine : NSObject<NSCoding> {
   NSString* uid; 
   NSString* machineID;
@@ -76,6 +83,7 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
   
   //connection state
   MachineRole role;
+  MachineStateRecord lastMachineStateRecord;
   
   //clients
   NSString* clientHostName;
@@ -84,6 +92,15 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
   NSString* qualityValues;
   NSString* qualityBitrates;
   NSString* qualityHeights;
+    
+  //remember what we played last...
+  NSMutableArray* playHistory;
+    
+  //Browsing state
+  NSMutableDictionary* sectionFilters;
+  NSMutableDictionary* selectedItems;
+  NSMutableDictionary* searchQuerries;
+  NSMutableArray* currentPosition;  
 }
 
 +(NSString*)stringFromVersion:(int)ver;
@@ -92,7 +109,8 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
 -(id)initWithServerName:(NSString*)serverName manager:(MachineManager*)parent machineID:(NSString*)mid;
 
 -(void)didReceiveMemoryWarning;
--(void)sendMachineChangeNotification;
+-(void)sendMachineChangedOnlineOrContentState;
+-(void)sendMachineChangeNotificationForConnection:(MachineConnectionBase*)con;
 
 @property (readwrite, retain) NSString* serverName;
 @property (readonly, assign) NSString* usersServerName;
@@ -121,8 +139,6 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
 
 @property (readwrite, assign) NSUInteger streamingBitrate;
 @property (readwrite, assign) PlexStreamingQuality streamQuality;
--(void)addConnection:(MachineConnectionBase*)c;
--(void)removeConnection:(MachineConnectionBase*)c;
 
 @property (readonly) NSString* ip;
 @property (readonly) NSUInteger port;
@@ -148,4 +164,16 @@ extern const ConditionallyAddErrorCode ConditionallyAddErrorCodeNeedCredentials;
 @property (readonly, assign) PlexMediaContainer* librarySections;
 @property (readonly, assign) PlexMediaContainer* rootLevel;
 @property (readonly, assign) NSArray* clientConnections;
+
+@property (readonly, retain) NSArray* playbackHistory;
+-(void)willPlayMediaObject:(PlexMediaObject*)pmo;
+
+-(NSString*)filterForSection:(NSString*)section;
+-(void)setFilter:(NSString*)f forSection:(NSString*)section;
+-(NSArray*)lastSeenContainerPath;
+-(void)setLastSeenContainerPath:(NSArray*)pos;
+-(void)setLastSearchQuerry:(NSString*)q forSection:(NSString*)section;
+-(NSString*)lastSearchQuerryForSection:(NSString*)section;
+-(void)setSelectionIndex:(CGFloat)idx key:(NSString*)key selectedObject:(PlexMediaObject*)objOrNil;
+-(CGFloat)selectionIndexForKey:(NSString*)key;
 @end

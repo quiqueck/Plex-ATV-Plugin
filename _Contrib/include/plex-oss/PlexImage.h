@@ -69,6 +69,8 @@ extern const PlexImageType PlexImageTypeOfflineThumbnail;
 @property (readwrite, retain) UIImageView* imageView;
 @property (readwrite) BOOL cancelBackgroundLoad;;
 
++(NSString*)buildIdFromRatingKey:(NSString*)rk type:(PlexImageType)tp machine:(Machine*)mach;
++(MemoryImage*)loadImageForRatingKey:(NSString*)rk fromMachine:(Machine*)mach ofType:(PlexImageType)tp;
 +(void)freeCache;
 +(UIImage*) defaultPoster;
 +(id)cloneFrom:(PlexImage*)src forMachine:(Machine*)mach originalPath:(NSString*)path image:(UIImage*)img;

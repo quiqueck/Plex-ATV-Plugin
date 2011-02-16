@@ -14,15 +14,23 @@ typedef int ConnectionInfoType;
 extern const ConnectionInfoType ConnectionInfoTypeRootLevel;
 extern const ConnectionInfoType ConnectionInfoTypeLibrarySections;
 extern const ConnectionInfoType ConnectionInfoTypeClients;
+extern const ConnectionInfoType ConnectionInfoTypeOnline;
+extern const ConnectionInfoType ConnectionInfoTypeCanConnect;
+extern const ConnectionInfoType ConnectionInfoTypeAuthenticationNeeded;
+extern const ConnectionInfoType ConnectionInfoTypeLocalNetwork;
 
 @class Machine, ClientConnection;
 
 @protocol MachineManagerDelegate <NSObject>
 -(void)machineWasAdded:(Machine*)m;
 -(void)machineWasRemoved:(Machine*)m;
+
+@optional
 -(void)machineWasChanged:(Machine*)m;
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask;
+-(void)machine:(Machine*)m changedConnection:(MachineConnectionBase*)con;
+-(void)machine:(Machine*)m updatedInfo:(ConnectionInfoType)updateMask;
 -(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc;
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask;
 @end;
 
 typedef int MachineRole;
