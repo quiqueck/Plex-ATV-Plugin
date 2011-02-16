@@ -62,11 +62,11 @@
 		self.assets = previewAssets;
 		
 		if ([self.assets count] > selIndex) {
-			selectedIndex = selIndex;
-			self.selectedMediaItemPreviewData = [self.assets objectAtIndex:selectedIndex];
+			currentSelectedIndex = selIndex;
+			self.selectedMediaItemPreviewData = [self.assets objectAtIndex:currentSelectedIndex];
 		} else if ([self.assets count] > 0) {
-			selectedIndex = 0;
-			self.selectedMediaItemPreviewData = [self.assets objectAtIndex:selectedIndex];
+			currentSelectedIndex = 0;
+			self.selectedMediaItemPreviewData = [self.assets objectAtIndex:currentSelectedIndex];
 		} else {
 			//fail, container has no items
 		}
@@ -92,37 +92,96 @@
 	[super dealloc];
 }
 
+- (void)changeMetadataViewToShowDataForIndex:(int)newIndex {
+	//check that it is a new one, otherwise don't refresh
+	if (currentSelectedIndex != newIndex) {
+		//set both focused and selected to the new index
+		currentSelectedIndex = newIndex;
+		self._shelfControl.focusedIndex = newIndex;
+		self.selectedMediaItemPreviewData = [self.assets objectAtIndex:currentSelectedIndex];
+		//move the shelf if needed to show the new item
+		//[self._shelfControl _scrollIndexToVisible:currentSelectedIndex];
+		//refresh metadata, but don't touch the shelf
+		[self reload];
+	}
+}
+
+
 #pragma mark -
 #pragma mark Delegate Methods
+-(void)controllerSwitchToNext:(SMFMoviePreviewController *)ctrl {
+	[[SMFThemeInfo sharedTheme] playNavigateSound];
+	int newIndex;
+	if (currentSelectedIndex + 1 < [self.assets count]) {
+		//go to next one
+		newIndex = currentSelectedIndex + 1;
+	} else {
+		//we have reached the end, loop around
+		newIndex = 0;
+	}
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"switching from item %d to next one %d", currentSelectedIndex, newIndex);
+#endif
+	lastFocusedIndex = newIndex;
+	[self changeMetadataViewToShowDataForIndex:lastFocusedIndex];
+	[self setFocusedControl:[self._buttons lastObject]];
+	
+}
+
+-(void)controllerSwitchToPrevious:(SMFMoviePreviewController *)ctrl {
+	[[SMFThemeInfo sharedTheme] playNavigateSound];
+	int newIndex;
+	if (currentSelectedIndex - 1 < 0) {
+		//we have reached the beginning, loop around
+		newIndex = [self.assets count] - 1;
+	} else {
+		//go to previous one
+		newIndex = currentSelectedIndex - 1;
+	}
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"switching from item %d to previous one %d", currentSelectedIndex, newIndex);
+#endif
+	lastFocusedIndex = newIndex;
+	[self changeMetadataViewToShowDataForIndex:lastFocusedIndex];
+	[self setFocusedControl:[self._buttons objectAtIndex:0]];
+}
+
 -(void)controller:(SMFMoviePreviewController *)c selectedControl:(BRControl *)ctrl {
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"controller selected %@", ctrl);
 #endif
 	if ([ctrl isKindOfClass:[BRButtonControl class]]) {
 		//one of the buttons have been pushed
-		BRButtonControl *buttonControl = (BRButtonControl *)ctrl;
-//		[self _changeFocusTo:mediaShelfControl];
-//		[mediaShelfControl _scrollIndexToVisible:selectedIndex];
-//		[mediaShelfControl _restoreLastSelection];
+		//BRButtonControl *buttonControl = (BRButtonControl *)ctrl;
+		//none of the buttons do anything, make error sound for now
+		[[SMFThemeInfo sharedTheme] playErrorSound];
 		
-	} else if ([ctrl isKindOfClass:[BRMediaShelfControl class]]) {
-		//one of the other media items have been selected
-		BRMediaShelfControl *mediaShelfControl = (BRMediaShelfControl *)ctrl;
-		selectedIndex = mediaShelfControl.focusedIndex;
-		
-		self.selectedMediaItemPreviewData = [self.assets objectAtIndex:selectedIndex];
-		
-		//[mediaShelfControl _saveCurrentSelection];
-		
-		//refresh
-		[self _removeAllControls];
-		[self drawSelf];
-		mediaShelfControl = [self valueForKey:@"_shelfControl"];
-		[mediaShelfControl _scrollIndexToVisible:selectedIndex];
-		//wanted to reset selection to the one selected, but does not seem to work
-		//[self _changeFocusTo:mediaShelfControl];
-		//[mediaShelfControl _loadControlAtIndex:selectedIndex];
+	} else if (ctrl == self._shelfControl) {
+		//user has selected a media item
+		[[SMFThemeInfo sharedTheme] playSelectSound];
+		[self changeMetadataViewToShowDataForIndex:self._shelfControl.focusedIndex];
 	}
+}
+
+-(void)controller:(SMFMoviePreviewController *)c switchedFocusTo:(BRControl *)newControl {
+	if ([newControl isKindOfClass:[BRButtonControl class]]) {		
+		//one of the buttons is now focused
+		NSLog(@"switchedFocusTo button focused");
+		if (shelfIsSelected)
+			shelfIsSelected = NO; //shelf was focused, and now one of the buttons are.
+	} else if (newControl == self._shelfControl) {
+		//the shelf is now re-focused, load previous focused element
+		shelfIsSelected = YES;
+		self._shelfControl.focusedIndex = lastFocusedIndex;
+	}
+}
+
+-(void)controller:(SMFMoviePreviewController *)c shelfLastIndex:(long)index {
+	//check if the shelf is currently selected
+	//we perform this check because this delegate method is called every time
+	//the user focuses a new control in the view
+	if (shelfIsSelected)
+		lastFocusedIndex = index;
 }
 
 
@@ -234,7 +293,7 @@
 	// built-in images:
 	// deleteActionImage, menuActionUnfocusedImage, playActionImage,
 	// previewActionImage, queueActionImage, rateActionImage
-    NSMutableArray *buttons = [NSMutableArray array];
+	NSMutableArray *buttons = [NSMutableArray array];
     BRButtonControl* b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]previewActionImage] 
                                                         subtitle:@"Preview" 
                                                            badge:nil] retain];
