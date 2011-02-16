@@ -113,7 +113,7 @@
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = atvTwo_Prefix.pch; sourceTree = "<group>"; };
+		66629E45130C854800EDC92D /* plex_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plex_Prefix.pch; sourceTree = "<group>"; };
 		66E5AEAF1303562D00FD8EA9 /* HWServersController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWServersController.h; path = Classes/HWServersController.h; sourceTree = "<group>"; };
 		66E5AEB01303562D00FD8EA9 /* HWServersController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWServersController.m; path = Classes/HWServersController.m; sourceTree = "<group>"; };
 		7273929712FA891E008B4C86 /* HWServerDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWServerDetailsController.h; path = Classes/HWServerDetailsController.h; sourceTree = "<group>"; };
@@ -276,7 +276,7 @@
 		32C88E010371C26100C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				32DBCF630370AF2F00C91783 /* atvTwo_Prefix.pch */,
+				66629E45130C854800EDC92D /* plex_Prefix.pch */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
