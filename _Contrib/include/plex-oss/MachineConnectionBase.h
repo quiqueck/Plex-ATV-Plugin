@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class Machine, MachineManager;
+#import "Machine.h"
+@class MachineManager;
 @interface MachineConnectionBase : NSObject<NSCoding> {
 	NSDate* lastFullConnectionStateUpdate;
 	NSString* hostName;
@@ -22,11 +22,8 @@
 	
 	Machine* machine;
 	
-	BOOL inLocalNetwork;
-	BOOL canConnect;
-	BOOL isOnline;
+  MachineStateRecord stateRecord;
 	BOOL stateUpdateRunning;
-	BOOL authenticationNeeded;
 	NSTimeInterval updateTime;
 	
 	

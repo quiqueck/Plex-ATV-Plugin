@@ -20,13 +20,6 @@ typedef int ContentRating;
 @property (readwrite) BOOL enableCaching; 
 @property (readwrite) BOOL enableShadows;
 
--(NSString*)filterForSection:(NSString*)section;
--(void)setFilter:(NSString*)val forSection:(NSString*)section;
--(void)setLastPosition:(NSArray*)pos forHost:(NSString*)host;
--(NSArray*)lastPositionOnHost:(NSString*)host;
--(void)setLastSearchQuerry:(NSString*)q forSection:(NSString*)section;
--(NSString*)lastSearchQuerryForSection:(NSString*)section;
-
 -(void)setServerList:(NSData*)serializedServers;
 -(NSData*)serverList;
 -(void)setLocalServer:(NSData*)s;

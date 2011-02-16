@@ -51,9 +51,16 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 @property (readonly) NSString* summary;
 @property (readonly) NSString* ratingKey;
 @property (readonly) NSString* imageRatingKey;
+@property (readonly) NSString* historyImageRatingKey;
 @property (readonly) PlexMediaObjectTypes type;
 @property (readwrite, assign) UIView* popoverView;
 @property (readonly) PlexMediaObject* parentObject;
+
+@property (readonly) BOOL isMovie;
+@property (readonly) BOOL isVideo;
+@property (readonly) BOOL isEpisode;
+@property (readonly) BOOL isSeason;
+@property (readonly) BOOL isTVShow;
 	
 //Episode Stuff
 @property (readonly) NSTimeInterval duration;
