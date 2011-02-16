@@ -22,10 +22,7 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
-//  
-#import <BackRow/BRBaseMediaAsset.h>
-#import <BackRow/BRImageManager.h>
-#import <BackRow/BRMediaAsset.h>
+// 
 #import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
