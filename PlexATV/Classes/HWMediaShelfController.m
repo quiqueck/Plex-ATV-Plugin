@@ -15,6 +15,7 @@
 #import "HWDetailedMovieMetadataController.h"
 
 #define LOCAL_DEBUG_ENABLED 1
+#define MAX_RECENT_ITEMS 20
 
 @implementation HWMediaShelfController
 
@@ -32,7 +33,14 @@
   NSLog(@"initWithPlexContaner - converting to assets");
 #endif
 
-  _shelfAssets = [self convertContainerToMediaAssets:recentMovies];
+    // we'll cut the recent movies down to MAX_RECENT_ITEMS, since recent actually has all movies, only sorted by added date
+    //and shelf isn't actually usable with bunch of items
+  NSArray *fullRecentMovies = [self convertContainerToMediaAssets:recentMovies];
+  NSRange theRange;  
+  theRange.location = 0;
+  theRange.length = [fullRecentMovies count] > MAX_RECENT_ITEMS ? MAX_RECENT_ITEMS : [fullRecentMovies count];
+  
+  _shelfAssets = [[fullRecentMovies subarrayWithRange:theRange] retain];
   _gridAssets = [self convertContainerToMediaAssets:allMovies];
 
   return self;
@@ -119,6 +127,7 @@
   NSLog(@"box");
   BRBoxControl *shelfBox = [[BRBoxControl alloc] init];
   [shelfBox setAcceptsFocus:YES];
+  [shelfBox setDividerSuggestedHeight:26.f];
   [shelfBox setDividerMargin:0.05f];
   [shelfBox setContent:_shelfControl];
   [shelfBox setDivider:div1];
@@ -149,10 +158,10 @@
   
   NSLog(@"grid");
   [_gridControl setProvider:[self getProviderForGrid]];
-  [_gridControl setColumnCount:7];
+  [_gridControl setColumnCount:6];
   [_gridControl setWrapsNavigation:YES];
   [_gridControl setHorizontalGap:0];
-  [_gridControl setVerticalGap:5];
+  [_gridControl setVerticalGap:15];
   [_gridControl setLeftMargin:0.05f];
   [_gridControl setRightMargin:0.05f];
   
@@ -161,7 +170,8 @@
   [_gridControl setWrapsNavigation:YES];
   [_gridControl setProviderRequester:_gridControl];
   CGRect gridFrame;
-  gridFrame.size.height = 5000.f;
+  gridFrame.origin.y = dividerFrame.origin.y-25;
+  gridFrame.size.height = [_gridControl _totalHeight] + 50.f;
   [_gridControl setFrame:gridFrame];
   
   CGRect gridBoxFrame;
@@ -171,7 +181,7 @@
   
   BRBoxControl *gridBox = [[BRBoxControl alloc] init];
   [gridBox setAcceptsFocus:YES];
-  [gridBox setDividerSuggestedHeight:46.f];
+  [gridBox setDividerSuggestedHeight:66.f];
   [gridBox setDividerMargin:0.05f];
   [gridBox setContent:_gridControl];
   [gridBox setDivider:div2];
@@ -184,10 +194,15 @@
   [_panelControl addControl:gridBox];
   
     
-  
+
   BRSpacerControl *spacerBottom=[BRSpacerControl spacerWithPixels:44.f];
-  [_panelControl addControl:spacerBottom];
+  CGRect spacerFrame;
+  spacerFrame.origin.x=0;
+  spacerFrame.origin.y = 0;
+  spacerFrame.size.height = 44.f;
+  [spacerBottom setFrame:spacerFrame];
   
+  [_panelControl addControl:spacerBottom];
   [_panelControl layoutSubcontrols];
   
   [self addControl:_cursorControl];
@@ -280,14 +295,25 @@
     if ([_shelfControl isFocused]) {
       index = [_shelfControl focusedIndex];
       assets = _shelfAssets;
+#if LOCAL_DEBUG_ENABLED
+      NSLog(@"item in shelf selected. assets: %d, index:%d",[assets count], index);
+#endif      
     }
     
     else if ([_gridControl isFocused]) {
       index = [_gridControl _indexOfFocusedControl];
       assets = _gridAssets;
+#if LOCAL_DEBUG_ENABLED
+      NSLog(@"item in grid selected. assets: %d, index:%d",[assets count], index);
+#endif      
+      
     }
 
     if (assets) {
+#if LOCAL_DEBUG_ENABLED
+      NSLog(@"brEventaction. have %d assets and index %d, showing movie preview ctrl",[assets count], index);
+#endif      
+      
       HWDetailedMovieMetadataController* previewController = [[HWDetailedMovieMetadataController alloc] initWithPreviewAssets:assets withSelectedIndex:index];
       [[[BRApplicationStackManager singleton] stack] pushController:[previewController autorelease]];      
     }
