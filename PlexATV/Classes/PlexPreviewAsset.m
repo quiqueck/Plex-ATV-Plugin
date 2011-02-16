@@ -61,7 +61,7 @@
 #pragma mark Helper Methods
 - (NSDate *)dateFromPlexDateString:(NSString *)dateString {
 	//format is 2001-11-06
-	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	NSDateFormatter *dateFormat = [[[NSDateFormatter alloc] init] autorelease];
 	[dateFormat setDateFormat:@"yyyy-MM-dd"];
 	return [dateFormat dateFromString:dateString];
 }
@@ -73,10 +73,10 @@
 //}
 
 - (id)artist {
-  if ([pmo.attributes objectForKey:@"artist" != nil])
-    return [pmo.attributes objectForKey:@"artist"];
-  else
-    return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+	if ([pmo.attributes objectForKey:@"artist" != nil])
+		return [pmo.attributes objectForKey:@"artist"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 }
 
 - (id)artistCollection {
@@ -364,8 +364,8 @@
 			self.assetID, @"id",
 			self.mediaSummary, @"mediaSummary",
 			self.mediaDescription, @"mediaDescription",
-      self.rating, @"rating",
-      self.starRating, @"starRating",
+			self.rating, @"rating",
+			self.starRating, @"starRating",
 			nil];
 }
 
@@ -390,9 +390,9 @@
 
 - (id)primaryCollectionTitle {
 	if ([pmo.attributes objectForKey:@"album"] != nil)
-    return [pmo.attributes objectForKey:@"album"];
-  else
-    return [pmo.mediaContainer.attributes valueForKey:@"title2"];
+		return [pmo.attributes objectForKey:@"album"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 }
 
 - (id)primaryCollectionTitleForSorting {
@@ -403,7 +403,7 @@
 	NSArray *allGenres = [self genres];
 	BRGenre *result = nil;
 	if ([allGenres count] > 0) {
-		result = [[BRGenre alloc] initWithString:[allGenres objectAtIndex:0]];
+		result = [[[BRGenre alloc] initWithString:[allGenres objectAtIndex:0]] autorelease];
 	}
 	return result;
 }
@@ -449,11 +449,11 @@
 - (id)seriesName {
     //grandparentTitle is usually populated for episodes when coming from dynamic views like "Recently added"
     //whereas mediacontainer.backTitle is used in "All shows->Futurama-Season 1->Episode 4"
-  if ([pmo.attributes objectForKey:@"grandparentTitle"] != nil) {
-    return [pmo.attributes objectForKey:@"grandparentTitle"];    
-  }
-  else
-    return pmo.mediaContainer.backTitle;
+	if ([pmo.attributes objectForKey:@"grandparentTitle"] != nil) {
+		return [pmo.attributes objectForKey:@"grandparentTitle"];    
+	}
+	else
+		return pmo.mediaContainer.backTitle;
 }
 
 - (id)seriesNameForSorting {
