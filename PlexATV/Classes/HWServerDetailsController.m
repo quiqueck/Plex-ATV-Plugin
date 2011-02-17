@@ -40,6 +40,11 @@
 		[[self list] setDatasource:self];
 		[[self list] addDividerAtIndex:ListItemCount-1 withLabel:@"Connections"];
 		[[self list] addDividerAtIndex:ListItemCount withLabel:@"Current connections"];
+		
+		//create the wait screen
+		waitPromptControl = [[BRWaitPromptControl alloc] init];
+		[waitPromptControl setFrame:[BRWindow interfaceFrame]];
+		[waitPromptControl setBackgroundColor:[[SMFThemeInfo sharedTheme]blackColor]];
 	}
 	return self;
 }
@@ -47,6 +52,7 @@
 - (id)initAndShowAddNewMachineWizard {
 	self = [self init];
 	isCreatingNewMachine = YES;
+	[waitPromptControl setPromptText:@"Testing connection\nfor new machine"];
 	return self;
 }
 
@@ -57,6 +63,7 @@
 }
 
 -(void)dealloc {
+	[waitPromptControl release];
 	self.machine = nil;
 	self.serverName = nil;
 	self.userName = nil;
@@ -89,58 +96,43 @@
 
 #pragma mark -
 #pragma mark Adding Wizard Methods
-- (void)startAddNewMachineWizard {
+- (void)startAddNewMachineWizard {	
 	//reset wizard variables
+	isCreatingNewConnection = NO;
 	hasCompletedAddNewMachineWithConnectionWizardStep1 = NO;
 	hasCompletedAddNewMachineWithConnectionWizardStep2 = NO;
-	hasCompletedAddNewMachineWithConnectionWizardStep3 = NO;
-	hasCompletedAddNewMachineWithConnectionWizardStep4 = NO;
-	self.hostName, self.userName, self.password = nil;
-	self.portNumber = NSNotFound;
+	self.userName, self.password = nil;
 	
 	[self showEnterServerNameDialogBoxWithInitialText:@""];
 }
 
-- (void)addNewMachineWizardWithInput:(NSString *)input {
+- (void)addNewMachineWizardWithInput:(NSString *)input {	
 	if (!hasCompletedAddNewMachineWithConnectionWizardStep1) {
 		hasCompletedAddNewMachineWithConnectionWizardStep1 = YES;		
 		self.serverName = input;
 		[[self stack] popController];
 		
-		[self showEnterHostNameDialogBoxWithInitialText:@""];
-		
+		[self showEnterUsernameDialogBoxWithInitialText:@""];
+	
 	} else if (!hasCompletedAddNewMachineWithConnectionWizardStep2) {
 		hasCompletedAddNewMachineWithConnectionWizardStep2 = YES;
-		self.hostName = input;
-		[[self stack] popController];
-		
-		[self showEnterPortNumberDialogBoxWithInitialText:DefaultServerPortNumber];
-	
-	} else if (!hasCompletedAddNewMachineWithConnectionWizardStep3) {
-		hasCompletedAddNewMachineWithConnectionWizardStep3 = YES;
-		self.portNumber = [input intValue];
-		[[self stack] popController];
-		
-		[self showEnterUsernameDialogBoxWithInitialText:@""];
-		
-	} else if (!hasCompletedAddNewMachineWithConnectionWizardStep4) {
-		hasCompletedAddNewMachineWithConnectionWizardStep4 = YES;
 		self.userName = input;
 		[[self stack] popController];
 		
 		[self showEnterPasswordDialogBoxWithInitialText:@""];
 		
 	} else {
-		//final step completed, create a "dummy" machine and test the connection
+		//final step completed of adding machine, 
 		self.password = input;
 		
-		Machine *machine = [[Machine alloc] initWithServerName:self.serverName manager:[MachineManager sharedMachineManager] machineID:nil];
-		[machine setUsername:self.userName andPassword:self.password];
-		
-		[machine testAndConditionallyAddConnectionForHostName:self.hostName port:self.portNumber notify:self];
+		//create a "dummy" machine and retrieve connection information
+		Machine *m = [[Machine alloc] initWithServerName:self.serverName manager:[MachineManager sharedMachineManager] machineID:nil];
+		self.machine = m;
+		[m release];
+		[self.machine setUsername:self.userName andPassword:self.password];
 		
 		[[self stack] popController];
-		isCreatingNewMachine = NO;
+		[self startAddNewConnectionWizard];
 	}
 }
 
@@ -178,8 +170,9 @@
 		 canClose:NO];
 		 */
 		
+		[self addControl:waitPromptControl];
+		
 		[[self stack] popController];
-		isCreatingNewConnection = NO;
 	}
 }
 
@@ -300,15 +293,15 @@
 }
 
 - (void)showEnterHostNameDialogBoxWithInitialText:(NSString *)initalText {
-	[self showDialogBoxWithTitle:@"Server - IP/Hostname" 
-			   secondaryInfoText:@"Please enter the IP address or hostname to access the server" 
+	[self showDialogBoxWithTitle:@"Connection - IP/Hostname" 
+			   secondaryInfoText:@"Please enter the IP address or hostname for this connection" 
 				  textFieldLabel:@"IP/Hostname"
 				 withInitialText:initalText];
 }
 
 - (void)showEnterPortNumberDialogBoxWithInitialText:(NSString *)initalText {
-	[self showDialogBoxWithTitle:@"Server - Port Number" 
-			   secondaryInfoText:@"Please enter the port number to access the server (default is 32400)" 
+	[self showDialogBoxWithTitle:@"Connection - Port Number" 
+			   secondaryInfoText:@"Please enter the port number for this connection (default is 32400)" 
 				  textFieldLabel:@"Port Number"
 				 withInitialText:initalText];
 }
@@ -334,10 +327,10 @@
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"text string: %@", textEntered);
 #endif
-	if (isCreatingNewMachine) {
-		[self addNewMachineWizardWithInput:textEntered];
-	} else if (isCreatingNewConnection) {
+	if (isCreatingNewConnection) {
 		[self addNewConnectionWizardWithInput:textEntered];
+	} else if (isCreatingNewMachine) {
+		[self addNewMachineWizardWithInput:textEntered];
 	} else {
 		//editing current property
 		if (isEditingServerName) {
@@ -386,7 +379,6 @@
 		MachineConnectionBase *connection = [option.userInfo objectForKey:@"connection"];
 		[self.machine removeConnection:connection];
 		
-		
 		[self setNeedsUpdate];
 		[[self stack] popController]; //need this so we don't go back to option dialog when going back
 		//set the selection to the to top of the connections list to avoid a weird UI bug where the selection box
@@ -401,7 +393,7 @@
 
 #pragma mark -
 #pragma mark TestAndConditionallyAddConnectionProtocol Methods
--(void)machine:(Machine*) m didAcceptConnection:(MachineConnectionBase*) con {
+-(void)machine:(Machine*)m didAcceptConnection:(MachineConnectionBase*)con {
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"machine %@ didAcceptConnection %@", m, con);
 #endif
@@ -410,7 +402,7 @@
 	
 }
 
--(void)machine:(Machine*) m didNotAcceptConnection:(MachineConnectionBase*) con error:(NSError*)err {
+-(void)machine:(Machine*)m didNotAcceptConnection:(MachineConnectionBase*)con error:(NSError*)err {
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"machine %@ didNotAcceptConnection %@ with error %@", m, con, err);
 #endif

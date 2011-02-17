@@ -195,59 +195,61 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 			&& ![machineID isEqualToString:[[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid]])
 			continue;
 		
-		if (machine.isComplete) {						   
-			//================== add all it's categories to our appliances list ==================
-			//machine.request.rootLevel = machine.rootLevel + machine.librarySections
-			for (PlexMediaObject *pmo in machine.request.rootLevel.directories) {
-				NSString *categoryName = [pmo.name copy];
+		//================== add all it's categories to our appliances list ==================
+		//not using machine.request.rootLevel.directories because it might not work,
+		//instead get the two arrays seperately and merge
+		NSMutableArray *allDirectories = [NSMutableArray arrayWithArray:machine.rootLevel.directories];
+		[allDirectories addObjectsFromArray:machine.librarySections.directories];
+		
+		for (PlexMediaObject *pmo in allDirectories) {
+			NSString *categoryName = [pmo.name copy];
 #if LOCAL_DEBUG_ENABLED
-				NSLog(@"Adding category [%@] for machine id [%@]", categoryName, machineID);
+			NSLog(@"Adding category [%@] for machine id [%@]", categoryName, machineID);
 #endif
-				
-				//create the compoundIdentifier for the appliance identifier
-				NSMutableDictionary *compoundIdentifier = [NSMutableDictionary dictionary];
-				[compoundIdentifier setObject:categoryName forKey:CategoryNameKey];
-				[compoundIdentifier setObject:machineID forKey:MachineIDKey];
-				[compoundIdentifier setObject:machineName forKey:MachineNameKey];
-				
-				//================== add the appliance ==================
-				
-				//the appliance order will be the highest number (ie it will be put at the end of the menu.
-				//this will be readjusted when the array is sorted in the (id)applianceCategories
-				float applianceOrder = [self.applianceCat count];
-				
-				BRApplianceCategory *appliance = [BRApplianceCategory categoryWithName:categoryName identifier:compoundIdentifier preferredOrder:applianceOrder];
-				[self.applianceCat addObject:appliance];
-				
-				// find any duplicate names of the one currently being added.
-				// if found, append machine name to them all
-				NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name == %@", categoryName];
-				NSArray *duplicateNameCategories = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
-				if ([duplicateNameCategories count] > 1) {
-					//================== found duplicate category names ==================
+			
+			//create the compoundIdentifier for the appliance identifier
+			NSMutableDictionary *compoundIdentifier = [NSMutableDictionary dictionary];
+			[compoundIdentifier setObject:categoryName forKey:CategoryNameKey];
+			[compoundIdentifier setObject:machineID forKey:MachineIDKey];
+			[compoundIdentifier setObject:machineName forKey:MachineNameKey];
+			
+			//================== add the appliance ==================
+			
+			//the appliance order will be the highest number (ie it will be put at the end of the menu.
+			//this will be readjusted when the array is sorted in the (id)applianceCategories
+			float applianceOrder = [self.applianceCat count];
+			
+			BRApplianceCategory *appliance = [BRApplianceCategory categoryWithName:categoryName identifier:compoundIdentifier preferredOrder:applianceOrder];
+			[self.applianceCat addObject:appliance];
+			
+			// find any duplicate names of the one currently being added.
+			// if found, append machine name to them all
+			NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"name == %@", categoryName];
+			NSArray *duplicateNameCategories = [self.applianceCat filteredArrayUsingPredicate:categoryPredicate];
+			if ([duplicateNameCategories count] > 1) {
+				//================== found duplicate category names ==================
 #if LOCAL_DEBUG_ENABLED
-					NSLog(@"Found [%@] duplicate categories with name [%@]", [duplicateNameCategories count], categoryName);
+				NSLog(@"Found [%@] duplicate categories with name [%@]", [duplicateNameCategories count], categoryName);
 #endif
-					//iterate over all of them updating their names
-					for (BRApplianceCategory *appl in duplicateNameCategories) {			
-						
-						NSDictionary *compoundIdentifierBelongingToDuplicateAppliance = (NSDictionary *)appl.identifier;
-						NSString *nameOfMachineThatCategoryBelongsTo = [compoundIdentifierBelongingToDuplicateAppliance objectForKey:MachineNameKey];
-						if (!nameOfMachineThatCategoryBelongsTo) break;
-						
-						// update the name
-						// name had format:       "Movies"
-						// now changing it to be: "Movies (Office)"
-						NSString *nameWithPms = [[NSString alloc] initWithFormat:@"%@ (%@)", categoryName, nameOfMachineThatCategoryBelongsTo];
-						[appl setName:nameWithPms];
-						[nameWithPms release];
-					}
+				//iterate over all of them updating their names
+				for (BRApplianceCategory *appl in duplicateNameCategories) {			
+					
+					NSDictionary *compoundIdentifierBelongingToDuplicateAppliance = (NSDictionary *)appl.identifier;
+					NSString *nameOfMachineThatCategoryBelongsTo = [compoundIdentifierBelongingToDuplicateAppliance objectForKey:MachineNameKey];
+					if (!nameOfMachineThatCategoryBelongsTo) break;
+					
+					// update the name
+					// name had format:       "Movies"
+					// now changing it to be: "Movies (Office)"
+					NSString *nameWithPms = [[NSString alloc] initWithFormat:@"%@ (%@)", categoryName, nameOfMachineThatCategoryBelongsTo];
+					[appl setName:nameWithPms];
+					[nameWithPms release];
 				}
-				[categoryName release];
 			}
-			[machineID release];
-			[machineName release];
+			[categoryName release];
 		}
+		[machineID release];
+		[machineName release];
 	}
 	
 	[super reloadCategories];
@@ -263,38 +265,26 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	[self reloadCategories];
 }
 
--(void)machineWasAdded:(Machine*)m {	
+-(void)machineWasAdded:(Machine*)m {   
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Added machine %@", m);
-	//new machine added, no need to take action until we have a valid connection
-#endif
-}
-
--(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask {
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
-#endif
-	if (m.isComplete && [m.bestConnection isEqual:con] 
-		&& (updateMask == ConnectionInfoTypeRootLevel || updateMask == ConnectionInfoTypeLibrarySections)) {
-		[self reloadCategories];
-	}
-}
-
--(void)machineWasChanged:(Machine*)m {
-	if (m==nil) return;
+	BOOL machineIsOnlineAndConnectable = m.isComplete;
 	
-	if (m.isComplete) {
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"MachineManager: Changed %@", m);
-#endif
-#warning question for frank regarding necessity of next line of code
+	if (machineIsOnlineAndConnectable) {
 		[self reloadCategories];
-	} else {
-#if LOCAL_DEBUG_ENABLED
-		NSLog(@"MachineManager: Machine %@ offline", m);
-#endif
 	}
+#endif
 }
 
--(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
+-(void)machine:(Machine *)m updatedInfo:(ConnectionInfoType)updateMask {
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"MachineManager: Updated Info with update mask %d from machine %@", updateMask, m);
+#endif
+	BOOL machinesCategoryListWasUpdated = (updateMask & (ConnectionInfoTypeRootLevel | ConnectionInfoTypeLibrarySections)) != 0;
+	BOOL machineHasEitherGoneOnlineOrOffline = (updateMask & ConnectionInfoTypeCanConnect) != 0;
+	
+	if ( machinesCategoryListWasUpdated || machineHasEitherGoneOnlineOrOffline ) {
+		[self reloadCategories];
+	}
+}
 @end

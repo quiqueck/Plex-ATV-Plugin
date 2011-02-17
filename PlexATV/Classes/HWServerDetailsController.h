@@ -10,13 +10,12 @@
 
 @interface HWServerDetailsController : SMFMediaMenuController <TestAndConditionallyAddConnectionProtocol> {
 	Machine *_machine;
+	BRWaitPromptControl *waitPromptControl;
 	
 	//add new machine flags
 	BOOL isCreatingNewMachine;
 	BOOL hasCompletedAddNewMachineWithConnectionWizardStep1; //if completed proceed to step 2
 	BOOL hasCompletedAddNewMachineWithConnectionWizardStep2; //if completed proceed to step 3
-	BOOL hasCompletedAddNewMachineWithConnectionWizardStep3; //if completed proceed to step 4
-	BOOL hasCompletedAddNewMachineWithConnectionWizardStep4; //if completed proceed to step 5
 	
 	//editing machine specific flags
 	BOOL isEditingServerName;
