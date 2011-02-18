@@ -99,7 +99,7 @@
 #pragma mark Adding Wizard Methods
 - (void)startAddNewMachineWizard {
 	//set prompt text
-	[waitPromptControl setPromptText:@"Testing connection\nfor new machine"];
+	[waitPromptControl setPromptText:@"Testing the connection\nto the new machine"];
 	
 	//reset wizard variables
 	isCreatingNewConnection = NO;
