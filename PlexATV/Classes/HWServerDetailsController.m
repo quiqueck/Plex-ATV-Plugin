@@ -17,13 +17,13 @@
 #define ConnectionDialogIdentifier @"ConnectionDialogIdentifier"
 #define DefaultServerPortNumber @"32400"
 
-#define ServerPropertyServerNameIndex 0
-#define ServerPropertyUserNameIndex 1
-#define ServerPropertyPasswordIndex 2
-
-#define ListAddNewConnection 3
-
-#define ListItemCount 4
+#define ServerPropertyServerNameIndex	0
+#define ServerPropertyUserNameIndex		1
+#define ServerPropertyPasswordIndex		2
+//---------------------------------------
+#define ListAddNewConnection			3
+//---------------------------------------
+#define ListItemCount					4
 
 
 @synthesize machine = _machine;
@@ -52,7 +52,6 @@
 - (id)initAndShowAddNewMachineWizard {
 	self = [self init];
 	isCreatingNewMachine = YES;
-	[waitPromptControl setPromptText:@"Testing connection\nfor new machine"];
 	return self;
 }
 
@@ -63,6 +62,8 @@
 }
 
 -(void)dealloc {
+#warning does self need to unsubscribe from any testConnection notifications
+	
 	[waitPromptControl release];
 	self.machine = nil;
 	self.serverName = nil;
@@ -96,7 +97,10 @@
 
 #pragma mark -
 #pragma mark Adding Wizard Methods
-- (void)startAddNewMachineWizard {	
+- (void)startAddNewMachineWizard {
+	//set prompt text
+	[waitPromptControl setPromptText:@"Testing connection\nfor new machine"];
+	
 	//reset wizard variables
 	isCreatingNewConnection = NO;
 	hasCompletedAddNewMachineWithConnectionWizardStep1 = NO;
@@ -106,18 +110,17 @@
 	[self showEnterServerNameDialogBoxWithInitialText:@""];
 }
 
-- (void)addNewMachineWizardWithInput:(NSString *)input {	
+- (void)addNewMachineWizardWithInput:(NSString *)input {
+	[[[BRApplicationStackManager singleton] stack] popController];
 	if (!hasCompletedAddNewMachineWithConnectionWizardStep1) {
 		hasCompletedAddNewMachineWithConnectionWizardStep1 = YES;		
 		self.serverName = input;
-		[[self stack] popController];
 		
 		[self showEnterUsernameDialogBoxWithInitialText:@""];
 	
 	} else if (!hasCompletedAddNewMachineWithConnectionWizardStep2) {
 		hasCompletedAddNewMachineWithConnectionWizardStep2 = YES;
 		self.userName = input;
-		[[self stack] popController];
 		
 		[self showEnterPasswordDialogBoxWithInitialText:@""];
 		
@@ -131,12 +134,15 @@
 		[m release];
 		[self.machine setUsername:self.userName andPassword:self.password];
 		
-		[[self stack] popController];
 		[self startAddNewConnectionWizard];
 	}
 }
 
 - (void)startAddNewConnectionWizard {
+	//set the prompt text unless the connection being added is part of a new machine
+	if (!isCreatingNewMachine)
+		[waitPromptControl setPromptText:@"Testing connection"];
+	
 	isCreatingNewConnection = YES;
 	
 	//reset wizard variables
@@ -148,11 +154,11 @@
 }
 
 - (void)addNewConnectionWizardWithInput:(NSString *)input {
+	[[[BRApplicationStackManager singleton] stack] popController];
 	
 	if (!hasCompletedAddNewConnectionWizardStep1) {
 		hasCompletedAddNewConnectionWizardStep1 = YES;
 		self.hostName = input;
-		[[self stack] popController];
 		
 		[self showEnterPortNumberDialogBoxWithInitialText:DefaultServerPortNumber];
 		
@@ -162,17 +168,8 @@
 		
 		[self.machine testAndConditionallyAddConnectionForHostName:self.hostName port:self.portNumber notify:self];
 		
-		//show information screen with spinner
-		
-		/*[ATMessageView showMessage:NSLocalizedString(@"testing the connection before adding it...", nil) 
-		 caption:NSLocalizedString(@"Please Wait", nil) 
-		 icon:nil 
-		 canClose:NO];
-		 */
-		
+		//show information screen with spinner		
 		[self addControl:waitPromptControl];
-		
-		[[self stack] popController];
 	}
 }
 
@@ -218,7 +215,6 @@
 #endif
 		[self showEditConnectionViewForConnection:connection];
 	}
-	
 }
 
 - (float)heightForRow:(long)row {
@@ -318,7 +314,7 @@
 	[textCon setSecondaryInfoText:infoText];
 	[textCon setTextEntryTextFieldLabel:textFieldLabel];
 	[textCon setInitialTextEntryText:initialText];
-	[[self stack] pushController:textCon];
+	[[[BRApplicationStackManager singleton] stack] pushController:textCon];
 }
 
 - (void)textDidEndEditing:(id)text
@@ -345,7 +341,7 @@
 			isEditingPassword = NO;
 			[self.machine setUsername:self.machine.userName andPassword:textEntered];
 		}
-		[[self stack] popController];
+		[[[BRApplicationStackManager singleton] stack] popController];
 	}
 	[self.list reload];
 }
@@ -367,7 +363,7 @@
 	[option addOptionText:@"Remove connection"];
 	[option addOptionText:@"Go back"];
 	[option setActionSelector:@selector(optionSelected:) target:self];
-	[[self stack] pushController:option];
+	[[[BRApplicationStackManager singleton] stack] pushController:option];
 	[option release];	
 }
 
@@ -380,14 +376,14 @@
 		[self.machine removeConnection:connection];
 		
 		[self setNeedsUpdate];
-		[[self stack] popController]; //need this so we don't go back to option dialog when going back
+		[[[BRApplicationStackManager singleton] stack] popController]; //need this so we don't go back to option dialog when going back
 		//set the selection to the to top of the connections list to avoid a weird UI bug where the selection box
 		//goes halfway off the screen
 		[self.list setSelection:ListItemCount-1];
 		
 	} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
-		//go back to connection listing...
-		[[self stack] popController];
+		//go back to server details/connection listing...
+		[[[BRApplicationStackManager singleton] stack] popController];
 	}
 }
 
@@ -397,21 +393,36 @@
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"machine %@ didAcceptConnection %@", m, con);
 #endif
+	isCreatingNewMachine = NO;
+	isCreatingNewConnection = NO;
+	
 	// add machine to MM (because so far you did not have a machine 
 	// for the PMS you were just connecting to)
+	[[MachineManager sharedMachineManager] addMachine:m];
+#warning quiequeck, is this ^ all that is required?
 	
+	[waitPromptControl setPromptText:@"Success\n New server added."];
 }
 
 -(void)machine:(Machine*)m didNotAcceptConnection:(MachineConnectionBase*)con error:(NSError*)err {
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"machine %@ didNotAcceptConnection %@ with error %@", m, con, err);
 #endif
+	isCreatingNewMachine = NO;
+	isCreatingNewConnection = NO;
+	NSString *promptText;
+	
 	if (err.code==ConditionallyAddErrorCodeCouldNotConnect) {
 		// We could not establish a connection to that machine. 
 		// It is either firewalled, not running or the connection data is wrong
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"Machine is either firewalled, not running or the connection data is wrong");
 #endif
+		promptText = @"Could not connect.\n Please verify the details, and try again.";
+		
+		//wait x amount of seconds then return us to previous screen
+		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:5.0];
+	
 		
 	} else if (err.code==ConditionallyAddErrorCodeNeedCredentials) {
 		// We were able to connect, but it looks like the username/password 
@@ -419,23 +430,47 @@
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"Machine login details are incorrect");
 #endif
+		promptText = @"User credentials incorrect.\n Please verify the login details, and try again.";
+		
+		//wait x amount of seconds then return us to previous screen
+		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:5.0];
+		
 		
 	} else if (err.code==ConditionallyAddErrorCodeWrongMachineID) {
 		// the connection just added is another way to contact a machine we 
 		// already know. In this case, you should add the connection 
 		// (using testAndConditionallyAddConnectionForHostName again) 
 		// to the machine stored in err.userInfo[machineForConnection]
-		//Machine *m = [err.userInfo objectForKey:@"machineForConnection"];
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"Machine is a duplicate. Add this connection to the other machine");
 #endif
+		Machine *alreadyExistingMachine = [err.userInfo objectForKey:@"machineForConnection"];
+		self.machine = alreadyExistingMachine;
+		self.hostName = con.hostName;
+		self.portNumber = con.port;
+		
+		[self.machine testAndConditionallyAddConnectionForHostName:self.hostName port:self.portNumber notify:self];
+		promptText = [NSString stringWithFormat:@"This connection links an existing server called %@\nWill attempt to add connection.", self.machine.serverName];
+		
+		isCreatingNewConnection = YES;
 		
 	} else {
 		//other kind of failure, cancel operation and reset
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Connection failed for uknown reason");
+		NSLog(@"Connection failed for uknown reason.");
 #endif
-	}	
+		promptText = @"Unknown error.";
+		
+		//wait x amount of seconds then return us to previous screen
+		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:5.0];
+	}
+	
+	[waitPromptControl setPromptText:promptText];
+#warning needs to be moved vv
+	[waitPromptControl controlWasDeactivated];
+	
+	//wait x amount of seconds then return us to previous screen (some will return all the way back to server listing)
+	[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:5.0];
 }
 
 @end

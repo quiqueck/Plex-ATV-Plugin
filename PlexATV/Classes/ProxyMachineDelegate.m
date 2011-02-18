@@ -75,6 +75,13 @@
   }
 }
 
+-(void)machine:(Machine*)m changedConnection:(MachineConnectionBase*)con{
+	for (id<MachineManagerDelegate> d in delegates){
+		NSLog(@"Send machine:changedConnection to %@", d);
+		[d machine:m changedConnection:con];
+	}
+}
+
 -(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{
   for (id<MachineManagerDelegate> d in delegates){
     NSLog(@"Send machine:changedClientTo to %@", d);
@@ -87,6 +94,13 @@
     NSLog(@"Send machine:receivedInfoForConnection to %@", d);
       [d machine:m receivedInfoForConnection:con updated:updateMask];
   }
+}
+
+-(void)machine:(Machine*)m updatedInfo:(ConnectionInfoType)updateMask{
+	for (id<MachineManagerDelegate> d in delegates){
+		NSLog(@"Send machine:updatedInfo to %@", d);
+		[d machine:m updatedInfo:updateMask];
+	}
 }
 
 -(void)machineWasRemoved:(Machine*)m{

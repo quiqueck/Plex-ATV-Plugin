@@ -276,6 +276,8 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #endif
 }
 
+- (void)machineWasChanged:(Machine *)m {}
+
 -(void)machine:(Machine *)m updatedInfo:(ConnectionInfoType)updateMask {
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Updated Info with update mask %d from machine %@", updateMask, m);
