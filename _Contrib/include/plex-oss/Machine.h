@@ -131,6 +131,7 @@ typedef struct _MachineStateRecord{
 
 @property (readonly) NSMutableArray* connections;
 @property (readonly) MachineConnectionBase* bestConnection;
+-(void)removeConnection:(MachineConnectionBase*)c;
 -(void)testAndConditionallyAddConnectionForHostName:(NSString*)hn notify:(id<TestAndConditionallyAddConnectionProtocol>)targetOrNil;
 -(void)testAndConditionallyAddConnectionForHostName:(NSString*)hn port:(NSUInteger)p notify:(id<TestAndConditionallyAddConnectionProtocol>)targetOrNil;
 -(void)testAndConditionallyAddConnectionForHostName:(NSString*)hn port:(NSUInteger)p etherID:(NSString*)m notify:(id<TestAndConditionallyAddConnectionProtocol>)targetOrNil;
@@ -172,8 +173,8 @@ typedef struct _MachineStateRecord{
 -(void)setFilter:(NSString*)f forSection:(NSString*)section;
 -(NSArray*)lastSeenContainerPath;
 -(void)setLastSeenContainerPath:(NSArray*)pos;
--(void)setLastSearchQuerry:(NSString*)q forSection:(NSString*)section;
--(NSString*)lastSearchQuerryForSection:(NSString*)section;
+-(void)setLastSearchQuery:(NSString*)q forSection:(NSString*)section;
+-(NSString*)lastSearchQueryForSection:(NSString*)section;
 -(void)setSelectionIndex:(CGFloat)idx key:(NSString*)key selectedObject:(PlexMediaObject*)objOrNil;
 -(CGFloat)selectionIndexForKey:(NSString*)key;
 @end

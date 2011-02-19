@@ -54,8 +54,8 @@ extern const PlexFlagTypes PlexFlagTypeContentVideoResolution;
 extern const PlexFlagTypes PlexFlagTypeContentAudioChannels;
 extern const PlexFlagTypes PlexFlagTypeContentAspectRation;
 
-typedef NSString* PlexClontentType;
-extern const PlexClontentType PlexContentSongs;
+typedef NSString* PlexContentType;
+extern const PlexContentType PlexContentSongs;
 
 struct _PlexMediaContainerFlags{
 	BOOL hasSummaries:1;
@@ -101,7 +101,7 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 	NSString* mediaTagPrefix;
 	NSString* mediaTagVersion;
 	
-	PlexClontentType content;
+	PlexContentType content;
 	
 	PlexImage* thumb;
 	PlexImage* art;
@@ -144,7 +144,7 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 @property (readonly) PlexViewGroups viewGroup;
 @property (readonly) NSString* mediaTagPrefix;
 @property (readonly) NSString* mediaTagVersion;
-@property (readonly) PlexClontentType content;
+@property (readonly) PlexContentType content;
 
 
 
