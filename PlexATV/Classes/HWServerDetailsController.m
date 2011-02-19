@@ -21,9 +21,10 @@
 #define ServerPropertyUserNameIndex		1
 #define ServerPropertyPasswordIndex		2
 //---------------------------------------
-#define ListAddNewConnection			3
+#define ServerRefreshSections			3
+#define ListAddNewConnection			4
 //---------------------------------------
-#define ListItemCount					4
+#define ListItemCount					5
 
 
 @synthesize machine = _machine;
@@ -38,7 +39,7 @@
 		BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		[[self list] setDatasource:self];
-		[[self list] addDividerAtIndex:ListItemCount-1 withLabel:@"Connections"];
+		[[self list] addDividerAtIndex:ListItemCount-1 withLabel:@"Actions"];
 		[[self list] addDividerAtIndex:ListItemCount withLabel:@"Current connections"];
 		
 		//create the wait screen
@@ -201,6 +202,10 @@
 	} else if (selected == ServerPropertyPasswordIndex) {
 		isEditingPassword = YES;
 		[self showEnterPasswordDialogBoxWithInitialText:self.userName];
+	
+	} else if (selected == ServerRefreshSections) {
+		//tell pms to refresh all sections
+		[self.machine.request refreshAllSections:NO];
 		
 	} else if (selected == ListAddNewConnection) {
 		//start the "add new connection" wizard
@@ -229,7 +234,12 @@
 - (id)itemForRow:(long)row {
 	SMFMenuItem *result;
 	NSString *title = [self titleForRow:row];
-	result = [SMFMenuItem folderMenuItem];
+	if (row == ServerRefreshSections) {
+		result = [SMFMenuItem progressMenuItem];
+	} else {
+		result = [SMFMenuItem folderMenuItem];
+	}
+	
 	[result setTitle:title];
 	return result;
 }
@@ -248,6 +258,9 @@
 		
 	} else if (row == ServerPropertyPasswordIndex) {
 		title = [NSString stringWithFormat:@"Password       %@", self.machine.password ? self.machine.password : @"None"];
+		
+	} else if (row == ServerRefreshSections) {
+		title = @"Tell server to refresh all sections";
 		
 	} else if (row == ListAddNewConnection) {
 		title = @"Add new connection";
