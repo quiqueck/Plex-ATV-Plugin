@@ -30,7 +30,9 @@
 @interface HWDetailedMovieMetadataController : SMFMoviePreviewController<SMFMoviePreviewControllerDatasource, SMFMoviePreviewControllerDelegate> {
 	NSArray *_assets;
 	
-	int selectedIndex;
+	BOOL shelfIsSelected;
+	int currentSelectedIndex;
+	int lastFocusedIndex;
 	PlexPreviewAsset *selectedMediaItemPreviewData;
 }
 @property (retain) NSArray *assets;
@@ -39,5 +41,6 @@
 - (id)initWithPreviewAssets:(NSArray*)previewAssets withSelectedIndex:(int)selIndex;
 - (id) initWithPlexContainer:(PlexMediaContainer*)aContainer withSelectedIndex:(int)selIndex;
 + (NSArray *)assetsForMediaObjects:(NSArray *)mediaObjects;
+- (void)changeMetadataViewToShowDataForIndex:(int)index;
 
 @end

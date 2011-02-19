@@ -22,16 +22,17 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
-//  
-#import <BackRow/BRBaseMediaAsset.h>
-#import <BackRow/BRImageManager.h>
-#import <BackRow/BRMediaAsset.h>
+// 
 #import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexRequest.h>
 #import <plex-oss/Machine.h>
 #import <ambertation-plex/Ambertation.h>
+
+@interface BRThemeInfo (PlexExtentions)
+- (id)storeRentalPlaceholderImage;
+@end
 
 @implementation PlexPreviewAsset
 @synthesize pmo;
@@ -64,7 +65,7 @@
 #pragma mark Helper Methods
 - (NSDate *)dateFromPlexDateString:(NSString *)dateString {
 	//format is 2001-11-06
-	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	NSDateFormatter *dateFormat = [[[NSDateFormatter alloc] init] autorelease];
 	[dateFormat setDateFormat:@"yyyy-MM-dd"];
 	return [dateFormat dateFromString:dateString];
 }
@@ -149,6 +150,10 @@
 	return nil;
 }
 
+- (id)coverArt {
+  return [BRImage imageWithURL:[self.imageProxy url]];
+}
+
 - (id)dateAcquired {
 	return [self dateFromPlexDateString:[pmo.attributes valueForKey:@"originallyAvailableAt"]];// [self dateFromPlexDateString:[pmo.attributes valueForKey:@"originallyAvailableAt"]];
 }
@@ -225,10 +230,6 @@
 	return (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]);
 }
 
-- (id)coverArt {
-  return [BRImage imageWithURL:[self.imageProxy url]];
-}
-
 - (id)imageProxy {
 	NSString *thumbURL = nil;
 	
@@ -276,7 +277,7 @@
 
 - (BOOL)isHD{
 	int videoResolution = [[pmo listSubObjects:@"Media" usingKey:@"videoResolution"] intValue];
-	return videoResolution >= 720;
+	return YES;//videoResolution >= 720;
 }
 
 - (BOOL)isInappropriate {
@@ -409,7 +410,7 @@
 	NSArray *allGenres = [self genres];
 	BRGenre *result = nil;
 	if ([allGenres count] > 0) {
-		result = [[BRGenre alloc] initWithString:[allGenres objectAtIndex:0]];
+		result = [[[BRGenre alloc] initWithString:[allGenres objectAtIndex:0]] autorelease];
 	}
 	return result;
 }
