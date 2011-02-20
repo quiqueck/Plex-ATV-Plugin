@@ -7,9 +7,12 @@ e) Install the plex-client on your ATV (prepares the correct skeletons)
 		echo "deb http://www.ambertation.de ./downloads/PLEX/" > /etc/apt/sources.list.d/plex.list
 		apt-get update
 		apt-get install com.plex.client-plugin
+d) Get SMFramework 
+		cd PlexATV 
+		git clone https://github.com/tomcool420/SMFramework.git SMFramework
 
 === BUILDING ===
-1. Open PlexATV/atvTwo.xcodeproj
+1. Open PlexATV/plex.xcodeproj
 2. Make sure you are building 4.2|Release|atvTwo|armv6
 3. Make sure your appleTV is turned on and that you can log in using root@appletv.local (without using a password)
 4. Set the transcoder keys in PlexATV/Classes/HWAppliance.mm
