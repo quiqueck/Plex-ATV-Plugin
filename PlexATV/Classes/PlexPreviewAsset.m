@@ -484,11 +484,12 @@
 }
 
 - (unsigned)startTimeInMS {
-	return 0;
+  NSLog(@"startTimeInMS");
+  return [[pmo.attributes valueForKey:@"viewOffset"] intValue];
 }
 
 - (unsigned)startTimeInSeconds {
-	return 0;
+	return [[pmo.attributes valueForKey:@"viewOffset"] intValue] / 1000;
 }
 
 - (unsigned)stopTimeInMS {

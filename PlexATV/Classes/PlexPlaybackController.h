@@ -1,8 +1,8 @@
 //
-//  HWPlexDir.h
-//  atvTwo
+//  PlexPlaybackController.h
+//  plex
 //
-//  Created by Frank Bauer on 22.10.10.
+//  Created by Bob Jelica on 22.02.2011.
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
@@ -22,33 +22,17 @@
 //  THE SOFTWARE.
 //  
 
-
-
 #import <Foundation/Foundation.h>
-#import <plex-oss/PlexMediaContainer.h>
-
-
-
 @class PlexMediaObject;
-@interface HWPlexDir: SMFMediaMenuController {
-	
-	PlexMediaContainer* rootContainer;
-	PlexMediaObject* playbackItem;
+
+@interface PlexPlaybackController : NSObject {
+  PlexMediaObject *pmo;
+  NSTimer* playProgressTimer;
 }
-
-@property (readwrite, retain) PlexMediaContainer* rootContainer;
-- (void)log:(NSNotificationCenter *)note;
-
-- (void)showModifyViewedStatusViewForRow:(long)row;
-- (id) initWithRootContainer:(PlexMediaContainer*)container;
-- (PlexMediaContainer*) applySkipFilteringOnContainer:(PlexMediaContainer*)container;
-- (void)showGridListControl:(PlexMediaContainer *)movieCategory;
-
-//list provider
-- (float)heightForRow:(long)row;
-- (long)itemCount;
-- (id)itemForRow:(long)row;
-- (BOOL)rowSelectable:(long)selectable;
-- (id)titleForRow:(long)row;
-
+ 
+-(id)initWithPlexMediaObject:(PlexMediaObject*)mediaObject;
+-(void)startPlaying;
+-(void)playbackVideoWithOffset:(int)offset;
+-(void)movieFinished:(NSNotification*)event;
+-(void)playbackAudio;
 @end

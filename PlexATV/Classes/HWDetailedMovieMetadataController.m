@@ -27,6 +27,7 @@
 
 #import "HWDetailedMovieMetadataController.h"
 #import "PlexMediaProvider.h"
+#import "PlexPlaybackController.h"
 
 //these are in the AppleTV.framework, but cannot #import <AppleTV/AppleTV.h> due to
 //naming conflicts with Backrow.framework. below is a hack!
@@ -173,6 +174,9 @@ typedef enum {
     switch (buttonId) {
       case kPlayButton:
         NSLog(@"play movie plz kthxbye");
+        NSLog(@"asset: %@", selectedMediaItemPreviewData.title);
+        PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:selectedMediaItemPreviewData.pmo];
+        [player startPlaying];
         break;
       default:
         break;
