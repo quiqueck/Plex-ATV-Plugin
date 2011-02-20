@@ -224,6 +224,10 @@
   [_shelfControl release];
   [_panelControl release];
   
+#if LOCAL_DEBUG_ENABLED
+  NSLog(@"drawSelf done");
+#endif
+  
   
 }
 

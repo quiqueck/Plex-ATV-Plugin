@@ -37,6 +37,13 @@
 - (id)storeRentalPlaceholderImage;
 @end
 
+typedef enum {
+	kPreviewButton = 0,
+  kPlayButton,
+  kQueueButton,
+  kMoreButton
+} ActionButton;
+
 @implementation HWDetailedMovieMetadataController
 @synthesize assets;
 @synthesize selectedMediaItemPreviewData;
@@ -158,8 +165,20 @@
 #endif
 	if ([ctrl isKindOfClass:[BRButtonControl class]]) {
 		//one of the buttons have been pushed
-		//BRButtonControl *buttonControl = (BRButtonControl *)ctrl;
-		//none of the buttons do anything, make error sound for now
+		BRButtonControl *buttonControl = (BRButtonControl *)ctrl;
+#if LOCAL_DEBUG_ENABLED
+    NSLog(@"button chosen: %@", buttonControl.identifier);
+#endif
+    int buttonId = [buttonControl.identifier intValue];
+    switch (buttonId) {
+      case kPlayButton:
+        NSLog(@"play movie plz kthxbye");
+        break;
+      default:
+        break;
+    }
+    
+    //none of the buttons do anything, make error sound for now
 		[[SMFThemeInfo sharedTheme] playErrorSound];
 		
 	} else if (ctrl == self._shelfControl) {
@@ -303,23 +322,26 @@
     BRButtonControl* b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]previewActionImage] 
                                                         subtitle:@"Preview" 
                                                            badge:nil] retain];
+    b.identifier = [NSNumber numberWithInt:kPreviewButton];
     [buttons addObject:b];
     
     b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]playActionImage] 
                                        subtitle:@"Play"
                                           badge:nil]retain];
-    
+  
+    b.identifier = [NSNumber numberWithInt:kPlayButton];
     [buttons addObject:b];
     
     b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]queueActionImage] 
                                        subtitle:@"Queue" 
                                           badge:nil]retain];
-    
+    b.identifier = [NSNumber numberWithInt:kQueueButton];
     [buttons addObject:b];
     
     b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]rateActionImage] 
                                        subtitle:@"More" 
                                           badge:nil]retain];
+    b.identifier = [NSNumber numberWithInt:kMoreButton];
     [buttons addObject:b];
     return buttons;
     
