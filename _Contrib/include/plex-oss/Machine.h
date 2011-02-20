@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "MachineManager.h"
 #import "MachineCapabilities.h"
-#import <ambertation-plex/SimplePing.h>
 
 
 typedef int PlayOnType;

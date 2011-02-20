@@ -75,7 +75,7 @@ extern const NSString* plexClientsKey ;
 -(NSURL*)remoteControlURLSendString:(NSString*)txt client:(ClientConnection*)clientOrNil;
 
 -(NSURL*)pathForScaledImage:(NSString*)key ofSize:(CGSize)sz;
--(NSURL*)streamingURLForPart:(PlexMediaObject*)part mediaContainer:(PlexMediaContainer*)pmc quality:(PlexStreamingQuality)q callingObject:(PlexMediaObject*)pmo;
+-(NSURL*)streamingURLForPart:(PlexDirectory*)part mediaContainer:(PlexMediaContainer*)pmc quality:(PlexStreamingQuality)q callingObject:(PlexMediaObject*)pmo;
 -(NSURL*)postSeenNotificationRatingKey:(NSString*)rk identifier:(NSString*)ident;
 -(NSURL*)postMediaProgressRatingKey:(NSString*)rk identifier:(NSString*)ident time:(NSTimeInterval)tm;
 -(NSURL*)postMediaProgressURL:(PlexMediaObject*)pmo time:(NSTimeInterval)tm;
