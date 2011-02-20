@@ -1,7 +1,9 @@
 # Plex ATV2G Client
 ## CREDIT TO
 Original project author, and libPLEX-OSS library creator: quiqueck
+
 Main project developers: b0bben and ccjensen
+
 ATV guru and project consultant: tomcool420
 
 ## PREPARING
