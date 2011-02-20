@@ -85,6 +85,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		//instrumentObjcMessageSends(YES);
 		
 		NSString *logPath = @"/tmp/PLEX.txt"; 
+		NSLog(@"==================== plex client starting up ====================");
 		NSLog(@"Redirecting Log to %@", logPath);
 		
 		/*		FILE fl1 = fopen([logPath fileSystemRepresentation], "a+");
@@ -191,9 +192,20 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		//check if the user has opted to use default server view mode
 		//if he has, check if the current machine is the default one
 		//it it is not, skip to the next machine, else keep going
-		if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]
-			&& ![machineID isEqualToString:[[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid]])
+		if (![[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView] 
+			&& ![machineID isEqualToString:[[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid]]) {
+#if LOCAL_DEBUG_ENABLED
+			NSLog(@"Machine [%@] is not default machine, skipping", machine);
+#endif
 			continue;
+		} else if (!machine.canConnect) {
+#if LOCAL_DEBUG_ENABLED
+			NSLog(@"Cannot connect to machine [%@], skipping", machine);
+#endif
+			continue;
+		} //else, either:
+		// a) the view mode is set to combined
+		// b) the view mode is set to default server, and this is the default server, and we can connect to it
 		
 		//================== add all it's categories to our appliances list ==================
 		//not using machine.request.rootLevel.directories because it might not work,
@@ -229,7 +241,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 			if ([duplicateNameCategories count] > 1) {
 				//================== found duplicate category names ==================
 #if LOCAL_DEBUG_ENABLED
-				NSLog(@"Found [%@] duplicate categories with name [%@]", [duplicateNameCategories count], categoryName);
+				NSLog(@"Found [%d] duplicate categories with name [%@]", [duplicateNameCategories count], categoryName);
 #endif
 				//iterate over all of them updating their names
 				for (BRApplianceCategory *appl in duplicateNameCategories) {			
@@ -268,12 +280,12 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 -(void)machineWasAdded:(Machine*)m {   
 #if LOCAL_DEBUG_ENABLED
 	NSLog(@"MachineManager: Added machine %@", m);
+#endif
 	BOOL machineIsOnlineAndConnectable = m.isComplete;
 	
 	if (machineIsOnlineAndConnectable) {
 		[self reloadCategories];
 	}
-#endif
 }
 
 - (void)machineWasChanged:(Machine *)m {}
