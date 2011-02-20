@@ -145,27 +145,8 @@
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
 	NSLog(@"imageProxyWithBookMarkTimeInMS");
-	NSString *thumbURL=@"";
-	
-    //HACK: need to support both regular music and itunes plugin. thumbs are stored in different objects...
-	if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil){
-		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
-		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-	} 
-	else if ([pmo.attributes valueForKey:@"thumb"] != nil){
-		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
-		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-	}   
-	else if ([pmo.mediaContainer.attributes valueForKey:@"art"] != nil){
-		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"art"]];
-		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-	} 
-	else if ([pmo.attributes valueForKey:@"art"] != nil){
-		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
-		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-	}	
-	else
-		return nil;};
+	return [self imageProxy];
+};
 - (BOOL)hasCoverArt {
 	return YES;
 };
