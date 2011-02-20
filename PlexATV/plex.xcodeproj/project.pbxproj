@@ -1,0 +1,580 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		DD02DEB212FCACCC0019FBEE /* All */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = DD02DEE412FCAD170019FBEE /* Build configuration list for PBXAggregateTarget "All" */;
+			buildPhases = (
+			);
+			dependencies = (
+				DD02DEB512FCACD00019FBEE /* PBXTargetDependency */,
+				DD02DEBA12FCAD020019FBEE /* PBXTargetDependency */,
+			);
+			name = All;
+			productName = Install;
+		};
+		DD02DEB712FCACEC0019FBEE /* Install */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = DD02DEE312FCAD170019FBEE /* Build configuration list for PBXAggregateTarget "Install" */;
+			buildPhases = (
+				DD02DEB612FCACEC0019FBEE /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Install;
+			productName = Install;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		013307461278688D0067A5FE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013307451278688D0067A5FE /* QuartzCore.framework */; };
+		013310FD127C09FD0067A5FE /* PlexIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 013310FC127C09FD0067A5FE /* PlexIcon.png */; };
+		0133123C127C26D70067A5FE /* PlexLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0133123B127C26D70067A5FE /* PlexLogo.png */; };
+		015D313D12E10A52001A32C1 /* ProxyMachineDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 015D313C12E10A52001A32C1 /* ProxyMachineDelegate.m */; };
+		015D320A12E11C80001A32C1 /* PlexMediaAssetOld.m in Sources */ = {isa = PBXBuildFile; fileRef = 015D320912E11C80001A32C1 /* PlexMediaAssetOld.m */; };
+		01A0EE5E1272224C007A60B5 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE5D1272224C007A60B5 /* CoreFoundation.framework */; };
+		01A0EE601272224C007A60B5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */; };
+		01A0EE621272224C007A60B5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0EE611272224C007A60B5 /* UIKit.framework */; };
+		01A0F56D12722804007A60B5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F56C12722804007A60B5 /* AudioToolbox.framework */; };
+		01A0F57112722804007A60B5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57012722804007A60B5 /* MediaPlayer.framework */; };
+		01A0F57312722804007A60B5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57212722804007A60B5 /* libsqlite3.dylib */; };
+		01A0F57D12722827007A60B5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F57C12722827007A60B5 /* SystemConfiguration.framework */; };
+		01A0F58512722858007A60B5 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F58412722858007A60B5 /* CFNetwork.framework */; };
+		01A0F58712722858007A60B5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F58612722858007A60B5 /* Security.framework */; };
+		01A0F58F12722877007A60B5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F58E12722877007A60B5 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		01A0F597127228BC007A60B5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F596127228BC007A60B5 /* Foundation.framework */; };
+		01A0F59D127228CC007A60B5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A0F59C127228CC007A60B5 /* libz.dylib */; };
+		66E5AEB11303562D00FD8EA9 /* HWServersController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E5AEB01303562D00FD8EA9 /* HWServersController.m */; };
+		7273929912FA891E008B4C86 /* HWServerDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7273929812FA891E008B4C86 /* HWServerDetailsController.m */; };
+		727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */; };
+		7297238412EE81000064E776 /* HWUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 7297238312EE81000064E776 /* HWUserDefaults.m */; };
+		72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */; };
+		72B2C71512DC1F0E00E23F8E /* HWDefaultServerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B2C71412DC1F0E00E23F8E /* HWDefaultServerController.m */; };
+		72EA80F712DEB49B00138F7D /* PlexSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 72EA80F612DEB49B00138F7D /* PlexSettings.png */; };
+		875A824D126FFF1F00ECADC2 /* HWAppliance.mm in Sources */ = {isa = PBXBuildFile; fileRef = 875A824A126FFF1F00ECADC2 /* HWAppliance.mm */; };
+		875A824E126FFF1F00ECADC2 /* HWBasicMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */; };
+		875A873412704ACC00ECADC2 /* theos in Resources */ = {isa = PBXBuildFile; fileRef = 875A86EB12704ACC00ECADC2 /* theos */; };
+		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+		C4ADAFAE12D46CA9002DA507 /* HWPlexDir.m in Sources */ = {isa = PBXBuildFile; fileRef = C4ADAFA812D46CA9002DA507 /* HWPlexDir.m */; };
+		C4ADAFAF12D46CA9002DA507 /* PlexMediaAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C4ADAFAA12D46CA9002DA507 /* PlexMediaAsset.m */; };
+		C4ADAFB012D46CA9002DA507 /* PlexMediaProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C4ADAFAD12D46CA9002DA507 /* PlexMediaProvider.m */; };
+		C4D558A512D66BE900877755 /* NSArray-Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D558A212D66BE900877755 /* NSArray-Shuffle.m */; };
+		C4D558A612D66BE900877755 /* SongListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D558A412D66BE900877755 /* SongListController.m */; };
+		C4D55A9312D7E22A00877755 /* PlexSongAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D55A9212D7E22A00877755 /* PlexSongAsset.m */; };
+		C4EA913612DCD77700DCC798 /* PlexPreviewAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DD02DEB412FCACD00019FBEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
+			remoteInfo = atvTwo;
+		};
+		DD02DEB912FCAD020019FBEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD02DEB712FCACEC0019FBEE;
+			remoteInfo = Install;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		013307451278688D0067A5FE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		013310FC127C09FD0067A5FE /* PlexIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlexIcon.png; path = Resources/PlexIcon.png; sourceTree = "<group>"; };
+		0133123B127C26D70067A5FE /* PlexLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlexLogo.png; path = Resources/PlexLogo.png; sourceTree = "<group>"; };
+		015D313B12E10A52001A32C1 /* ProxyMachineDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProxyMachineDelegate.h; path = Classes/ProxyMachineDelegate.h; sourceTree = "<group>"; };
+		015D313C12E10A52001A32C1 /* ProxyMachineDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProxyMachineDelegate.m; path = Classes/ProxyMachineDelegate.m; sourceTree = "<group>"; };
+		015D31B812E114CE001A32C1 /* HWAppliance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWAppliance.h; path = Classes/HWAppliance.h; sourceTree = "<group>"; };
+		015D320812E11C80001A32C1 /* PlexMediaAssetOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexMediaAssetOld.h; path = Classes/PlexMediaAssetOld.h; sourceTree = "<group>"; };
+		015D320912E11C80001A32C1 /* PlexMediaAssetOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexMediaAssetOld.m; path = Classes/PlexMediaAssetOld.m; sourceTree = "<group>"; };
+		01A0EE5D1272224C007A60B5 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		01A0EE611272224C007A60B5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		01A0F56C12722804007A60B5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		01A0F57012722804007A60B5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		01A0F57212722804007A60B5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		01A0F57C12722827007A60B5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		01A0F58412722858007A60B5 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		01A0F58612722858007A60B5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		01A0F58E12722877007A60B5 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		01A0F596127228BC007A60B5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		01A0F59C127228CC007A60B5 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		01F4DD2D12C3875500A0A0B5 /* BackRowExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowExtras.h; sourceTree = "<group>"; };
+		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		66629E45130C854800EDC92D /* plex_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plex_Prefix.pch; sourceTree = "<group>"; };
+		66E5AEAF1303562D00FD8EA9 /* HWServersController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWServersController.h; path = Classes/HWServersController.h; sourceTree = "<group>"; };
+		66E5AEB01303562D00FD8EA9 /* HWServersController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWServersController.m; path = Classes/HWServersController.m; sourceTree = "<group>"; };
+		7273929712FA891E008B4C86 /* HWServerDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWServerDetailsController.h; path = Classes/HWServerDetailsController.h; sourceTree = "<group>"; };
+		7273929812FA891E008B4C86 /* HWServerDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWServerDetailsController.m; path = Classes/HWServerDetailsController.m; sourceTree = "<group>"; };
+		727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWAdvancedSettingsController.h; path = Classes/HWAdvancedSettingsController.h; sourceTree = "<group>"; };
+		727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWAdvancedSettingsController.m; path = Classes/HWAdvancedSettingsController.m; sourceTree = "<group>"; };
+		7297238212EE81000064E776 /* HWUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWUserDefaults.h; path = Classes/HWUserDefaults.h; sourceTree = "<group>"; };
+		7297238312EE81000064E776 /* HWUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWUserDefaults.m; path = Classes/HWUserDefaults.m; sourceTree = "<group>"; };
+		72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWSettingsController.h; path = Classes/HWSettingsController.h; sourceTree = "<group>"; };
+		72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWSettingsController.m; path = Classes/HWSettingsController.m; sourceTree = "<group>"; };
+		72B2C71312DC1F0E00E23F8E /* HWDefaultServerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWDefaultServerController.h; path = Classes/HWDefaultServerController.h; sourceTree = "<group>"; };
+		72B2C71412DC1F0E00E23F8E /* HWDefaultServerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWDefaultServerController.m; path = Classes/HWDefaultServerController.m; sourceTree = "<group>"; };
+		72EA80F612DEB49B00138F7D /* PlexSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlexSettings.png; path = Resources/PlexSettings.png; sourceTree = "<group>"; };
+		72EA810712DEB6B500138F7D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = Classes/Constants.h; sourceTree = "<group>"; };
+		875A824A126FFF1F00ECADC2 /* HWAppliance.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = HWAppliance.mm; path = Classes/HWAppliance.mm; sourceTree = "<group>"; };
+		875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWBasicMenu.h; path = Classes/HWBasicMenu.h; sourceTree = "<group>"; };
+		875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWBasicMenu.m; path = Classes/HWBasicMenu.m; sourceTree = "<group>"; };
+		875A8425126FFF6500ECADC2 /* build.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build.sh; sourceTree = "<group>"; };
+		875A8427126FFF6D00ECADC2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		875A86EB12704ACC00ECADC2 /* theos */ = {isa = PBXFileReference; lastKnownFileType = folder; path = theos; sourceTree = "<group>"; };
+		8D5B49B6048680CD000E48DA /* plex.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = plex.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C4ADAFA712D46CA9002DA507 /* HWPlexDir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWPlexDir.h; path = Classes/HWPlexDir.h; sourceTree = "<group>"; };
+		C4ADAFA812D46CA9002DA507 /* HWPlexDir.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWPlexDir.m; path = Classes/HWPlexDir.m; sourceTree = "<group>"; };
+		C4ADAFA912D46CA9002DA507 /* PlexMediaAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexMediaAsset.h; path = Classes/PlexMediaAsset.h; sourceTree = "<group>"; };
+		C4ADAFAA12D46CA9002DA507 /* PlexMediaAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexMediaAsset.m; path = Classes/PlexMediaAsset.m; sourceTree = "<group>"; };
+		C4ADAFAB12D46CA9002DA507 /* PlexMediaContainer + SkinResources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PlexMediaContainer + SkinResources.h"; path = "Classes/PlexMediaContainer + SkinResources.h"; sourceTree = "<group>"; };
+		C4ADAFAC12D46CA9002DA507 /* PlexMediaProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexMediaProvider.h; path = Classes/PlexMediaProvider.h; sourceTree = "<group>"; };
+		C4ADAFAD12D46CA9002DA507 /* PlexMediaProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexMediaProvider.m; path = Classes/PlexMediaProvider.m; sourceTree = "<group>"; };
+		C4D558A112D66BE900877755 /* NSArray-Shuffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray-Shuffle.h"; path = "Classes/NSArray-Shuffle.h"; sourceTree = "<group>"; };
+		C4D558A212D66BE900877755 /* NSArray-Shuffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray-Shuffle.m"; path = "Classes/NSArray-Shuffle.m"; sourceTree = "<group>"; };
+		C4D558A312D66BE900877755 /* SongListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SongListController.h; path = Classes/SongListController.h; sourceTree = "<group>"; };
+		C4D558A412D66BE900877755 /* SongListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SongListController.m; path = Classes/SongListController.m; sourceTree = "<group>"; };
+		C4D55A9112D7E22A00877755 /* PlexSongAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexSongAsset.h; path = Classes/PlexSongAsset.h; sourceTree = "<group>"; };
+		C4D55A9212D7E22A00877755 /* PlexSongAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexSongAsset.m; path = Classes/PlexSongAsset.m; sourceTree = "<group>"; };
+		C4EA913412DCD77700DCC798 /* PlexPreviewAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlexPreviewAsset.h; path = Classes/PlexPreviewAsset.h; sourceTree = "<group>"; };
+		C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlexPreviewAsset.m; path = Classes/PlexPreviewAsset.m; sourceTree = "<group>"; };
+		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D5B49B3048680CD000E48DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01A0EE5E1272224C007A60B5 /* CoreFoundation.framework in Frameworks */,
+				01A0EE601272224C007A60B5 /* CoreGraphics.framework in Frameworks */,
+				01A0EE621272224C007A60B5 /* UIKit.framework in Frameworks */,
+				01A0F56D12722804007A60B5 /* AudioToolbox.framework in Frameworks */,
+				01A0F57112722804007A60B5 /* MediaPlayer.framework in Frameworks */,
+				01A0F57312722804007A60B5 /* libsqlite3.dylib in Frameworks */,
+				01A0F57D12722827007A60B5 /* SystemConfiguration.framework in Frameworks */,
+				01A0F58512722858007A60B5 /* CFNetwork.framework in Frameworks */,
+				01A0F58712722858007A60B5 /* Security.framework in Frameworks */,
+				01A0F58F12722877007A60B5 /* StoreKit.framework in Frameworks */,
+				01A0F597127228BC007A60B5 /* Foundation.framework in Frameworks */,
+				01A0F59D127228CC007A60B5 /* libz.dylib in Frameworks */,
+				013307461278688D0067A5FE /* QuartzCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* atvTwo */ = {
+			isa = PBXGroup;
+			children = (
+				875A8427126FFF6D00ECADC2 /* Makefile */,
+				875A8425126FFF6500ECADC2 /* build.sh */,
+				875A86EB12704ACC00ECADC2 /* theos */,
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				32C88E010371C26100C91783 /* Other Sources */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				19C28FB8FE9D52D311CA2CBB /* Products */,
+			);
+			name = atvTwo;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
+				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+			);
+			name = "Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0133123B127C26D70067A5FE /* PlexLogo.png */,
+				013310FC127C09FD0067A5FE /* PlexIcon.png */,
+				72EA80F612DEB49B00138F7D /* PlexSettings.png */,
+				8D5B49B7048680CD000E48DA /* Info.plist */,
+				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				C4EA913312DCD74600DCC798 /* Assets */,
+				72B2C4FB12DBE0EE00E23F8E /* Controllers */,
+				C4D558A112D66BE900877755 /* NSArray-Shuffle.h */,
+				C4D558A212D66BE900877755 /* NSArray-Shuffle.m */,
+				C4ADAFAB12D46CA9002DA507 /* PlexMediaContainer + SkinResources.h */,
+				C4ADAFAC12D46CA9002DA507 /* PlexMediaProvider.h */,
+				C4ADAFAD12D46CA9002DA507 /* PlexMediaProvider.m */,
+				01F4DD2D12C3875500A0A0B5 /* BackRowExtras.h */,
+				72EA810712DEB6B500138F7D /* Constants.h */,
+				7297238212EE81000064E776 /* HWUserDefaults.h */,
+				7297238312EE81000064E776 /* HWUserDefaults.m */,
+				015D313B12E10A52001A32C1 /* ProxyMachineDelegate.h */,
+				015D313C12E10A52001A32C1 /* ProxyMachineDelegate.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				01A0EE5D1272224C007A60B5 /* CoreFoundation.framework */,
+				01A0EE5F1272224C007A60B5 /* CoreGraphics.framework */,
+				01A0EE611272224C007A60B5 /* UIKit.framework */,
+				01A0F56C12722804007A60B5 /* AudioToolbox.framework */,
+				01A0F57012722804007A60B5 /* MediaPlayer.framework */,
+				01A0F57212722804007A60B5 /* libsqlite3.dylib */,
+				01A0F57C12722827007A60B5 /* SystemConfiguration.framework */,
+				01A0F58412722858007A60B5 /* CFNetwork.framework */,
+				01A0F58612722858007A60B5 /* Security.framework */,
+				01A0F58E12722877007A60B5 /* StoreKit.framework */,
+				01A0F596127228BC007A60B5 /* Foundation.framework */,
+				01A0F59C127228CC007A60B5 /* libz.dylib */,
+				013307451278688D0067A5FE /* QuartzCore.framework */,
+				089C167FFE841241C02AAC07 /* AppKit.framework */,
+				D2F7E65807B2D6F200F64583 /* CoreData.framework */,
+				089C1672FE841209C02AAC07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB8FE9D52D311CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D5B49B6048680CD000E48DA /* plex.frappliance */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32C88E010371C26100C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				66629E45130C854800EDC92D /* plex_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		727A3F4A12F7914000994193 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				72B2C4FC12DBE12800E23F8E /* HWSettingsController.h */,
+				72B2C4FD12DBE12800E23F8E /* HWSettingsController.m */,
+				72B2C71312DC1F0E00E23F8E /* HWDefaultServerController.h */,
+				72B2C71412DC1F0E00E23F8E /* HWDefaultServerController.m */,
+				727A3F4712F78FB100994193 /* HWAdvancedSettingsController.h */,
+				727A3F4812F78FB100994193 /* HWAdvancedSettingsController.m */,
+				66E5AEAF1303562D00FD8EA9 /* HWServersController.h */,
+				66E5AEB01303562D00FD8EA9 /* HWServersController.m */,
+				7273929712FA891E008B4C86 /* HWServerDetailsController.h */,
+				7273929812FA891E008B4C86 /* HWServerDetailsController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		72B2C4FB12DBE0EE00E23F8E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				727A3F4A12F7914000994193 /* Settings */,
+				C4D558A312D66BE900877755 /* SongListController.h */,
+				C4D558A412D66BE900877755 /* SongListController.m */,
+				C4ADAFA712D46CA9002DA507 /* HWPlexDir.h */,
+				C4ADAFA812D46CA9002DA507 /* HWPlexDir.m */,
+				015D31B812E114CE001A32C1 /* HWAppliance.h */,
+				875A824A126FFF1F00ECADC2 /* HWAppliance.mm */,
+				875A824B126FFF1F00ECADC2 /* HWBasicMenu.h */,
+				875A824C126FFF1F00ECADC2 /* HWBasicMenu.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		C4EA913312DCD74600DCC798 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				C4EA913412DCD77700DCC798 /* PlexPreviewAsset.h */,
+				C4EA913512DCD77700DCC798 /* PlexPreviewAsset.m */,
+				C4D55A9112D7E22A00877755 /* PlexSongAsset.h */,
+				C4D55A9212D7E22A00877755 /* PlexSongAsset.m */,
+				C4ADAFA912D46CA9002DA507 /* PlexMediaAsset.h */,
+				C4ADAFAA12D46CA9002DA507 /* PlexMediaAsset.m */,
+				015D320812E11C80001A32C1 /* PlexMediaAssetOld.h */,
+				015D320912E11C80001A32C1 /* PlexMediaAssetOld.m */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D5B49AC048680CD000E48DA /* plex */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "plex" */;
+			buildPhases = (
+				8D5B49AF048680CD000E48DA /* Resources */,
+				8D5B49B1048680CD000E48DA /* Sources */,
+				8D5B49B3048680CD000E48DA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = plex;
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = atvTwo;
+			productReference = 8D5B49B6048680CD000E48DA /* plex.frappliance */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "plex" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* atvTwo */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D5B49AC048680CD000E48DA /* plex */,
+				DD02DEB212FCACCC0019FBEE /* All */,
+				DD02DEB712FCACEC0019FBEE /* Install */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D5B49AF048680CD000E48DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */,
+				875A873412704ACC00ECADC2 /* theos in Resources */,
+				013310FD127C09FD0067A5FE /* PlexIcon.png in Resources */,
+				0133123C127C26D70067A5FE /* PlexLogo.png in Resources */,
+				72EA80F712DEB49B00138F7D /* PlexSettings.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DD02DEB612FCACEC0019FBEE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export APP_NAME=\"Lowtide.app\"\nexport TARGET_DIR=/Applications/${APP_NAME}/Appliances/PLEX.frappliance\n\n#copy local (in order to build the .deb\ncp \"${BUILT_PRODUCTS_DIR}/plex.frappliance/plex\" \"${BUILD_DIR}/../_deb/PLEX.frapplication/Applications/${APP_NAME}/Appliances/PLEX.frappliance/\"\n\n\n#copy to the ATV\nscp \"${BUILT_PRODUCTS_DIR}/plex.frappliance/plex\" root@apple-tv.local:${TARGET_DIR}\nscp \"${PROJECT_DIR}/_deb/PLEX.frapplication/Applications/${APP_NAME}/Appliances/PLEX.frappliance/Info.plist\" root@apple-tv.local:${TARGET_DIR}\n\n#restart UI\nssh root@apple-tv.local 'killall AppleTV'\n#ssh root@apple-tv.local 'killall Lowtide'\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D5B49B1048680CD000E48DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				875A824D126FFF1F00ECADC2 /* HWAppliance.mm in Sources */,
+				875A824E126FFF1F00ECADC2 /* HWBasicMenu.m in Sources */,
+				C4ADAFAE12D46CA9002DA507 /* HWPlexDir.m in Sources */,
+				C4ADAFAF12D46CA9002DA507 /* PlexMediaAsset.m in Sources */,
+				C4ADAFB012D46CA9002DA507 /* PlexMediaProvider.m in Sources */,
+				C4D558A512D66BE900877755 /* NSArray-Shuffle.m in Sources */,
+				C4D558A612D66BE900877755 /* SongListController.m in Sources */,
+				C4D55A9312D7E22A00877755 /* PlexSongAsset.m in Sources */,
+				72B2C4FE12DBE12800E23F8E /* HWSettingsController.m in Sources */,
+				72B2C71512DC1F0E00E23F8E /* HWDefaultServerController.m in Sources */,
+				C4EA913612DCD77700DCC798 /* PlexPreviewAsset.m in Sources */,
+				015D313D12E10A52001A32C1 /* ProxyMachineDelegate.m in Sources */,
+				015D320A12E11C80001A32C1 /* PlexMediaAssetOld.m in Sources */,
+				7297238412EE81000064E776 /* HWUserDefaults.m in Sources */,
+				727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */,
+				7273929912FA891E008B4C86 /* HWServerDetailsController.m in Sources */,
+				66E5AEB11303562D00FD8EA9 /* HWServersController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DD02DEB512FCACD00019FBEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D5B49AC048680CD000E48DA /* plex */;
+			targetProxy = DD02DEB412FCACD00019FBEE /* PBXContainerItemProxy */;
+		};
+		DD02DEBA12FCAD020019FBEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD02DEB712FCACEC0019FBEE /* Install */;
+			targetProxy = DD02DEB912FCAD020019FBEE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C167EFE841241C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB913C08733D840010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../SMFramework/_/Library/Frameworks\"",
+				);
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = plex_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"BUILD_ATV_LIB=1",
+					"HTTP_SERVER_PORT=32400",
+				);
+				HEADER_SEARCH_PATHS = (
+					../../ATV2Includes,
+					"\"$(SRCROOT)/theos/include\"",
+					"\"$(SRCROOT)/../_Contrib/include\"",
+				);
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					../../ATV2Includes,
+					"\"$(SRCROOT)/theos/include\"",
+					"\"$(SRCROOT)/../_Contrib/lib\"",
+				);
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lPLEX-OSS",
+					"-undefined",
+					dynamic_lookup,
+					"-weak_lBackRow",
+					"-all_load",
+				);
+				PRODUCT_NAME = plex;
+				VALID_ARCHS = armv7;
+				WRAPPER_EXTENSION = frappliance;
+			};
+			name = Release;
+		};
+		1DEB914008733D840010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../ATV2Includes;
+				PREBINDING = NO;
+				SDKROOT = iphoneos4.2;
+				STRIP_INSTALLED_PRODUCT = NO;
+			};
+			name = Release;
+		};
+		DD02DEB312FCACCC0019FBEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = Install;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		DD02DEB812FCACEC0019FBEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = Install;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "plex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB913C08733D840010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "plex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB914008733D840010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD02DEE312FCAD170019FBEE /* Build configuration list for PBXAggregateTarget "Install" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD02DEB812FCACEC0019FBEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD02DEE412FCAD170019FBEE /* Build configuration list for PBXAggregateTarget "All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD02DEB312FCACCC0019FBEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

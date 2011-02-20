@@ -1,0 +1,12 @@
+//
+// Prefix header for all source files of the 'atvTwo' target in the 'atvTwo' project.
+//
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+	#import <SMFramework/SMFramework.h>
+	#import <plex-oss/Preferences.h>
+	#import "ProxyMachineDelegate.h"
+#endif
+
+#define DEBUG 1

@@ -26,7 +26,7 @@
 
 #import <Foundation/Foundation.h>
 #import <plex-oss/PlexMediaContainer.h>
-#import "SMFramework.h"
+
 
 
 @class PlexMediaObject;
@@ -39,8 +39,11 @@
 
 @property (readwrite, retain) PlexMediaContainer* rootContainer;
 - (void)log:(NSNotificationCenter *)note;
--(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset; 
+-(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset;
+-(void)playbackAudioWithMediaObject:(PlexMediaObject*)mediaObj;
 - (void)showModifyViewedStatusViewForRow:(long)row;
+- (id) initWithRootContainer:(PlexMediaContainer*)container;
+- (PlexMediaContainer*) applySkipFilteringOnContainer:(PlexMediaContainer*)container;
 
 //list provider
 - (float)heightForRow:(long)row;

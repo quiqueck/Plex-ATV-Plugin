@@ -22,10 +22,7 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
-//  
-#import "BackRow/BRBaseMediaAsset.h"
-#import <BackRow/BRImageManager.h>
-#import "BackRow/BRMediaAsset.h"
+// 
 #import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
@@ -64,8 +61,8 @@
 #pragma mark Helper Methods
 - (NSDate *)dateFromPlexDateString:(NSString *)dateString {
 	//format is 2001-11-06
-	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-	[dateFormat setDateFormat:@"yyyy-mm-dd"];
+	NSDateFormatter *dateFormat = [[[NSDateFormatter alloc] init] autorelease];
+	[dateFormat setDateFormat:@"yyyy-MM-dd"];
 	return [dateFormat dateFromString:dateString];
 }
 
@@ -76,7 +73,10 @@
 //}
 
 - (id)artist {
-	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+	if ([pmo.attributes objectForKey:@"artist" != nil])
+		return [pmo.attributes objectForKey:@"artist"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 }
 
 - (id)artistCollection {
@@ -84,7 +84,7 @@
 }
 
 - (id)artistForSorting {
-	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
+	return self.artist;
 }
 
 - (id)assetID {
@@ -270,7 +270,7 @@
 
 - (BOOL)isHD{
 	int videoResolution = [[pmo listSubObjects:@"Media" usingKey:@"videoResolution"] intValue];
-	return videoResolution >= 720;
+	return YES;//videoResolution >= 720;
 }
 
 - (BOOL)isInappropriate {
@@ -336,12 +336,6 @@
 	return mediaType;
 }
 
-- (NSString*)mediaURL{
-    //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-	//NSLog(@"Wanted URL %@", [url description]);	
-	return [url description];
-}
-
 - (long)parentalControlRatingRank {
 	return 1;
 }
@@ -370,8 +364,8 @@
 			self.assetID, @"id",
 			self.mediaSummary, @"mediaSummary",
 			self.mediaDescription, @"mediaDescription",
-      self.rating, @"rating",
-      self.starRating, @"starRating",
+			self.rating, @"rating",
+			self.starRating, @"starRating",
 			nil];
 }
 
@@ -395,18 +389,21 @@
 }
 
 - (id)primaryCollectionTitle {
-	return [pmo.mediaContainer.attributes valueForKey:@"title2"];
+	if ([pmo.attributes objectForKey:@"album"] != nil)
+		return [pmo.attributes objectForKey:@"album"];
+	else
+		return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 }
 
 - (id)primaryCollectionTitleForSorting {
-	return nil;
+	return self.primaryCollectionTitle;
 }
 
 - (id)primaryGenre {
 	NSArray *allGenres = [self genres];
 	BRGenre *result = nil;
 	if ([allGenres count] > 0) {
-		result = [[BRGenre alloc] initWithString:[allGenres objectAtIndex:0]];
+		result = [[[BRGenre alloc] initWithString:[allGenres objectAtIndex:0]] autorelease];
 	}
 	return result;
 }
@@ -450,11 +447,17 @@
 }
 
 - (id)seriesName {
-	return pmo.name;
+    //grandparentTitle is usually populated for episodes when coming from dynamic views like "Recently added"
+    //whereas mediacontainer.backTitle is used in "All shows->Futurama-Season 1->Episode 4"
+	if ([pmo.attributes objectForKey:@"grandparentTitle"] != nil) {
+		return [pmo.attributes objectForKey:@"grandparentTitle"];    
+	}
+	else
+		return pmo.mediaContainer.backTitle;
 }
 
 - (id)seriesNameForSorting {
-	return pmo.name;
+	return self.seriesName;
 }
 
 - (void)skip {}
@@ -517,5 +520,68 @@
 }
 
 - (void)willBeDeleted {}
+
+
+#pragma mark -
+#pragma mark Additional Metadata Methods
+- (BOOL)hasClosedCaptioning {
+	return YES;
+}
+
+- (BOOL)hasDolbyDigitalAudioTrack {
+	return YES;
+}
+
+- (NSString *)mediaURL{
+    //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+	//NSLog(@"Wanted URL %@", [url description]);	
+	return [url description];
+}
+
+- (BRImage *)starRatingImage {
+	BRImage *result = nil;
+	float starRating = [self starRating];
+	if (1.0 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] oneStar];
+		
+	} else if (1.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] onePointFiveStars];
+		
+	} else if (2 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] twoStars];
+		
+	} else if (2.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] twoPointFiveStars];
+		
+	} else if (3 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] threeStar];
+		
+	} else if (3.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] threePointFiveStars];
+		
+	} else if (4 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fourStar];
+		
+	} else if (4.5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fourPointFiveStars];
+		
+	} else if (5 == starRating) {
+		result = [[SMFThemeInfo sharedTheme] fiveStars];
+	}
+	return result;
+}
+
+- (NSArray *)writers {
+	NSString *result = [pmo listSubObjects:@"Writer" usingKey:@"tag"];
+	return [result componentsSeparatedByString:@", "];
+}
+
+- (NSString *)yearCreated {
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"yyyy"];
+	NSString *yearCreated = [dateFormat stringFromDate:[self dateCreated]];
+	[dateFormat release];
+	return yearCreated;
+}
 
 @end
