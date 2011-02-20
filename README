@@ -7,9 +7,9 @@ e) Install the plex-client on your ATV (prepares the correct skeletons)
 		echo "deb http://www.ambertation.de ./downloads/PLEX/" > /etc/apt/sources.list.d/plex.list
 		apt-get update
 		apt-get install com.plex.client-plugin
-d) Get SMFramework 
-		cd PlexATV 
-		git clone https://github.com/tomcool420/SMFramework.git SMFramework
+d) Get build dependencies 
+		cd _Contrib/
+		git clone https://github.com/tomcool420/ATV2Includes.git
 
 === BUILDING ===
 1. Open PlexATV/plex.xcodeproj
