@@ -28,6 +28,7 @@ extern const NSString* PlexMediaPartToken;
 @property (readonly) NSMutableDictionary* subObjects;
 @property (readonly) BOOL hasMedia;
 @property (readonly) BOOL localKey;
+@property (readonly) NSUInteger uid;
 
 -(id)initWithAttributes:(NSDictionary*)dict parentMediaContainer:(PlexMediaContainer*)mc parentObject:(PlexDirectory*)pmo containerType:(NSString*)ct;
 
