@@ -33,14 +33,12 @@
 @interface HWPlexDir: SMFMediaMenuController {
 	
 	PlexMediaContainer* rootContainer;
-	NSTimer* playProgressTimer;
 	PlexMediaObject* playbackItem;
 }
 
 @property (readwrite, retain) PlexMediaContainer* rootContainer;
 - (void)log:(NSNotificationCenter *)note;
--(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset;
--(void)playbackAudioWithMediaObject:(PlexMediaObject*)mediaObj;
+
 - (void)showModifyViewedStatusViewForRow:(long)row;
 - (id) initWithRootContainer:(PlexMediaContainer*)container;
 - (PlexMediaContainer*) applySkipFilteringOnContainer:(PlexMediaContainer*)container;
