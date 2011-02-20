@@ -87,6 +87,8 @@
   [self addControl:_scroller];
   [self addControl:_spinner];
   
+  
+  
   [_panelControl setFrame:masterFrame];
   [_panelControl setPanelMode:1];
   
@@ -215,6 +217,12 @@
 
   [self layoutSubcontrols];
   
+  [_spinner release];
+  [_cursorControl release];
+  [_scroller release];
+  [_gridControl release];
+  [_shelfControl release];
+  [_panelControl release];
   
   
 }
