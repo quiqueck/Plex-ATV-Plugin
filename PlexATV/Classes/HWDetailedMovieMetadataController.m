@@ -185,6 +185,7 @@ typedef enum {
         NSLog(@"asset: %@", selectedMediaItemPreviewData.title);
         PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:selectedMediaItemPreviewData.pmo];
         [player startPlaying];
+        [player autorelease];
         break;
       default:
         break;
