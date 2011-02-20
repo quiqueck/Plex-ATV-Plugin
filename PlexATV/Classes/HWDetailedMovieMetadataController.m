@@ -115,23 +115,8 @@
 
 #pragma mark -
 #pragma mark Delegate Methods
--(void)controllerSwitchToNext:(SMFMoviePreviewController *)ctrl {
-	[[SMFThemeInfo sharedTheme] playNavigateSound];
-	int newIndex;
-	if (currentSelectedIndex + 1 < [self.assets count]) {
-		//go to next one
-		newIndex = currentSelectedIndex + 1;
-	} else {
-		//we have reached the end, loop around
-		newIndex = 0;
-	}
-#if LOCAL_DEBUG_ENABLED
-	NSLog(@"switching from item %d to next one %d", currentSelectedIndex, newIndex);
-#endif
-	lastFocusedIndex = newIndex;
-	[self changeMetadataViewToShowDataForIndex:lastFocusedIndex];
-	[self setFocusedControl:[self._buttons lastObject]];
-	
+-(BOOL)controllerCanSwitchToPrevious:(SMFMoviePreviewController *)c {
+	return YES;
 }
 
 -(void)controllerSwitchToPrevious:(SMFMoviePreviewController *)ctrl {
@@ -150,6 +135,29 @@
 	lastFocusedIndex = newIndex;
 	[self changeMetadataViewToShowDataForIndex:lastFocusedIndex];
 	[self setFocusedControl:[self._buttons objectAtIndex:0]];
+}
+
+-(BOOL)controllerCanSwitchToNext:(SMFMoviePreviewController *)c {
+	return YES;
+}
+
+-(void)controllerSwitchToNext:(SMFMoviePreviewController *)ctrl {
+	[[SMFThemeInfo sharedTheme] playNavigateSound];
+	int newIndex;
+	if (currentSelectedIndex + 1 < [self.assets count]) {
+		//go to next one
+		newIndex = currentSelectedIndex + 1;
+	} else {
+		//we have reached the end, loop around
+		newIndex = 0;
+	}
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"switching from item %d to next one %d", currentSelectedIndex, newIndex);
+#endif
+	lastFocusedIndex = newIndex;
+	[self changeMetadataViewToShowDataForIndex:lastFocusedIndex];
+	[self setFocusedControl:[self._buttons lastObject]];
+	
 }
 
 -(void)controller:(SMFMoviePreviewController *)c selectedControl:(BRControl *)ctrl {
