@@ -14,6 +14,7 @@
 
 @implementation HWServerDetailsController
 
+#define SecondsBeforeDismissingPrompt 5.0
 #define ConnectionDialogIdentifier @"ConnectionDialogIdentifier"
 #define DefaultServerPortNumber @"32400"
 
@@ -39,7 +40,7 @@
 		BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		[[self list] setDatasource:self];
-		[[self list] addDividerAtIndex:ListItemCount-1 withLabel:@"Actions"];
+		[[self list] addDividerAtIndex:ListItemCount-2 withLabel:@"Actions"];
 		[[self list] addDividerAtIndex:ListItemCount withLabel:@"Current connections"];
 		
 		//create the wait screen
@@ -100,7 +101,7 @@
 #pragma mark Adding Wizard Methods
 - (void)startAddNewMachineWizard {
 	//set prompt text
-	[waitPromptControl setPromptText:@"Testing the connection\nto the new machine"];
+	[waitPromptControl setPromptText:@"Testing the connection\nto the new server"];
 	
 	//reset wizard variables
 	isCreatingNewConnection = NO;
@@ -142,7 +143,7 @@
 - (void)startAddNewConnectionWizard {
 	//set the prompt text unless the connection being added is part of a new machine
 	if (!isCreatingNewMachine)
-		[waitPromptControl setPromptText:@"Testing connection"];
+		[waitPromptControl setPromptText:@"Testing new connection"];
 	
 	isCreatingNewConnection = YES;
 	
@@ -206,6 +207,8 @@
 	} else if (selected == ServerRefreshSections) {
 		//tell pms to refresh all sections
 		[self.machine.request refreshAllSections:NO];
+		isRefreshingAllSections = YES;
+		[self.list reload];
 		
 	} else if (selected == ListAddNewConnection) {
 		//start the "add new connection" wizard
@@ -235,7 +238,17 @@
 	SMFMenuItem *result;
 	NSString *title = [self titleForRow:row];
 	if (row == ServerRefreshSections) {
-		result = [SMFMenuItem progressMenuItem];
+		result = [[BRMenuItem alloc] init];
+		if (isRefreshingAllSections) {
+			[result addAccessoryOfType:6]; //spinner icon
+		} else {
+			[result addAccessoryOfType:3]; //refresh icon
+		}
+		
+	} else if (row == ListAddNewConnection) {
+		result = [[BRMenuItem alloc] init];
+		[result addAccessoryOfType:12]; //stack/new
+		
 	} else {
 		result = [SMFMenuItem folderMenuItem];
 	}
@@ -251,13 +264,14 @@
 - (id)titleForRow:(long)row {
 	NSString *title;
 	if (row == ServerPropertyServerNameIndex) {
+#warning quiqueck, what is the diff between serverName and usersServerName
 		title = [NSString stringWithFormat:@"Servername     %@", self.machine.serverName ? self.machine.serverName : self.machine.usersServerName];
 		
 	} else if (row == ServerPropertyUserNameIndex) {
-		title = [NSString stringWithFormat:@"Username       %@", self.machine.userName ? self.machine.userName : @"None"];
+		title = [NSString stringWithFormat:@"Username        %@", [self.machine.userName length] > 0 ? self.machine.userName : @"None"];
 		
 	} else if (row == ServerPropertyPasswordIndex) {
-		title = [NSString stringWithFormat:@"Password       %@", self.machine.password ? self.machine.password : @"None"];
+		title = [NSString stringWithFormat:@"Password        %@", [self.machine.password length] > 0 ? self.machine.password : @"None"];
 		
 	} else if (row == ServerRefreshSections) {
 		title = @"Tell server to refresh all sections";
@@ -328,6 +342,12 @@
 	[textCon setTextEntryTextFieldLabel:textFieldLabel];
 	[textCon setInitialTextEntryText:initialText];
 	[[[BRApplicationStackManager singleton] stack] pushController:textCon];
+	
+	NSLog(@"newMachine: %@", isCreatingNewMachine ? @"YES" : @"NO");
+	NSLog(@"newConnection: %@", isCreatingNewConnection ? @"YES" : @"NO");
+	NSLog(@"isEditingPW: %@", isEditingPassword ? @"YES" : @"NO");
+	NSLog(@"isEditingUsername: %@", isEditingUserName ? @"YES" : @"NO");
+	NSLog(@"isEditingServername: %@", isEditingServerName ? @"YES" : @"NO");
 }
 
 - (void)textDidEndEditing:(id)text
@@ -383,7 +403,7 @@
 - (void)optionSelected:(id)sender {
 	BROptionDialog *option = sender;
 	
-	if([[sender selectedText] isEqualToString:@"Remove from server list"]) {
+	if([[sender selectedText] isEqualToString:@"Remove connection"]) {
 		//remove the connection
 		MachineConnectionBase *connection = [option.userInfo objectForKey:@"connection"];
 		[self.machine removeConnection:connection];
@@ -406,15 +426,28 @@
 #ifdef LOCAL_DEBUG_ENABLED
 	NSLog(@"machine %@ didAcceptConnection %@", m, con);
 #endif
-	isCreatingNewMachine = NO;
-	isCreatingNewConnection = NO;
+	NSString *promptText;
+	if (isCreatingNewMachine) {
+		isCreatingNewMachine = NO;
+		isCreatingNewConnection = NO;
+		// add machine to MM (because so far you did not have a machine 
+		// for the PMS you were just connecting to)
+		[[MachineManager sharedMachineManager] addMachine:m];
+#warning quiqueck, is this ^ all that is required?
+#warning quiqueck, machines do not persist. How do I save new machines?
+		promptText = @"Success\n New server added";
+	} else {
+		isCreatingNewConnection = NO;
+		// add connection to machine
+#warning quiqueck, how do I add a new connection to an existing machine?
+		promptText = @"Success\n New connection added";
+	}	
+	[waitPromptControl setPromptText:promptText];
 	
-	// add machine to MM (because so far you did not have a machine 
-	// for the PMS you were just connecting to)
-	[[MachineManager sharedMachineManager] addMachine:m];
-#warning quiequeck, is this ^ all that is required?
-	
-	[waitPromptControl setPromptText:@"Success\n New server added."];
+	[waitPromptControl controlWasDeactivated];	
+	//wait x amount of seconds then hide waitPromptControl
+	[waitPromptControl performSelector:@selector(removeFromParent) withObject:nil afterDelay:SecondsBeforeDismissingPrompt];
+	[self.list reload];
 }
 
 -(void)machine:(Machine*)m didNotAcceptConnection:(MachineConnectionBase*)con error:(NSError*)err {
@@ -431,10 +464,13 @@
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"Machine is either firewalled, not running or the connection data is wrong");
 #endif
-		promptText = @"Could not connect.\n Please verify the details, and try again.";
+		promptText = @"Could not connect.\n Please verify the details, and try again";
+		//stop spinner
+		[waitPromptControl controlWasDeactivated];
 		
-		//wait x amount of seconds then return us to previous screen
-		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:5.0];
+		//wait x amount of seconds then hide waitPromptControl and pop view 
+		[waitPromptControl performSelector:@selector(removeFromParent) withObject:nil afterDelay:SecondsBeforeDismissingPrompt];
+		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:SecondsBeforeDismissingPrompt];
 	
 		
 	} else if (err.code==ConditionallyAddErrorCodeNeedCredentials) {
@@ -443,10 +479,13 @@
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"Machine login details are incorrect");
 #endif
-		promptText = @"User credentials incorrect.\n Please verify the login details, and try again.";
+		promptText = @"User credentials incorrect.\n Please verify the login details, and try again";
+		//stop spinner
+		[waitPromptControl controlWasDeactivated];
 		
-		//wait x amount of seconds then return us to previous screen
-		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:5.0];
+		//wait x amount of seconds then hide waitPromptControl and pop view 
+		[waitPromptControl performSelector:@selector(removeFromParent) withObject:nil afterDelay:SecondsBeforeDismissingPrompt];
+		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:SecondsBeforeDismissingPrompt];
 		
 		
 	} else if (err.code==ConditionallyAddErrorCodeWrongMachineID) {
@@ -463,7 +502,7 @@
 		self.portNumber = con.port;
 		
 		[self.machine testAndConditionallyAddConnectionForHostName:self.hostName port:self.portNumber notify:self];
-		promptText = [NSString stringWithFormat:@"This connection links an existing server called %@\nWill attempt to add connection.", self.machine.serverName];
+		promptText = [NSString stringWithFormat:@"This connection links to an existing server:\n%@\nWill attempt to add connection", self.machine.serverName];
 		
 		isCreatingNewConnection = YES;
 		
@@ -472,18 +511,17 @@
 #ifdef LOCAL_DEBUG_ENABLED
 		NSLog(@"Connection failed for uknown reason.");
 #endif
-		promptText = @"Unknown error.";
+		promptText = @"Unknown error";
 		
-		//wait x amount of seconds then return us to previous screen
-		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:5.0];
+		//stop spinner
+		[waitPromptControl controlWasDeactivated];
+		
+		//wait x amount of seconds then hide waitPromptControl and pop view 
+		[waitPromptControl performSelector:@selector(removeFromParent) withObject:nil afterDelay:SecondsBeforeDismissingPrompt];
+		[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:SecondsBeforeDismissingPrompt];
 	}
 	
 	[waitPromptControl setPromptText:promptText];
-#warning needs to be moved vv
-	[waitPromptControl controlWasDeactivated];
-	
-	//wait x amount of seconds then return us to previous screen (some will return all the way back to server listing)
-	[[[BRApplicationStackManager singleton] stack] performSelector:@selector(popController) withObject:nil afterDelay:5.0];
 }
 
 @end

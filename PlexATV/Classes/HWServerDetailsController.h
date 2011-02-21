@@ -26,6 +26,9 @@
 	BOOL isCreatingNewConnection;
 	BOOL hasCompletedAddNewConnectionWizardStep1; //if completed proceed to step 2
 	
+	//action flags
+	BOOL isRefreshingAllSections;
+	
 	NSString *_serverName;
 	NSString *_userName;
 	NSString *_password;

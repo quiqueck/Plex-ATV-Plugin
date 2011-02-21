@@ -431,7 +431,6 @@
 				015D313D12E10A52001A32C1 /* ProxyMachineDelegate.m in Sources */,
 				015D320A12E11C80001A32C1 /* PlexMediaAssetOld.m in Sources */,
 				7297238412EE81000064E776 /* HWUserDefaults.m in Sources */,
-				729723AF12EE84810064E776 /* HWRemoteServersController.m in Sources */,
 				727A3F4912F78FB100994193 /* HWAdvancedSettingsController.m in Sources */,
 				7273929912FA891E008B4C86 /* HWServerDetailsController.m in Sources */,
 				66E5AEB11303562D00FD8EA9 /* HWServersController.m in Sources */,

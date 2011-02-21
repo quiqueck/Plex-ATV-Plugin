@@ -130,7 +130,7 @@
 	BRMenuItem * result = [[BRMenuItem alloc] init];
 	
 	if(row == 0){
-		[result setText:@"Add server" withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+		[result setText:@"Add new server" withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 		[result addAccessoryOfType:0];
 	} else {
 		Machine *m = [self.machines objectAtIndex:row-1];
