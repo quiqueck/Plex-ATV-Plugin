@@ -14,8 +14,8 @@
 //
 
 #import "HWSettingsController.h"
-#import "HWPmsListController.h"
-#import "HWRemoteServersController.h"
+#import "HWDefaultServerController.h"
+#import "HWServersController.h"
 #import "HWAdvancedSettingsController.h"
 #import "HWUserDefaults.h"
 #import "Constants.h"
@@ -25,9 +25,9 @@
 
 #define PlexPluginVersion @"0.6.7"
 
-#define CombinedPmsCategoriesIndex 0
-#define DefaultServerIndex 1
-#define RemoteServersIndex 2
+#define ServersIndex 0
+#define CombinedPmsCategoriesIndex 1
+#define DefaultServerIndex 2
 #define QualitySettingIndex 3
 #define AdvancedSettingsIndex 4
 #define PluginVersionNumberIndex 5
@@ -55,6 +55,12 @@
 - (void)setupList {
 	[_items removeAllObjects];
 	
+	// =========== servers ===========
+	SMFMenuItem *serversMenuItem = [SMFMenuItem folderMenuItem];
+	[serversMenuItem setTitle:@"Servers"];
+	[_items addObject:serversMenuItem];
+	
+	
 	// =========== combined PMS category view ===========
 	SMFMenuItem *combinedPmsCategoriesMenuItem = [SMFMenuItem menuItem];
 	
@@ -79,12 +85,6 @@
 	[defaultServerMenuItem setTitle:defaultServerTitle];
 	[defaultServerTitle release];
 	[_items addObject:defaultServerMenuItem];
-	
-	
-	// =========== remote servers ===========
-	SMFMenuItem *remoteServersMenuItem = [SMFMenuItem folderMenuItem];
-	[remoteServersMenuItem setTitle:@"Remote Servers"];
-	[_items addObject:remoteServersMenuItem];
 	
 	
 	// =========== quality setting ===========
@@ -117,15 +117,15 @@
 	[_items addObject:pluginVersionNumberMenuItem];
 	
 	//this code can be used to find all the accessory types
-	//	for (int i = 0; i<32; i++) {
-	//		BRMenuItem *tempSettingMenuItem = [[BRMenuItem alloc] init];
-	//		[tempSettingMenuItem addAccessoryOfType:i];
-	//		
-	//		NSString *tempSettingTitle = [[NSString alloc] initWithFormat:@"temp %d", i];
-	//		[tempSettingMenuItem setText:tempSettingTitle withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
-	//		[tempSettingTitle release];
-	//		[_items addObject:tempSettingMenuItem];
-	//	}
+//	for (int i = 0; i<32; i++) {
+//		BRMenuItem *tempSettingMenuItem = [[BRMenuItem alloc] init];
+//		[tempSettingMenuItem addAccessoryOfType:i];
+//		
+//		NSString *tempSettingTitle = [[NSString alloc] initWithFormat:@"temp %d", i];
+//		[tempSettingMenuItem setText:tempSettingTitle withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+//		[tempSettingTitle release];
+//		[_items addObject:tempSettingMenuItem];
+//	}
 }
 
 - (void)dealloc {
@@ -142,6 +142,13 @@
 #pragma mark List Delegate Methods
 - (void)itemSelected:(long)selected {
 	switch (selected) {
+		case ServersIndex: {
+			// =========== remote servers ===========
+			HWServersController* menuController = [[HWServersController alloc] init];
+			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
+			[menuController autorelease];
+			break;
+		}
 		case CombinedPmsCategoriesIndex: {
 			// =========== combined PMS category view ===========
 			BOOL isTurnedOn = [[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView];
@@ -152,14 +159,7 @@
 		}
 		case DefaultServerIndex: {
 			// =========== default server ===========
-			HWPmsListController* menuController = [[HWPmsListController alloc] init];
-			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
-			[menuController autorelease];
-			break;
-		}
-		case RemoteServersIndex: {
-			// =========== remote servers ===========
-			HWRemoteServersController* menuController = [[HWRemoteServersController alloc] init];
+			HWDefaultServerController* menuController = [[HWDefaultServerController alloc] init];
 			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 			[menuController autorelease];
 			break;
@@ -201,6 +201,12 @@
 {
 	SMFBaseAsset *asset = [[SMFBaseAsset alloc] init];
 	switch (item) {
+		case ServersIndex: {
+			// =========== servers ===========
+			[asset setTitle:@"List of servers"];
+			[asset setSummary:@"Add new or modify current servers and their connections"];
+			break;
+		}
 		case CombinedPmsCategoriesIndex: {
 			// =========== combined PMS category view ===========
 			[asset setTitle:@"Switch between main menu view modes"];
@@ -211,12 +217,6 @@
 			// =========== default server ===========
 			[asset setTitle:@"Select the default server"];
 			[asset setSummary:@"Shows the category's belonging to the default server (Only used if 'Default Server' view mode is selected"];
-			break;
-		}
-		case RemoteServersIndex: {
-			// =========== remote servers ===========
-			[asset setTitle:@"List of remote servers"];
-			[asset setSummary:@"Modify the list of servers not located on the local network"];
 			break;
 		}
 		case QualitySettingIndex: {

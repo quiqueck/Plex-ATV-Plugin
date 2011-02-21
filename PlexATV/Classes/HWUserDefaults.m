@@ -17,13 +17,6 @@
     if(!_plexPreferences) {
 		//setup user preferences
         _plexPreferences = [[SMFPreferences alloc] initWithPersistentDomainName:PreferencesDomain];
-		NSDictionary *remoteServer = [[NSDictionary alloc] initWithObjectsAndKeys: 
-									  @"", PreferencesRemoteServerHostName, 
-									  @"", PreferencesRemoteServerName, 
-									  @"", PreferencesRemoteServerUserName,
-									  @"", PreferencesRemoteServerPassword,
-									  nil];
-		NSArray *remoteServerList = [[NSArray alloc] initWithObjects:remoteServer, nil];
 		[_plexPreferences registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 											NO, PreferencesUseCombinedPmsView, 
 											@"<No Default Selected>", PreferencesDefaultServerName,
@@ -31,10 +24,7 @@
 											@"Low", PreferencesQualitySetting,
 											NO, PreferencesAdvancedEnableSkipFilteringOptionsMenu,
 											NO, PreferencesAdvancedEnableDebug,
-											remoteServerList, PreferencesRemoteServerList,
 											nil]];
-		[remoteServer release];
-		[remoteServerList release];
     }
 	
     return _plexPreferences;

@@ -10,9 +10,7 @@
 #import "PlexObject.h"
 #import "PlexMediaObject.h"
 @class PlexRequest;
-@protocol PlexDataPresenter;
-@protocol ListViewCellProtocol;
-@protocol BookPageView;
+
 
 typedef NSUInteger PlexViewModes;
 extern const PlexViewModes PlexViewModeUndefined;
@@ -56,8 +54,8 @@ extern const PlexFlagTypes PlexFlagTypeContentVideoResolution;
 extern const PlexFlagTypes PlexFlagTypeContentAudioChannels;
 extern const PlexFlagTypes PlexFlagTypeContentAspectRation;
 
-typedef NSString* PlexClontentType;
-extern const PlexClontentType PlexContentSongs;
+typedef NSString* PlexContentType;
+extern const PlexContentType PlexContentSongs;
 
 struct _PlexMediaContainerFlags{
 	BOOL hasSummaries:1;
@@ -80,16 +78,14 @@ struct _PlexMediaContainerFlags{
 };
 typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 
-#ifdef __IPHONE_4_0
+
 @interface PlexMediaContainer : PlexObject<NSXMLParserDelegate> {
-#else
-@interface PlexMediaContainer : PlexObject {
-#endif
+	id formatter;
 	NSMutableArray* directories;
 	PlexMediaContainer* parentFilterContainer;
 	PlexRequest* request;
 	PlexMediaObject* parentObject;
-	id<PlexDataPresenter> formatter;
+	//id<PlexDataPresenter> formatter;
 
 	NSString* backTitle;
 	
@@ -105,7 +101,7 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 	NSString* mediaTagPrefix;
 	NSString* mediaTagVersion;
 	
-	PlexClontentType content;
+	PlexContentType content;
 	
 	PlexImage* thumb;
 	PlexImage* art;
@@ -127,6 +123,7 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 @property (readonly) NSString* header;
 @property (readonly) NSString* message;
 @property (readonly) NSString* identifier;
+@property (readonly) NSString* imageRatingKey;
 @property (readonly) BOOL requestsMessage;
 @property (readonly) BOOL replaceParent;
 @property (readonly) BOOL hasSummaries;
@@ -147,17 +144,17 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 @property (readonly) PlexViewGroups viewGroup;
 @property (readonly) NSString* mediaTagPrefix;
 @property (readonly) NSString* mediaTagVersion;
-@property (readonly) PlexClontentType content;
+@property (readonly) PlexContentType content;
 
 
--(Class<ListViewCellProtocol>)listViewCellClassForOrientation:(UIInterfaceOrientation)io;
+
 
 
 -(id)initWithRequest:(PlexRequest*)req baseKey:(NSString*)bk fromObject:(PlexMediaObject*)pmo;
 -(void)didReceiveMemoryWarning;
 -(void)freeBannersAndArt;
+-(void)updateRequest:(PlexRequest*)req;
 	
--(void)displayMessage;
 -(PlexMediaContainer*)reload;
 -(void)loadAllThumbnailsInBackground;
 -(PlexMediaObject*)findEqualObject:(PlexObject*)o;
@@ -173,4 +170,3 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 -(void)reloadAttributes;
 @end
 	
-#import "PlexMediaContainer + SkinResources.h"

@@ -1,0 +1,6 @@
+[submodule "_Contrib/ATV2Includes"]
+	path = _Contrib/ATV2Includes
+	url = git://github.com/tomcool420/ATV2Includes.git
+[submodule "_Contrib/SMFramework"]
+	path = _Contrib/SMFramework
+	url = git://github.com/tomcool420/SMFramework.git

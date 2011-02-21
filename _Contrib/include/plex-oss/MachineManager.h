@@ -1,27 +1,36 @@
 //
-//  Machine.h
+//  MachineManager.h
 //  PlexPad
 //
-//  Created by Frank Bauer on 26.07.10.
+//  Created by Frank Bauer on 14.01.11.
 //  Copyright 2010 ambertation. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <ambertation-plex/Ambertation.h>
-#import "PlexGDM.h"
+#import "MachineAutoDetector.h"
 
-@class ServiceBrowser;
-@class Machine, PlexGDM;
-@protocol PlexGDBDelegate;
+typedef int ConnectionInfoType;
+extern const ConnectionInfoType ConnectionInfoTypeRootLevel;
+extern const ConnectionInfoType ConnectionInfoTypeLibrarySections;
+extern const ConnectionInfoType ConnectionInfoTypeClients;
+extern const ConnectionInfoType ConnectionInfoTypeOnline;
+extern const ConnectionInfoType ConnectionInfoTypeCanConnect;
+extern const ConnectionInfoType ConnectionInfoTypeAuthenticationNeeded;
+extern const ConnectionInfoType ConnectionInfoTypeLocalNetwork;
 
-@protocol MachineManagerDelegate
+@class Machine, ClientConnection;
+
+@protocol MachineManagerDelegate <NSObject>
 -(void)machineWasAdded:(Machine*)m;
--(void)machineStateDidChange:(Machine*)m;
--(void)machineResolved:(Machine*)m;
--(void)machineDidNotResolve:(Machine*)m;
--(void)machineReceivedClients:(Machine*)m;
-@optional
 -(void)machineWasRemoved:(Machine*)m;
+
+@optional
+-(void)machineWasChanged:(Machine*)m;
+-(void)machine:(Machine*)m changedConnection:(MachineConnectionBase*)con;
+-(void)machine:(Machine*)m updatedInfo:(ConnectionInfoType)updateMask;
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc;
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask;
 @end;
 
 typedef int MachineRole;
@@ -30,50 +39,46 @@ extern const MachineRole MachineRoleServer;
 extern const MachineRole MachineRoleClient;
 extern const MachineRole MachineRoleClientServer;
 
-extern NSString* PMSBonjourID;
-extern NSString* PlexBonjourID;;
-extern NSString* PMSBounjourIdent;
-
-static inline BOOL isServerService(NSNetService* s) {
-	NSRange r = [[s type] rangeOfString:PMSBounjourIdent];
-	return r.length>0;
-}
-
-@interface MachineManager : NSObject<NSNetServiceBrowserDelegate, PlexGDBDelegate> {
-	NSNetServiceBrowser* serviceBrowserPMS;
-	NSNetServiceBrowser* serviceBrowserPlex;
-	
-	ServiceBrowser* dnsBrowserPMS;
-	ServiceBrowser* dnsBrowserPlex;
-	PlexGDM*        gdmBrowser;
+@interface MachineManager : NSObject<MachineAutoDetectionProtocol> {
 	id<MachineManagerDelegate> delegate;
 	
+	NSSet* discoveryMethods;
 	NSMutableArray* machines;
 	Machine* localhost;
+	
+	
+  NSTimeInterval stateMonitorInterval;
+	NSTimer* stateMonitorTimer;
 }
 
 @property (readwrite, assign) id<MachineManagerDelegate> delegate;
 @property (readwrite, retain) Machine* localhost;
-@property (readonly, retain) NSMutableArray* machines;
+@property (readonly, retain) NSArray* threadSafeMachines;
 
 SINGLETON_INTERFACE(MachineManager)
 
 -(void)startAutoDetection;
 -(void)stopAutoDetection;
 -(BOOL)autoDetectionActive;
+
 -(void)writeMachinePreferences;
 
--(NSArray*)machines;
+-(void)addConnection:(MachineConnectionBase*)con;
+-(void)removeConnection:(MachineConnectionBase*)con;
+
+-(NSArray*)threadSafeMachines;
+-(NSUInteger)machineCount;
+
 -(void)addMachine:(Machine*)m;
 -(void)changedMachine:(Machine*)machineOrNil;
--(void)sendMachineChangeNotificationFor:(Machine*)m;
 -(void)removeMachine:(Machine*)m;
 -(void)removeMachineAtIndex:(NSUInteger)idx;
 -(Machine*)machineAtIndex:(int)idx;
+-(Machine*)machineForMachineID:(NSString*)mid;
 
--(void)updateUnknownRoles;
--(void)updateOnlineStates;
 
--(NSArray*)serialize;
--(void)loadSerializedArray:(NSArray*)ar;
+-(void)updateMachineStatesNow;
+-(void)startMonitoringMachineState;
+-(void)setMachineStateMonitorPriority:(BOOL)high;
+-(void)stopMonitoringMachineState;
 @end

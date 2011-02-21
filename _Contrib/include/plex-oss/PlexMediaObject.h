@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "PlexDirectory.h"
-#import "DownloadOrPlayViewControllerDelegate.h"
-#import "PlaybackWhereViewControllerDelegate.h"
-
 typedef int PlexMediaObjectSeenState;
 extern const PlexMediaObjectSeenState PlexMediaObjectSeenStateSeen;
 extern const PlexMediaObjectSeenState PlexMediaObjectSeenStateUnseen;
@@ -28,7 +25,7 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 @protocol BackgroundOperationDelegate;
 
 @class LoadPlexObjectBackgroundContentOperation,LoadURLOperation;
-@interface PlexMediaObject : PlexDirectory<PlaybackWhereViewControllerDelegate, DownloadOrPlayViewControllerDelegate> {
+@interface PlexMediaObject : PlexDirectory{
 	NSString* ratingKey;
 	NSTimeInterval duration;
 	NSDate* originallyAvailableAt;
@@ -53,9 +50,17 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 @property (readonly) BOOL search;
 @property (readonly) NSString* summary;
 @property (readonly) NSString* ratingKey;
+@property (readonly) NSString* imageRatingKey;
+@property (readonly) NSString* historyImageRatingKey;
 @property (readonly) PlexMediaObjectTypes type;
 @property (readwrite, assign) UIView* popoverView;
 @property (readonly) PlexMediaObject* parentObject;
+
+@property (readonly) BOOL isMovie;
+@property (readonly) BOOL isVideo;
+@property (readonly) BOOL isEpisode;
+@property (readonly) BOOL isSeason;
+@property (readonly) BOOL isTVShow;
 	
 //Episode Stuff
 @property (readonly) NSTimeInterval duration;
@@ -67,22 +72,19 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 -(void)processReceivedContents:(PlexMediaContainer*)contents;
 -(LoadPlexObjectBackgroundContentOperation*)loadContentAndNotify:(id<BackgroundOperationDelegate>)objOrNil;
 
--(IBAction)openMenuScreen:(UIView*)container;
--(void)openMenu;
 -(void)postMediaProgress:(NSTimeInterval)tm;
--(void)openWithoutAskDownload:(UIView<PlexPosterView>*)sender;
--(IBAction)open:(UIView<PlexPosterView>*)sender;
--(void)playInPlex;
--(IBAction)playOnDevice;
--(void)makeAvailableOffline;
 -(PlexMediaContainer*)loadDetails;
 
--(BOOL)canPlayOnDevice;
--(BOOL)canPlayOnPlex;
+-(BOOL)canPlayOnDevicePredicate;
+-(BOOL)canPlayOnPlexPredicate;
 -(BOOL)canPlayWithoutTranscoder;
 -(BOOL)localFile;
+
 -(NSURL*)mediaURL;
 -(NSURL*)mediaStreamURL;
+-(NSURL*)mediaPlexPlayURL;
+-(NSURL*)audioPlexPlayURL;
+
 -(int)rating;
 -(PlexMediaObjectSeenState)seenState;
 
@@ -107,4 +109,6 @@ extern const PlexMediaObjectTypes PlexMediaMediaTypeMovie;
 -(void)setAsMatch;
 
 -(BOOL)shouldRemoveForRating:(const ContentRating)cr;
+
+-(void)updateRequest:(PlexRequest*)req;
 @end

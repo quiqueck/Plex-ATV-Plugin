@@ -32,6 +32,7 @@
 @property (readwrite, retain) NSMutableDictionary* attributes;
 @property (readonly) NSString* key;
 @property (readonly) NSString* lastKeyComponent;
+@property (readonly) NSString* sectionKey;
 @property (readonly) PlexRequest* request;
 @property (readwrite, retain) NSString* name;
 @property (readonly, retain) NSString* containerType;
@@ -53,5 +54,7 @@
 -(void)loadBackgroundData;
 -(void)cancelLoadBackgroundData;
 -(void)finishedLoadBackgroundData;
+
+-(void)refreshContainingSection:(BOOL)force;
 @end
 	

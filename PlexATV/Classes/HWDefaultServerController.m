@@ -1,5 +1,5 @@
 //
-//  HWPmsListController.m
+//  HWDefaultServersController.m
 //  atvTwo
 //
 //  Created by ccjensen on 10/01/2011.
@@ -7,14 +7,14 @@
 
 
 
-#import "HWPmsListController.h"
+#import "HWDefaultServerController.h"
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
 #import "HWUserDefaults.h"
 #import "Constants.h"
 
-@implementation HWPmsListController
+@implementation HWDefaultServerController
 
 - (id) init
 {
@@ -29,9 +29,6 @@
 		//make sure we are the delegate
 		[[ProxyMachineDelegate shared] registerDelegate:self];
 		
-		//start the auto detection
-		[[MachineManager sharedMachineManager] startAutoDetection];
-		
 		[[self list] setDatasource:self];
 	}
 	return self;
@@ -40,7 +37,6 @@
 
 -(void)dealloc
 {
-	[[MachineManager sharedMachineManager] stopAutoDetection];
 	[_names release];
 	
 	[super dealloc];
@@ -60,12 +56,10 @@
 	[super wasPopped];
 }
 
-
-
 - (id)previewControlForItem:(long)item
 
 {
-	BRImage *theImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[HWPmsListController class]] pathForResource:@"PlexLogo" ofType:@"png"]];
+	BRImage *theImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[HWDefaultServerController class]] pathForResource:@"PlexLogo" ofType:@"png"]];
 	BRImageAndSyncingPreviewController *obj = [[BRImageAndSyncingPreviewController alloc] init];
 	[obj setImage:theImage];
 	return [obj autorelease];
@@ -80,7 +74,7 @@
 	NSLog(@"machine selected: %@", m);
 	
 	[[HWUserDefaults preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
-	[[HWUserDefaults preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];
+	[[HWUserDefaults preferences] setObject:m.machineID forKey:PreferencesDefaultServerUid];
 	
 	[self setNeedsUpdate];
 }
@@ -101,7 +95,7 @@
 	[result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 	
 	NSString *defaultServerUid = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid];
-	if ([m.uid isEqualToString:defaultServerUid]) {
+	if ([m.machineID isEqualToString:defaultServerUid]) {
 		[result addAccessoryOfType:17]; //checkmark
 	}
 	
@@ -129,7 +123,7 @@
 
 #pragma mark
 #pragma mark Machine Manager Delegate
--(void)machineWasRemoved:(Machine*)m{
+-(void)machineWasRemoved:(Machine*)m;{
 	NSLog(@"Removed %@", m);
 	[_names removeObject:m];
 }
@@ -144,7 +138,7 @@
 	[self setNeedsUpdate];
 }
 
--(void)machineStateDidChange:(Machine*)m{
+-(void)machineWasChanged:(Machine*)m{
 	if (m==nil) return;
 	
 	if (runsServer(m.role) && ![_names containsObject:m]){
@@ -160,16 +154,7 @@
 	[self setNeedsUpdate];
 }
 
--(void)machineResolved:(Machine*)m{
-	NSLog(@"Resolved %@", m);
-	[[MachineManager sharedMachineManager] addMachine:m];
-}
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{}
 
--(void)machineDidNotResolve:(Machine*)m{
-	NSLog(@"Unable to Resolve %@", m);
-}
-
--(void)machineReceivedClients:(Machine*)m{
-	NSLog(@"Got list of clients %@", m);
-}
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{}
 @end

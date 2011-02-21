@@ -9,33 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "Machine.h"
 #import "MemoryObject.h"
+#import "PlexStreamingQuality.h"
 
 extern const NSString* plexSectionsKey;
 extern const NSString* plexClientsKey;
 extern const NSString* plexServersKey;
 extern const NSString* plexPhotoKey;
 extern const NSString* plexStoreKey;
+extern const NSString* plexSystemKey;
 extern const NSString* plexVideoKey;
 extern const NSString* plexMusicKey;
-
-typedef NSInteger PlexStreamingQuality;
-extern const PlexStreamingQuality PlexStreamingQualityAuto;
-extern const PlexStreamingQuality PlexStreamingQuality3GLow;
-extern const PlexStreamingQuality PlexStreamingQuality3GMed;
-extern const PlexStreamingQuality PlexStreamingQuality3GHigh;
-extern const PlexStreamingQuality PlexStreamingQualityDefault;
-extern const PlexStreamingQuality PlexStreamingQualityWiFi;
-extern const PlexStreamingQuality PlexStreamingQualityiPhoneWiFi;
-extern const PlexStreamingQuality PlexStreamingQuality720p_1500;
-extern const PlexStreamingQuality PlexStreamingQuality720p_2300;
-extern const PlexStreamingQuality PlexStreamingQuality720p_4000;
-extern const PlexStreamingQuality PlexStreamingQuality1080p_5000;
-extern const PlexStreamingQuality PlexStreamingQuality1080p_8000;
-extern const PlexStreamingQuality PlexStreamingQuality1080p_10000;
-extern const PlexStreamingQuality PlexStreamingQuality1080p_14000;
-extern const PlexStreamingQuality PlexStreamingQualityMaxiPad;
-extern const PlexStreamingQuality PlexStreamingQualityMaxLowResiPhone;
-extern const PlexStreamingQuality PlexStreamingQualityMax;
 
 
 typedef NSString* PlexRemoteControlType;
@@ -54,6 +37,8 @@ extern const NSString* plexClientsKey ;
 	int port, localPort;
 	NSMutableDictionary* flagCache;
 	BOOL transcoderRunning;
+	BOOL authWasExpected;
+    BOOL canStartTranscoder;
 	
 	PlexServer* serverObject;
 	Machine* machine;
@@ -62,6 +47,8 @@ extern const NSString* plexClientsKey ;
 @property (readwrite, assign) Machine* machine;
 @property (readonly) NSString* base;
 @property (readwrite) BOOL transcoderRunning;
+@property (readwrite) BOOL canStartTranscoder;
+@property (readwrite) BOOL authWasExpected;
 @property (readonly) PlexServer* serverObject;
 
 -(id) initWithServer:(NSString*)host onPort:(NSUInteger)port;
@@ -78,17 +65,17 @@ extern const NSString* plexClientsKey ;
 -(NSData*)dataForRequest:(NSMutableURLRequest*)req timeout:(NSTimeInterval)t didTimeout:(BOOL*)didTimeout;
 -(void)asyncDataForURL:(NSURL*)url authenticateStreaming:(BOOL)auths notify:(id<NSURLLoadOperationDelegate>)opDelegate timeout:(NSTimeInterval)t;
 
--(void)sendRemoteControlCommand:(NSString*)cmd type:(PlexRemoteControlType)type toClient:(Machine*)clientOrNil;
--(void)sendRemoteControlURLSendKey:(NSString*)k client:(Machine*)clientOrNil;
--(void)sendRemoteControlURLSendVirtualKey:(NSString*)k client:(Machine*)clientOrNil;
--(void)sendRemoteControlURLSendString:(NSString*)txt client:(Machine*)clientOrNil;
--(NSURL*)remoteControlURL:(NSString*)command type:(PlexRemoteControlType)type parameter:(NSString*)queryOrNil client:(Machine*)clientOrNil;
--(NSURL*)remoteControlURLSendKey:(NSString*)k client:(Machine*)clientOrNil;
--(NSURL*)remoteControlURLSendVirtualKey:(NSString*)k client:(Machine*)clientOrNil;
--(NSURL*)remoteControlURLSendString:(NSString*)txt client:(Machine*)clientOrNil;
+-(void)sendRemoteControlCommand:(NSString*)cmd type:(PlexRemoteControlType)type toClient:(ClientConnection*)clientOrNil;
+-(void)sendRemoteControlURLSendKey:(NSString*)k client:(ClientConnection*)clientOrNil;
+-(void)sendRemoteControlURLSendVirtualKey:(NSString*)k client:(ClientConnection*)clientOrNil;
+-(void)sendRemoteControlURLSendString:(NSString*)txt client:(ClientConnection*)clientOrNil;
+-(NSURL*)remoteControlURL:(NSString*)command type:(PlexRemoteControlType)type parameter:(NSString*)queryOrNil client:(ClientConnection*)clientOrNil;
+-(NSURL*)remoteControlURLSendKey:(NSString*)k client:(ClientConnection*)clientOrNil;
+-(NSURL*)remoteControlURLSendVirtualKey:(NSString*)k client:(ClientConnection*)clientOrNil;
+-(NSURL*)remoteControlURLSendString:(NSString*)txt client:(ClientConnection*)clientOrNil;
 
 -(NSURL*)pathForScaledImage:(NSString*)key ofSize:(CGSize)sz;
--(NSURL*)streamingURL:(NSString*)key mediaContainer:(PlexMediaContainer*)pmc quality:(PlexStreamingQuality)q callingObject:(PlexMediaObject*)pmo;
+-(NSURL*)streamingURLForPart:(PlexDirectory*)part mediaContainer:(PlexMediaContainer*)pmc quality:(PlexStreamingQuality)q callingObject:(PlexMediaObject*)pmo;
 -(NSURL*)postSeenNotificationRatingKey:(NSString*)rk identifier:(NSString*)ident;
 -(NSURL*)postMediaProgressRatingKey:(NSString*)rk identifier:(NSString*)ident time:(NSTimeInterval)tm;
 -(NSURL*)postMediaProgressURL:(PlexMediaObject*)pmo time:(NSTimeInterval)tm;
@@ -108,10 +95,15 @@ extern const NSString* plexClientsKey ;
 -(void)pingTranscoder;
 -(void)pingTranscoderSync;
 
+-(void)refreshSection:(NSString*)key force:(BOOL)forceRefresh;
+-(void)refreshAllSections:(BOOL)force;
+
 +(void)freeCache;
 
 -(PlexImage*)flagForKey:(NSString*)key;
 -(PlexMediaContainer*)rootLevel;
+-(PlexMediaContainer*)topLevelContainer;
+-(PlexMediaContainer*)librarySections;
 -(void)didReceiveMemoryWarning;
 - (NSString *) buildAbsoluteKey: (NSString *) key;
 - (NSString *) buildAbsoluteKey: (NSString *) key  referenceLocalHost:(BOOL)local;

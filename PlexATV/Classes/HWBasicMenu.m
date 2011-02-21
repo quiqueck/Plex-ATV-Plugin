@@ -160,7 +160,7 @@
 	[self setNeedsUpdate];
 }
 
--(void)machineStateDidChange:(Machine*)m{
+-(void)machineWasChanged:(Machine*)m{
   if (m==nil) return;
   
   if (runsServer(m.role) && ![_names containsObject:m]){
@@ -176,15 +176,9 @@
 	[self setNeedsUpdate];
 }
 
--(void)machineResolved:(Machine*)m{
-	NSLog(@"Resolved %@", m);
+-(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con{
 }
 
--(void)machineDidNotResolve:(Machine*)m{
-	NSLog(@"Unable to Resolve %@", m);
-}
-
--(void)machineReceivedClients:(Machine*)m{
-	NSLog(@"Got list of clients %@", m);
+-(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{
 }
 @end
