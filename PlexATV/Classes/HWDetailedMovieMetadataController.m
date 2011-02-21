@@ -40,9 +40,9 @@
 
 typedef enum {
 	kPreviewButton = 0,
-  kPlayButton,
-  kQueueButton,
-  kMoreButton
+	kPlayButton,
+	kQueueButton,
+	kMoreButton
 } ActionButton;
 
 @implementation HWDetailedMovieMetadataController
@@ -69,7 +69,7 @@ typedef enum {
 	if (self = [super init]) {
 		self.assets = previewAssets;
 #if LOCAL_DEBUG_ENABLED
-    NSLog(@"init with asset count:%d and index:%d", [self.assets count], selIndex);
+		NSLog(@"init with asset count:%d and index:%d", [self.assets count], selIndex);
 #endif
 		if ([self.assets count] > selIndex) {
 			currentSelectedIndex = selIndex;
@@ -83,9 +83,9 @@ typedef enum {
 		
 		self.datasource = self;
 		self.delegate = self;
-    
+		
 #if LOCAL_DEBUG_ENABLED
-    NSLog(@"init done. assets rigged");
+		NSLog(@"init done. assets rigged");
 #endif
 	}
 	return self;
@@ -176,22 +176,22 @@ typedef enum {
 		//one of the buttons have been pushed
 		BRButtonControl *buttonControl = (BRButtonControl *)ctrl;
 #if LOCAL_DEBUG_ENABLED
-    NSLog(@"button chosen: %@", buttonControl.identifier);
+		NSLog(@"button chosen: %@", buttonControl.identifier);
 #endif
-    int buttonId = [buttonControl.identifier intValue];
-    switch (buttonId) {
-      case kPlayButton:
-        NSLog(@"play movie plz kthxbye");
-        NSLog(@"asset: %@", selectedMediaItemPreviewData.title);
-        PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:selectedMediaItemPreviewData.pmo];
-        [player startPlaying];
-        [player autorelease];
-        break;
-      default:
-        break;
-    }
-    
-    //none of the buttons do anything, make error sound for now
+		int buttonId = [buttonControl.identifier intValue];
+		switch (buttonId) {
+			case kPlayButton:
+				NSLog(@"play movie plz kthxbye");
+				NSLog(@"asset: %@", selectedMediaItemPreviewData.title);
+				PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:selectedMediaItemPreviewData.pmo];
+				[player startPlaying];
+				[player autorelease];
+				break;
+			default:
+				break;
+		}
+		
+		//none of the buttons do anything, make error sound for now
 		[[SMFThemeInfo sharedTheme] playErrorSound];
 		
 	} else if (ctrl == self._shelfControl) {
@@ -341,7 +341,7 @@ typedef enum {
     b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]playActionImage] 
                                        subtitle:@"Play"
                                           badge:nil]retain];
-  
+	
     b.identifier = [NSNumber numberWithInt:kPlayButton];
     [buttons addObject:b];
     
