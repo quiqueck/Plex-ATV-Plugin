@@ -7,11 +7,11 @@ Main project developers: b0bben and ccjensen
 Apple TV guru and project consultant: tomcool420
 
 ## PREPARING
-a) You need to install the "beigelist" on your Apple TV (if you installed the Plex-Plugin using apt, it is already there )
-b) Set up a password-less ssh connection to your Apple TV using [O'Reilly's instructions](http://oreilly.com/pub/h/66)
-c) You need the iPhone 4.2 SDK installed on your machine!
-d) You need to get transcoder keys from the plex team in order to make playback work.
-e) Install the plex-client on your Apple TV (prepares the correct skeletons)
+1. You need to install the "beigelist" on your Apple TV (if you installed the Plex-Plugin using apt, it is already there )
+2. Set up a password-less ssh connection to your Apple TV using [O'Reilly's instructions](http://oreilly.com/pub/h/66)
+3. You need the iPhone 4.2 SDK installed on your machine!
+4. You need to get transcoder keys from the plex team in order to make playback work.
+5. Install the plex-client on your Apple TV (prepares the correct skeletons)
 		echo "deb http://www.ambertation.de ./downloads/PLEX/" > /etc/apt/sources.list.d/plex.list
 		apt-get update
 		apt-get install com.plex.client-plugin
