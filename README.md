@@ -11,7 +11,7 @@ Apple TV guru and project consultant: tomcool420
 2. Set up a password-less ssh connection to your Apple TV using [O'Reilly's instructions](http://oreilly.com/pub/h/66)
 3. You need the iPhone 4.2 SDK installed on your machine!
 4. You need to get transcoder keys from the plex team in order to make playback work.
-5. Install the plex-client on your Apple TV (prepares the correct skeletons)
+5. Install the plex-client on your Apple TV (prepares the correct skeletons) using:
 		echo "deb http://www.ambertation.de ./downloads/PLEX/" > /etc/apt/sources.list.d/plex.list
 		apt-get update
 		apt-get install com.plex.client-plugin
