@@ -159,6 +159,8 @@
 	NSLog(@"artist");
 	if ([pmo.attributes objectForKey:@"artist"] != nil)
 		return [pmo.attributes objectForKey:@"artist"];
+	else if ([pmo.attributes objectForKey:@"grandparentTitle"] != nil)
+		return [pmo.attributes objectForKey:@"grandparentTitle"];
 	else
 		return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 };
@@ -178,6 +180,8 @@
     NSLog(@"primaryCollectionTitle");
 	if ([pmo.attributes objectForKey:@"album"] != nil)
 		return [pmo.attributes objectForKey:@"album"];
+  else if ([pmo.attributes objectForKey:@"parentTitle"] != nil)
+    return [pmo.attributes objectForKey:@"parentTitle"];
 	else
 		return [pmo.mediaContainer.attributes valueForKey:@"title2"];
 };

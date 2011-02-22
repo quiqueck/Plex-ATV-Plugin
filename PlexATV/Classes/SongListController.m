@@ -78,7 +78,7 @@
 }
 
 - (void)dealloc {
-	[self.songs dealloc];
+	[self.songs release];
 	[self.rootContainer release];
 	[super dealloc];
 }
@@ -210,7 +210,7 @@
 			BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
 			[preview setShowsMetadataImmediately:YES];
 			[preview setAsset:album];	
-			[album release];
+			[album autorelease];
 			return [preview autorelease];      
 		}
 	}
