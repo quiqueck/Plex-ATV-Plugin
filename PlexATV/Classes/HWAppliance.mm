@@ -11,7 +11,7 @@
 #import <plex-oss/PlexMediaContainer.h>
 #import "HWUserDefaults.h"
 #import "Constants.h"
-#import "HWMediaShelfController.h"
+#import "HWMediaGridController.h"
 
 #define SERVER_LIST_ID @"hwServerList"
 #define SETTINGS_ID @"hwSettings"
@@ -170,7 +170,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
   
   if (recent && allMovies){
     NSLog(@"pushing shelfController");
-    HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
+    HWMediaGridController *shelfController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
     [[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
   }
 }
