@@ -314,7 +314,6 @@
 		MachineConnectionBase *connection = [self.machine.connections objectAtIndex:adjustedRow];
 		title = [NSString stringWithFormat:@"%@ : %d", connection.hostName, connection.port];
 	}
-	NSLog(@"new title: %@", title);
 	return title;
 }
 

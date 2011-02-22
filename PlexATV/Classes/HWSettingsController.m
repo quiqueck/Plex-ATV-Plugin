@@ -57,7 +57,7 @@
 	
 	// =========== servers ===========
 	SMFMenuItem *serversMenuItem = [SMFMenuItem folderMenuItem];
-	[serversMenuItem setTitle:@"Servers"];
+	[serversMenuItem setTitle:@"Manage server list"];
 	[_items addObject:serversMenuItem];
 	
 	
@@ -204,18 +204,18 @@
 		case ServersIndex: {
 			// =========== servers ===========
 			[asset setTitle:@"Manage server list"];
-			[asset setSummary:@"Add new or modify current servers and their connections"];
+			[asset setSummary:@"Add new or modify current servers, their connections and their 'inclusion in main menu' status"];
 			break;
 		}
 		case CombinedPmsCategoriesIndex: {
 			// =========== combined PMS category view ===========
-			[asset setTitle:@"Switch between main menu view modes"];
+			[asset setTitle:@"Switch between main menu view modes (REPLACED)"];
 			[asset setSummary:@"Toggles between using a categories from a single default server or a combined view of categories from all available PMS'"];
 			break;
 		}
 		case DefaultServerIndex: {
 			// =========== default server ===========
-			[asset setTitle:@"Select the default server"];
+			[asset setTitle:@"Select the default server (REPLACED)"];
 			[asset setSummary:@"Shows the category's belonging to the default server (Only used if 'Default Server' view mode is selected"];
 			break;
 		}
