@@ -10,7 +10,7 @@
 
 @class PlexMediaContainer;
 
-@interface HWMediaShelfController : BRController {
+@interface HWMediaGridController : BRController {
   NSArray	*_shelfAssets;
   NSArray	*_gridAssets;
   BRGridControl*          _gridControl;

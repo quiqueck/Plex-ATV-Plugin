@@ -36,7 +36,7 @@
 #import "PlexSongAsset.h"
 #import "SongListController.h"
 #import "HWUserDefaults.h"
-#import "HWMediaShelfController.h"
+#import "HWMediaGridController.h"
 #import "HWDetailedMovieMetadataController.h"
 #import "PlexPlaybackController.h"
 
@@ -267,7 +267,7 @@
 	
 	if (recent && allMovies){
 		NSLog(@"pushing shelfController");
-		HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
+		HWMediaGridController *shelfController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
 		[[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
 	}
 	

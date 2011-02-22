@@ -6,7 +6,7 @@
   //  Copyright 2011 Band's gonna make it!. All rights reserved.
   //
 
-#import "HWMediaShelfController.h"
+#import "HWMediaGridController.h"
 #import "PlexMediaAsset.h"
 #import "PlexPreviewAsset.h"
 #import <plex-oss/PlexMediaObject.h>
@@ -23,7 +23,15 @@
 - (id)storeRentalPlaceholderImage;
 @end
 
-@implementation HWMediaShelfController
+@implementation HWMediaGridController
+
+void checkNil(NSObject *ctrl)
+{
+  if (ctrl!=nil) {
+    [ctrl release];
+    ctrl=nil;
+  }
+}
 
 -(id)initWithPath:(NSString *)path
 {
@@ -50,7 +58,23 @@
   _gridAssets = [self convertContainerToMediaAssets:allMovies];
 
   return self;
-}  
+}
+
+-(void)dealloc {
+#if LOCAL_DEBUG_ENABLED
+	NSLog(@"deallocing HWMediaShelfController");
+#endif
+	_shelfAssets = nil;
+  _gridAssets = nil;
+    //[_spinner release];
+    //[_cursorControl release];
+    //[_scroller release];
+  [_gridControl release];
+  [_shelfControl release];
+  [_panelControl release];
+  
+  [super dealloc];
+}
 
 - (NSArray *)convertContainerToMediaAssets:(PlexMediaContainer *)container {
   NSLog(@"convertContainerToMediaAssets %@", container);
@@ -82,11 +106,18 @@
    * Controls init
    */
   
+  NSLog(@"controls init");
+ 
   _spinner=[[BRWaitSpinnerControl alloc]init];
+ 
   _cursorControl=[[BRCursorControl alloc] init];
+ 
   _scroller=[[BRScrollControl alloc] init];
+ 
   _gridControl=[[BRGridControl alloc] init];
+ 
   _shelfControl = [[BRMediaShelfControl alloc]init];
+ 
   _panelControl = [[BRPanelControl alloc]init];
   
   
@@ -222,13 +253,6 @@
   [_scroller setAcceptsFocus:YES];
 
   [self layoutSubcontrols];
-  
-  [_spinner release];
-  [_cursorControl release];
-  [_scroller release];
-  [_gridControl release];
-  [_shelfControl release];
-  [_panelControl release];
   
 #if LOCAL_DEBUG_ENABLED
   NSLog(@"drawSelf done");
