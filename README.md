@@ -16,6 +16,7 @@ Apple TV guru and project consultant: tomcool420
 		echo "deb http://www.ambertation.de ./downloads/PLEX/" > /etc/apt/sources.list.d/plex.list
 		apt-get update
 		apt-get install com.plex.client-plugin
+		
 6. Get a copy of the Plex Apple TV Client using a the link at the github repository
 7. cd into the code's base directory (with name Plex-ATV-Plugin)
 8. Get build dependencies (ATV2Includes and SMFramework). These are included as submodules in the _contrib folder. The folders will be empty when you do a fresh clone, so type in:
@@ -31,7 +32,7 @@ Apple TV guru and project consultant: tomcool420
             
             git submodule add
 	
-	This fill the _contrib/SMFramework and _contrib/ATV2Includes folders
+	This fill the `_contrib/SMFramework` and `_contrib/ATV2Includes` folders
 10. At this point all the code should be present
 
 ## BUILDING
