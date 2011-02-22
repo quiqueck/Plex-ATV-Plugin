@@ -44,5 +44,5 @@
 - (NSString*)mediaURL;
 - (BRImage *)starRatingImage;
 - (NSArray *)writers;
-- (NSString *)yearCreated;
+- (NSString *)year;
 @end

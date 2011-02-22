@@ -260,7 +260,7 @@ typedef enum {
 	BRGenre *genre = [self.selectedMediaItemPreviewData primaryGenre];
 	[details addObject:[genre displayString]];
 	
-	NSString *released = [NSString stringWithFormat:@"Released %@", [self.selectedMediaItemPreviewData yearCreated]];
+	NSString *released = [NSString stringWithFormat:@"Released %@", [self.selectedMediaItemPreviewData year]];
 	[details addObject:released];
 	
 	NSString *duration = [NSString stringWithFormat:@"%d minutes", [self.selectedMediaItemPreviewData duration]/60];

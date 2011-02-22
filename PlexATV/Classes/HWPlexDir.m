@@ -1,26 +1,26 @@
-  //
-  //  HWPlexDir.m
-  //  atvTwo
-  //
-  //  Created by Frank Bauer on 22.10.10.
-  //  Permission is hereby granted, free of charge, to any person obtaining a copy
-  //  of this software and associated documentation files (the "Software"), to deal
-  //  in the Software without restriction, including without limitation the rights
-  //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  //  copies of the Software, and to permit persons to whom the Software is
-  //  furnished to do so, subject to the following conditions:
-  //  
-  //  The above copyright notice and this permission notice shall be included in
-  //  all copies or substantial portions of the Software.
-  //  
-  //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  //  THE SOFTWARE.
-  //  
+//
+//  HWPlexDir.m
+//  atvTwo
+//
+//  Created by Frank Bauer on 22.10.10.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//  
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//  
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//  
 
 #import "HWPlexDir.h"
 #import "Constants.h"
@@ -52,7 +52,7 @@
 		
 		NSString *settingsPng = [[NSBundle bundleForClass:[HWPlexDir class]] pathForResource:@"PlexIcon" ofType:@"png"];
 		BRImage *sp = [BRImage imageWithPath:settingsPng];
-      //BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
+		//BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		
@@ -66,63 +66,63 @@
 }
 
 - (id) initWithRootContainer:(PlexMediaContainer*)container {
-  self = [self init];
-  self.rootContainer = [self applySkipFilteringOnContainer:container];
-  return self;
+	self = [self init];
+	self.rootContainer = [self applySkipFilteringOnContainer:container];
+	return self;
 }
 
 - (PlexMediaContainer*) applySkipFilteringOnContainer:(PlexMediaContainer*)container {
-  PlexMediaContainer *pmc = container;
-  
-  BOOL skipFilteringOptionsMenu = [[HWUserDefaults preferences] boolForKey:PreferencesAdvancedEnableSkipFilteringOptionsMenu];
-  NSLog(@"skipFilteringOption: %@", skipFilteringOptionsMenu ? @"YES" : @"NO");
-  
-  if (pmc.sectionRoot && !pmc.requestsMessage && skipFilteringOptionsMenu) { 
-			//open "/library/section/x/all or the first item in the list"
-			//bypass the first filter node
-    
-    /*
-     at some point wou will present the user a selection for the available filters, right?
-     when the user selects one, you should write to that preference so next time user comes back
-     ATV will use the last filter
-     */
-			//[PlexPrefs defaultPreferences] filterForSection]
-    
-    const NSString* filter = [[PlexPrefs defaultPreferences] filterForSection:pmc.key];
-    BOOL handled = NO;
-    PlexMediaContainer* new_pmc = nil;
-    
-    for(PlexMediaObject* po in pmc.directories){
-      NSLog(@"%@: %@ == %@", pmc.key, po.lastKeyComponent, filter);
-      if ([filter isEqualToString:po.lastKeyComponent]){
-        PlexMediaContainer* my_new_pmc = [po contents];
-        if (my_new_pmc.directories.count>0) new_pmc = my_new_pmc;
-        handled = YES;
-        break;
-      }
-    }
-    
-    NSLog(@"handled: %@", handled ? @"YES" : @"NO");
-    if (handled && new_pmc==nil) new_pmc = [[pmc.directories objectAtIndex:0] contents];
-    if (new_pmc==nil || new_pmc.directories.count==0){
-      for(PlexMediaObject* po in pmc.directories){
-        PlexMediaContainer* my_new_pmc = [po contents];
-        if (my_new_pmc.directories.count>0) {
-          new_pmc = my_new_pmc;
-          handled = YES;
-          break;
-        }
-      }
-    }
-    
-    if (new_pmc) {
-      pmc = new_pmc;
-    }
-    
-    if (!handled && pmc.directories.count>0) pmc = [[pmc.directories objectAtIndex:0] contents];
-  }
-  NSLog(@"done filtering");
-  return pmc;
+	PlexMediaContainer *pmc = container;
+	
+	BOOL skipFilteringOptionsMenu = [[HWUserDefaults preferences] boolForKey:PreferencesAdvancedEnableSkipFilteringOptionsMenu];
+	NSLog(@"skipFilteringOption: %@", skipFilteringOptionsMenu ? @"YES" : @"NO");
+	
+	if (pmc.sectionRoot && !pmc.requestsMessage && skipFilteringOptionsMenu) { 
+		//open "/library/section/x/all or the first item in the list"
+		//bypass the first filter node
+		
+		/*
+		 at some point wou will present the user a selection for the available filters, right?
+		 when the user selects one, you should write to that preference so next time user comes back
+		 ATV will use the last filter
+		 */
+		//[PlexPrefs defaultPreferences] filterForSection]
+		
+		const NSString* filter = [[PlexPrefs defaultPreferences] filterForSection:pmc.key];
+		BOOL handled = NO;
+		PlexMediaContainer* new_pmc = nil;
+		
+		for(PlexMediaObject* po in pmc.directories){
+			NSLog(@"%@: %@ == %@", pmc.key, po.lastKeyComponent, filter);
+			if ([filter isEqualToString:po.lastKeyComponent]){
+				PlexMediaContainer* my_new_pmc = [po contents];
+				if (my_new_pmc.directories.count>0) new_pmc = my_new_pmc;
+				handled = YES;
+				break;
+			}
+		}
+		
+		NSLog(@"handled: %@", handled ? @"YES" : @"NO");
+		if (handled && new_pmc==nil) new_pmc = [[pmc.directories objectAtIndex:0] contents];
+		if (new_pmc==nil || new_pmc.directories.count==0){
+			for(PlexMediaObject* po in pmc.directories){
+				PlexMediaContainer* my_new_pmc = [po contents];
+				if (my_new_pmc.directories.count>0) {
+					new_pmc = my_new_pmc;
+					handled = YES;
+					break;
+				}
+			}
+		}
+		
+		if (new_pmc) {
+			pmc = new_pmc;
+		}
+		
+		if (!handled && pmc.directories.count>0) pmc = [[pmc.directories objectAtIndex:0] contents];
+	}
+	NSLog(@"done filtering");
+	return pmc;
 }
 
 - (void)log:(NSNotificationCenter *)note {
@@ -131,14 +131,14 @@
 
 -(void)dealloc
 {
-  NSLog(@"deallocing HWPlexDir");
+	NSLog(@"deallocing HWPlexDir");
 	[playbackItem release];
 	[rootContainer release];
 	
 	[super dealloc];
 }
 
-  //handle custom event
+//handle custom event
 -(BOOL)brEventAction:(BREvent *)event
 {
 	int remoteAction = [event remoteAction];
@@ -150,7 +150,7 @@
 	{
 		case kBREventRemoteActionSelectHold: {
 			if([event value] == 1) {
-          //get the index of currently selected row
+				//get the index of currently selected row
 				long selected = [self getSelection];
 				[self showModifyViewedStatusViewForRow:selected];
 			}
@@ -219,58 +219,58 @@
 	if ([type empty]) type = pmo.containerType;
 	type = [type lowercaseString];
 	
-  NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, pmo.containerType);
+	NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, pmo.containerType);
 	
 	NSLog(@"viewgroup: %@, viewmode:%@",pmo.mediaContainer.viewGroup, pmo.containerType);
-
-  if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"albums" isEqualToString:pmo.mediaContainer.content] || [@"playlists" isEqualToString:pmo.mediaContainer.content]) {
+	
+	if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"albums" isEqualToString:pmo.mediaContainer.content] || [@"playlists" isEqualToString:pmo.mediaContainer.content]) {
 		NSLog(@"Accessing Artist/Album %@", pmo);
 		SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
 		[songlist autorelease];
 	}
-  else if ([@"movie" isEqualToString:pmo.type]) {
-    [self showGridListControl:[pmo contents]];
-  }
+	else if ([@"movie" isEqualToString:pmo.type]) {
+		[self showGridListControl:[pmo contents]];
+	}
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType] || [@"Track" isEqualToString:pmo.containerType]){
 #if LOCAL_DEBUG_ENABLED
-    NSLog(@"got some media, switching to PlexPlaybackController");
+		NSLog(@"got some media, switching to PlexPlaybackController");
 #endif
-    PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:pmo];
-    [player startPlaying];
-    [player autorelease];
-  }
-  else {
-    HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[pmo contents]];
+		PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:pmo];
+		[player startPlaying];
+		[player autorelease];
+	}
+	else {
+		HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[pmo contents]];
 		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
-    
+		
 		[menuController autorelease];
-  }
+	}
 }
 
 - (void)showGridListControl:(PlexMediaContainer*)movieCategory {
-  PlexMediaObject *recent=nil;
-  PlexMediaObject *allMovies=nil;
+	PlexMediaObject *recent=nil;
+	PlexMediaObject *allMovies=nil;
     //NSLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
-  if (movieCategory.directories > 0) {
-    NSUInteger i, count = [movieCategory.directories count];
-    for (i = 0; i < count; i++) {
-      PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
-      NSString *key = [obj.attributes objectForKey:@"key"];
-        //NSLog(@"obj_type: %@",key);
-      if ([key isEqualToString:@"all"])
-        allMovies = obj;
-      else if ([key isEqualToString:@"recentlyAdded"])
-        recent = obj;
-    }
-  }
-  
-  if (recent && allMovies){
-    NSLog(@"pushing shelfController");
-    HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
-    [[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
-  }
-  
+	if (movieCategory.directories > 0) {
+		NSUInteger i, count = [movieCategory.directories count];
+		for (i = 0; i < count; i++) {
+			PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
+			NSString *key = [obj.attributes objectForKey:@"key"];
+			//NSLog(@"obj_type: %@",key);
+			if ([key isEqualToString:@"all"])
+				allMovies = obj;
+			else if ([key isEqualToString:@"recentlyAdded"])
+				recent = obj;
+		}
+	}
+	
+	if (recent && allMovies){
+		NSLog(@"pushing shelfController");
+		HWMediaShelfController *shelfController = [[HWMediaShelfController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
+		[[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
+	}
+	
 }
 
 - (void)showModifyViewedStatusViewForRow:(long)row {
@@ -281,16 +281,16 @@
 	NSLog(@"HERE: %@", plexMediaObjectType);
 	
 	if (pmo.hasMedia 
-      || [@"Video" isEqualToString:pmo.containerType]
-      || [@"show" isEqualToString:plexMediaObjectType]
-      || [@"season" isEqualToString:plexMediaObjectType]) {
-      //show dialog box
+		|| [@"Video" isEqualToString:pmo.containerType]
+		|| [@"show" isEqualToString:plexMediaObjectType]
+		|| [@"season" isEqualToString:plexMediaObjectType]) {
+		//show dialog box
 		BROptionDialog *optionDialogBox = [[BROptionDialog alloc] init];
 		[optionDialogBox setIdentifier:ModifyViewStatusOptionDialog];
 		
 		[optionDialogBox setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
-                                  pmo, @"mediaObject",
-                                  nil]];
+									  pmo, @"mediaObject",
+									  nil]];
 		
 		[optionDialogBox setPrimaryInfoText:@"Modify View Status"];
 		[optionDialogBox setSecondaryInfoText:pmo.name];
@@ -299,15 +299,15 @@
 		NSString *watchOption = nil;
 		NSString *unwatchOption = nil;
 		if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType]) {
-        //modify single media item
+			//modify single media item
 			watchOption = @"Mark as Watched";
 			unwatchOption = @"Mark as Unwatched";
 		} else if (!pmo.hasMedia && [@"show" isEqualToString:plexMediaObjectType]) {
-        //modify all seasons within show
+			//modify all seasons within show
 			watchOption = @"Mark entire show as Watched";
 			unwatchOption = @"Mark entire show as Unwatched";
 		} else if (!pmo.hasMedia && [@"season" isEqualToString:plexMediaObjectType]) {
-        //modify all episodes within season
+			//modify all episodes within season
 			watchOption = @"Mark entire season as Watched";
 			unwatchOption = @"Mark entire season as Unwatched";
 		}
@@ -323,22 +323,22 @@
 
 - (void)optionSelected:(id)sender {
 	BROptionDialog *option = sender;
-  PlexMediaObject *pmo = [option.userInfo objectForKey:@"mediaObject"];
+	PlexMediaObject *pmo = [option.userInfo objectForKey:@"mediaObject"];
 	if ([option.identifier isEqualToString:ModifyViewStatusOptionDialog]) {		
 		if([[sender selectedText] hasSuffix:@"Watched"]) {
-        //mark item(s) as watched
+			//mark item(s) as watched
 			[[[BRApplicationStackManager singleton] stack] popController]; //need this so we don't go back to option dialog when going back
 			NSLog(@"Marking as watched: %@", pmo.name);
 			[pmo markSeen];
 			[self.list reload];
 		} else if ([[sender selectedText] hasSuffix:@"Unwatched"]) {
-        //mark item(s) as unwatched
+			//mark item(s) as unwatched
 			[[self stack] popController]; //need this so we don't go back to option dialog when going back
 			NSLog(@"Marking as unwatched: %@", pmo.name);
 			[pmo markUnseen];
 			[self.list reload];
 		} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
-        //go back to movie listing...
+			//go back to movie listing...
 			[[[BRApplicationStackManager singleton] stack] popController];
 		}
 	}
@@ -383,27 +383,22 @@
 		} else {
 			image = nil;
 		}
-      //BRImageControl *thumbnailLayer = (BRImageControl *)[menuItem valueForKey:@"_thumbnailLayer"];
+		//BRImageControl *thumbnailLayer = (BRImageControl *)[menuItem valueForKey:@"_thumbnailLayer"];
 		[menuItem setThumbnailImage:image];
 		[menuItem setThumbnailLayerAspectRatio:0.5]; //halves the size of the image (ie makes it the "right" size)
 		
 		[menuItem setTitle:[pmo name]];
 		
 		
-		
+		//used to get details about the show, instead of gettings attrs here manually
+		PlexPreviewAsset *previewData = [[PlexPreviewAsset alloc] initWithURL:nil mediaProvider:nil mediaObject:pmo];
 		NSString *subtitle = nil;
-		if ([mediaType isEqualToString:PlexMediaObjectTypeEpisode]) {
-        //used to get details about the show, instead of gettings attrs here manually
-			PlexPreviewAsset *previewData = [[PlexPreviewAsset alloc] initWithURL:nil mediaProvider:nil mediaObject:pmo];
-			
-        //set subtitle to show details
+		if ([mediaType isEqualToString:PlexMediaObjectTypeEpisode]) {			
+			//set subtitle to show details
 			subtitle = [NSString stringWithFormat:@"%@, Season %d, Episode %d",[previewData seriesName] ,[previewData season],[previewData episode]];
 		} else {
-        //set subtitle to year
-			NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-			[dateFormatter setDateFormat:@"yyyy"];
-			subtitle = [dateFormatter stringFromDate:pmo.originallyAvailableAt];
-			[dateFormatter release];
+			//set subtitle to year
+			subtitle = previewData.year;
 		}
 		[menuItem setSubtitle:subtitle];
 		

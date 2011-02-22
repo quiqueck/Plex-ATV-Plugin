@@ -584,12 +584,8 @@
 	return [result componentsSeparatedByString:@", "];
 }
 
-- (NSString *)yearCreated {
-	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-	[dateFormat setDateFormat:@"yyyy"];
-	NSString *yearCreated = [dateFormat stringFromDate:[self dateCreated]];
-	[dateFormat release];
-	return yearCreated;
+- (NSString *)year {
+	return [pmo.attributes valueForKey:@"year"];
 }
 
 @end
