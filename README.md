@@ -25,6 +25,7 @@ Apple TV guru and project consultant: tomcool420
 9. now either:   
    * Retrieve the latest commit (recommended): `git submodule update`
    * Retrieve the entire branch (if you intend to submit code changes to this repository): `git submodule add`
+	
 	This fill the `_contrib/SMFramework` and `_contrib/ATV2Includes` folders
 10. At this point all the code should be present
 
