@@ -35,6 +35,15 @@ Apple TV guru and project consultant: tomcool420
 10. At this point all the code should be present
 
 ## BUILDING
+### SMFramework
+This might not be required, but the Plex client does very often stay on the 'bleeding edge' with SMFramework.
+1. cd into SMFramework folder
+2. Run to build a new deb (will also update the SMFramework headers folder in ATV2Includes):
+   make clean package
+3. To install new build of SMFramework on your apple tv:
+   make install package
+
+### Plex Apple TV Client
 1. Open PlexATV/atvTwo.xcodeproj
 2. Make sure you are building 4.2|Release|atvTwo|armv6
 3. Make sure your appleTV is turned on and that you can log in using root@appletv.local (without using a password)
