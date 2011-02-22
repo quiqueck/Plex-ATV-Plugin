@@ -22,16 +22,9 @@ Apple TV guru and project consultant: tomcool420
 8. Get build dependencies (ATV2Includes and SMFramework). These are included as submodules in the _contrib folder. The folders will be empty when you do a fresh clone, so type in:
       git submodule init
    This will initialize the folders
-9. now either:
-   
-   * Retrieve the latest commit (recommended): 
-	   
-            git submodule update
-   
-   * Retrieve the entire branch (if you intend to submit code changes to this repository):
-            
-            git submodule add
-	
+9. now either:   
+   * Retrieve the latest commit (recommended): `git submodule update`
+   * Retrieve the entire branch (if you intend to submit code changes to this repository): `git submodule add`
 	This fill the `_contrib/SMFramework` and `_contrib/ATV2Includes` folders
 10. At this point all the code should be present
 
