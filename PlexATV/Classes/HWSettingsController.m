@@ -152,7 +152,7 @@
 		case CombinedPmsCategoriesIndex: {
 			// =========== combined PMS category view ===========
 			BOOL isTurnedOn = [[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView];
-			[[HWUserDefaults preferences] setBool:!isTurnedOn forKey:PreferencesUseCombinedPmsView];			
+			[[HWUserDefaults preferences] setBool:!isTurnedOn forKey:PreferencesUseCombinedPmsView];
 			[self setupList];
 			[self.list reload];
 			break;
@@ -203,7 +203,7 @@
 	switch (item) {
 		case ServersIndex: {
 			// =========== servers ===========
-			[asset setTitle:@"List of servers"];
+			[asset setTitle:@"Manage server list"];
 			[asset setSummary:@"Add new or modify current servers and their connections"];
 			break;
 		}

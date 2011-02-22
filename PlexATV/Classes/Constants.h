@@ -5,6 +5,8 @@
 #define PreferencesDefaultServerName @"PreferencesDefaultServerName"
 #define PreferencesDefaultServerUid @"PreferencesDefaultServerUid"
 
+#define PreferencesMachinesExcludedFromServerList @"PreferencesMachinesExcludedFromServerList"
+
 #define PreferencesQualitySetting @"PreferencesQualitySetting"
 
 #define PreferencesAdvancedEnableDebug @"PreferencesAdvancedEnableDebug"

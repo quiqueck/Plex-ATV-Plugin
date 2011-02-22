@@ -46,6 +46,8 @@
 - (id)initAndShowAddNewMachineWizard;
 - (id)initWithMachine:(Machine *)machine;
 
+- (BOOL)isExcludedFromServerList;
+
 - (void)startAddNewMachineWizard;
 - (void)addNewMachineWizardWithInput:(NSString *)input;
 - (void)startAddNewConnectionWizard;

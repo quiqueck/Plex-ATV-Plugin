@@ -10,6 +10,7 @@
 #import "HWServerDetailsController.h"
 #import <plex-oss/PlexRequest.h>
 #import <plex-oss/MachineConnectionBase.h>
+#import "HWUserDefaults.h"
 #import "Constants.h"
 
 @implementation HWServerDetailsController
@@ -21,11 +22,12 @@
 #define ServerPropertyServerNameIndex	0
 #define ServerPropertyUserNameIndex		1
 #define ServerPropertyPasswordIndex		2
+#define ServerExcludedFromList			3
 //---------------------------------------
-#define ServerRefreshSections			3
-#define ListAddNewConnection			4
+#define ServerRefreshSections			4
+#define ListAddNewConnection			5
 //---------------------------------------
-#define ListItemCount					5
+#define ListItemCount					6
 
 
 @synthesize machine = _machine;
@@ -64,7 +66,7 @@
 }
 
 -(void)dealloc {
-#warning does self need to unsubscribe from any testConnection notifications
+	//controller is retained by MM until testConnection calls have been returned
 	
 	[waitPromptControl release];
 	self.machine = nil;
@@ -96,6 +98,13 @@
 	[super wasPopped];
 }
 
+- (BOOL)isExcludedFromServerList {
+	NSArray *machinesExcludedFromServerList = [[HWUserDefaults preferences] objectForKey:PreferencesMachinesExcludedFromServerList];
+#ifdef LOCAL_DEBUG_ENABLED
+	NSLog(@"MachineID [%@], Excluded Machines [%@]", _machine.machineID, machinesExcludedFromServerList);
+#endif
+	return [machinesExcludedFromServerList containsObject:self.machine.machineID];
+}
 
 #pragma mark -
 #pragma mark Adding Wizard Methods
@@ -204,6 +213,22 @@
 		isEditingPassword = YES;
 		[self showEnterPasswordDialogBoxWithInitialText:self.userName];
 	
+	} else if (selected == ServerExcludedFromList) {
+		//toggle whether the server is excluded from the server list
+		BOOL isExcluded = [self isExcludedFromServerList];
+		NSMutableArray *machinesExcludedFromServerList = [NSMutableArray arrayWithArray:[[HWUserDefaults preferences] objectForKey:PreferencesMachinesExcludedFromServerList]];
+		NSString *machineID = [self.machine.machineID copy];
+		if (isExcluded) {
+			//remove machine from exclusion list
+			[machinesExcludedFromServerList removeObject:machineID];
+		} else {
+			//add machine to exclusion list
+			[machinesExcludedFromServerList addObject:machineID];
+		}
+		[machineID release];
+		[[HWUserDefaults preferences] setObject:machinesExcludedFromServerList forKey:PreferencesMachinesExcludedFromServerList];
+		[self.list reload];
+		
 	} else if (selected == ServerRefreshSections) {
 		//tell pms to refresh all sections
 		[self.machine.request refreshAllSections:NO];
@@ -235,26 +260,29 @@
 }
 
 - (id)itemForRow:(long)row {
-	SMFMenuItem *result;
+	BRMenuItem *menuItem = [[[BRMenuItem alloc] init] autorelease];
+	int accessoryType;
 	NSString *title = [self titleForRow:row];
 	if (row == ServerRefreshSections) {
-		result = [[BRMenuItem alloc] init];
+		menuItem = [[[BRMenuItem alloc] init] autorelease];
 		if (isRefreshingAllSections) {
-			[result addAccessoryOfType:6]; //spinner icon
+			accessoryType = 6; //spinner icon
 		} else {
-			[result addAccessoryOfType:3]; //refresh icon
+			accessoryType = 3; //refresh icon
 		}
 		
+	} else if (row == ServerExcludedFromList) {
+		accessoryType = 0; //nothing
+		
 	} else if (row == ListAddNewConnection) {
-		result = [[BRMenuItem alloc] init];
-		[result addAccessoryOfType:12]; //stack/new
+		accessoryType = 12; //stack/new
 		
 	} else {
-		result = [SMFMenuItem folderMenuItem];
+		accessoryType = 1; //folder
 	}
-	
-	[result setTitle:title];
-	return result;
+	[menuItem addAccessoryOfType:accessoryType];
+	[menuItem setText:title withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+	return menuItem;
 }
 
 - (BOOL)rowSelectable:(long)selectable {
@@ -264,14 +292,16 @@
 - (id)titleForRow:(long)row {
 	NSString *title;
 	if (row == ServerPropertyServerNameIndex) {
-#warning quiqueck, what is the diff between serverName and usersServerName
-		title = [NSString stringWithFormat:@"Servername     %@", self.machine.serverName ? self.machine.serverName : self.machine.usersServerName];
+		title = [NSString stringWithFormat:@"Servername     %@", self.machine.usersServerName ? self.machine.usersServerName : self.machine.serverName];
 		
 	} else if (row == ServerPropertyUserNameIndex) {
 		title = [NSString stringWithFormat:@"Username        %@", [self.machine.userName length] > 0 ? self.machine.userName : @"None"];
 		
 	} else if (row == ServerPropertyPasswordIndex) {
-		title = [NSString stringWithFormat:@"Password        %@", [self.machine.password length] > 0 ? self.machine.password : @"None"];
+		title = [NSString stringWithFormat:@"Password         %@", [self.machine.password length] > 0 ? self.machine.password : @"None"];
+
+	} else if (row == ServerExcludedFromList) {
+		title = [NSString stringWithFormat:@"List Status        %@", [self isExcludedFromServerList] ? @"Excluded" : @"Included"];
 		
 	} else if (row == ServerRefreshSections) {
 		title = @"Tell server to refresh all sections";
@@ -284,6 +314,7 @@
 		MachineConnectionBase *connection = [self.machine.connections objectAtIndex:adjustedRow];
 		title = [NSString stringWithFormat:@"%@ : %d", connection.hostName, connection.port];
 	}
+	NSLog(@"new title: %@", title);
 	return title;
 }
 
@@ -365,6 +396,7 @@
 		if (isEditingServerName) {
 			isEditingServerName = NO;
 			self.machine.serverName = textEntered;
+#warning does this change required MM writePrefs ^^
 			
 		} else if (isEditingUserName) {
 			isEditingUserName = NO;
@@ -433,13 +465,13 @@
 		// add machine to MM (because so far you did not have a machine 
 		// for the PMS you were just connecting to)
 		[[MachineManager sharedMachineManager] addMachine:m];
-#warning quiqueck, is this ^ all that is required?
-#warning quiqueck, machines do not persist. How do I save new machines?
+#warning the lines below are needed to write prefs, but libPlex needs some changes to enable pref writing to custom domain
+		//[[MachineManager sharedMachineManager] writeMachinePreferences];
+		//[[HWUserDefaults preferences] synchronize];
 		promptText = @"Success\n New server added";
 	} else {
 		isCreatingNewConnection = NO;
 		// add connection to machine
-#warning quiqueck, how do I add a new connection to an existing machine?
 		promptText = @"Success\n New connection added";
 	}	
 	[waitPromptControl setPromptText:promptText];
@@ -502,7 +534,7 @@
 		self.portNumber = con.port;
 		
 		[self.machine testAndConditionallyAddConnectionForHostName:self.hostName port:self.portNumber notify:self];
-		promptText = [NSString stringWithFormat:@"This connection links to an existing server:\n%@\nWill attempt to add connection", self.machine.serverName];
+		promptText = [NSString stringWithFormat:@"This connection links to an existing server:\n%@\nWill attempt to add connection", self.machine.usersServerName ? self.machine.usersServerName : self.machine.serverName];
 		
 		isCreatingNewConnection = YES;
 		

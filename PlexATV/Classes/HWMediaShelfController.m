@@ -17,6 +17,12 @@
 #define LOCAL_DEBUG_ENABLED 1
 #define MAX_RECENT_ITEMS 20
 
+//these are in the AppleTV.framework, but cannot #import <AppleTV/AppleTV.h> due to
+//naming conflicts with Backrow.framework. below is a hack!
+@interface BRThemeInfo (PlexExtentions)
+- (id)storeRentalPlaceholderImage;
+@end
+
 @implementation HWMediaShelfController
 
 -(id)initWithPath:(NSString *)path

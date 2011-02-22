@@ -13,9 +13,9 @@
 #import "Constants.h"
 #import "HWMediaShelfController.h"
 
-#define OTHERSERVERS_ID @"hwOtherServer"
+#define SERVER_LIST_ID @"hwServerList"
 #define SETTINGS_ID @"hwSettings"
-#define OTHERSERVERS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Other Servers", @"Other Servers") identifier:OTHERSERVERS_ID preferredOrder:98]
+#define SERVER_LIST_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Server List", @"Server List") identifier:SERVER_LIST_ID preferredOrder:98]
 #define SETTINGS_CAT [BRApplianceCategory categoryWithName:NSLocalizedString(@"Settings", @"Settings") identifier:SETTINGS_ID preferredOrder:99]
 
 //dictionary keys
@@ -96,7 +96,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		_topShelfController = [[TopShelfController alloc] init];
 		_applianceCategories = [[NSMutableArray alloc] init];
 		
-		otherServersApplianceCategory = [OTHERSERVERS_CAT retain];
+		otherServersApplianceCategory = [SERVER_LIST_CAT retain];
 		settingsApplianceCategory = [SETTINGS_CAT retain];
 		
 		[[ProxyMachineDelegate shared] registerDelegate:self];
@@ -108,7 +108,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 - (id)controllerForIdentifier:(id)identifier args:(id)args {
 	id menuController = nil;
 	
-	if ([OTHERSERVERS_ID isEqualToString:identifier]) {
+	if ([SERVER_LIST_ID isEqualToString:identifier]) {
 		menuController = [[HWBasicMenu alloc] init];
 	} else if ([SETTINGS_ID isEqualToString:identifier]) {
 		HWSettingsController* hwsc = [[HWSettingsController alloc] init];
