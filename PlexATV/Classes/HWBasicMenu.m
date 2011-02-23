@@ -14,7 +14,7 @@
 		
 		NSLog(@"--- %@ %s", self, _cmd);
 		
-		[self setListTitle:@"Local Servers"];
+		[self setListTitle:@"Server List"];
 		
 		BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		
