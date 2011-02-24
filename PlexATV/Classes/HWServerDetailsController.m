@@ -9,7 +9,6 @@
 
 #import "HWServerDetailsController.h"
 #import <plex-oss/PlexRequest.h>
-#import <plex-oss/MachineConnectionBase.h>
 #import "HWUserDefaults.h"
 #import "Constants.h"
 
@@ -25,9 +24,10 @@
 #define ServerExcludedFromList			3
 //---------------------------------------
 #define ServerRefreshSections			4
-#define ListAddNewConnection			5
+#define ServerDelete					5
+#define ListAddNewConnection			6
 //---------------------------------------
-#define ListItemCount					6
+#define ListItemCount					7
 
 
 @synthesize machine = _machine;
@@ -36,19 +36,25 @@
 @synthesize password = _password;
 @synthesize hostName = _hostName;
 @synthesize portNumber = _portNumber;
+@synthesize selectedConnection = _selectedConnection;
 
 - (id) init {
 	if((self = [super init]) != nil) {
 		BRImage *sp = [[BRThemeInfo sharedTheme] gearImage];
 		[self setListIcon:sp horizontalOffset:0.0 kerningFactor:0.15];
 		[[self list] setDatasource:self];
-		[[self list] addDividerAtIndex:ListItemCount-2 withLabel:@"Actions"];
+		[[self list] addDividerAtIndex:ListItemCount-3 withLabel:@"Actions"];
 		[[self list] addDividerAtIndex:ListItemCount withLabel:@"Current connections"];
 		
 		//create the wait screen
 		waitPromptControl = [[BRWaitPromptControl alloc] init];
 		[waitPromptControl setFrame:[BRWindow interfaceFrame]];
 		[waitPromptControl setBackgroundColor:[[SMFThemeInfo sharedTheme]blackColor]];
+		
+		//create the popup
+		listDropShadowControl = [[SMFListDropShadowControl alloc] init];
+		[listDropShadowControl setCDelegate:self];
+		[listDropShadowControl setCDatasource:self];
 	}
 	return self;
 }
@@ -69,11 +75,13 @@
 	//controller is retained by MM until testConnection calls have been returned
 	
 	[waitPromptControl release];
+	[listDropShadowControl release];
 	self.machine = nil;
 	self.serverName = nil;
 	self.userName = nil;
 	self.password = nil;
 	self.hostName = nil;
+	self.selectedConnection = nil;
 	
 	[super dealloc];
 }
@@ -234,6 +242,12 @@
 		[self.machine.request refreshAllSections:NO];
 		isRefreshingAllSections = YES;
 		[self.list reload];
+	
+	} else if (selected == ServerDelete) {
+		//show confirmation window
+		isDeletingConnection = NO;
+		isDeletingMachine = YES;
+		[listDropShadowControl addToController:self];
 		
 	} else if (selected == ListAddNewConnection) {
 		//start the "add new connection" wizard
@@ -242,11 +256,14 @@
 	} else {
 		//connection selected
 		int adjustedSelected = selected - ListItemCount;
-		MachineConnectionBase *connection = [self.machine.connections objectAtIndex:adjustedSelected];
+		self.selectedConnection = [self.machine.connections objectAtIndex:adjustedSelected];
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"connection selected: %@", connection);
+		NSLog(@"connection selected: %@", self.selectedConnection);
 #endif
-		[self showEditConnectionViewForConnection:connection];
+		//show confirmation window
+		isDeletingMachine = NO;
+		isDeletingConnection = YES;
+		[listDropShadowControl addToController:self];
 	}
 }
 
@@ -272,6 +289,9 @@
 		}
 		
 	} else if (row == ServerExcludedFromList) {
+		accessoryType = 0; //nothing
+		
+	} else if (row == ServerDelete) {
 		accessoryType = 0; //nothing
 		
 	} else if (row == ListAddNewConnection) {
@@ -305,6 +325,9 @@
 		
 	} else if (row == ServerRefreshSections) {
 		title = @"Tell server to refresh all sections";
+		
+	} else if (row == ServerDelete) {
+		title = @"Remove server from list";
 		
 	} else if (row == ListAddNewConnection) {
 		title = @"Add new connection";
@@ -409,6 +432,84 @@
 	}
 	[self.list reload];
 }
+
+#pragma mark -
+#pragma mark Popup delegates
+
+#define DeleteConfirmationOption 0
+
+- (float)popupHeightForRow:(long)row { 
+	return 0.0f;
+}
+
+- (BOOL)popupRowSelectable:(long)row { 
+	return YES;
+}
+
+- (long)popupItemCount { 
+	return 2;
+}
+
+- (id)popupItemForRow:(long)row	{ 
+    SMFMenuItem *it = [SMFMenuItem menuItem];
+    switch (row) {
+		case DeleteConfirmationOption: {
+			NSString *title;
+			if (isDeletingMachine) {
+				title = @"Remove server";
+			} else {
+				title = @"Remove connection";
+			}
+			[it setTitle:title];
+			break;
+		}
+		default:
+			[it setTitle:@"Cancel"];
+			break;
+	}
+    return it;
+}
+
+- (id)popupTitleForRow:(long)row					
+{ 
+    if (row>=[self itemCount])
+        return nil;
+    id it = [self itemForRow:row];
+    if ([it isKindOfClass:[BRComboMenuItemLayer class]]) 
+        return [(BRComboMenuItemLayer*) it title];
+    return [it text];
+}
+
+- (long)popupDefaultIndex { 
+	return 0;
+}
+
+- (void)popup:(id)p itemSelected:(long)row {
+	[p removeFromParent];
+	switch (row) {
+		case DeleteConfirmationOption: {
+			if (isDeletingMachine) {
+				//delete machine
+				[[MachineManager sharedMachineManager] removeMachine:self.machine];
+				[[[BRApplicationStackManager singleton] stack] popController];
+			} else {
+				//delete connection
+				[self.machine removeConnection:self.selectedConnection];
+				[self.list reload];
+			}
+			//delete machine
+			break;
+		}
+		default:
+			break;
+	}
+	
+	//reset flags
+	isDeletingMachine = NO;
+	isDeletingConnection = NO;
+}
+        
+
 
 #pragma mark -
 #pragma mark BROptionDialog Methods

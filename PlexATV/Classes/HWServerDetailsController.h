@@ -7,10 +7,12 @@
 
 #import <Foundation/Foundation.h>
 #import <plex-oss/Machine.h>
+#import <plex-oss/MachineConnectionBase.h>
 
-@interface HWServerDetailsController : SMFMediaMenuController <TestAndConditionallyAddConnectionProtocol> {
+@interface HWServerDetailsController : SMFMediaMenuController <TestAndConditionallyAddConnectionProtocol, SMFListDropShadowDatasource,SMFListDropShadowDelegate> {
 	Machine *_machine;
 	BRWaitPromptControl *waitPromptControl;
+	SMFListDropShadowControl *listDropShadowControl; //popup
 	
 	//add new machine flags
 	BOOL isCreatingNewMachine;
@@ -21,10 +23,15 @@
 	BOOL isEditingServerName;
 	BOOL isEditingUserName;
 	BOOL isEditingPassword;
+	BOOL isDeletingMachine;
 	
 	//add new connection flags
 	BOOL isCreatingNewConnection;
 	BOOL hasCompletedAddNewConnectionWizardStep1; //if completed proceed to step 2
+	
+	//editing connection specific variables
+	BOOL isDeletingConnection;
+	MachineConnectionBase *_selectedConnection;
 	
 	//action flags
 	BOOL isRefreshingAllSections;
@@ -41,6 +48,7 @@
 @property (copy) NSString *password;
 @property (copy) NSString *hostName;
 @property (assign) uint portNumber;
+@property (retain) MachineConnectionBase *selectedConnection;
 
 //custom methods
 - (id)initAndShowAddNewMachineWizard;

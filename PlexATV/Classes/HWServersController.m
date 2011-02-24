@@ -134,7 +134,17 @@
 		[result addAccessoryOfType:0];
 	} else {
 		Machine *m = [self.machines objectAtIndex:row-1];
-		[result setText:m.serverName withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
+		NSString *serverName;
+		
+		if (m.usersServerName) {
+			serverName = m.usersServerName;
+		} else if (m.serverName) {
+			serverName = m.serverName;
+		} else {
+			serverName = @"<Unknown>"; //if machine has no connections
+		}
+
+		[result setText:serverName withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 		
 		[result addAccessoryOfType:1]; //folder
 		if (m.canConnect) {
