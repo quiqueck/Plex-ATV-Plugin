@@ -183,7 +183,13 @@ typedef enum {
 			case kPlayButton:
 				NSLog(@"play movie plz kthxbye");
 				NSLog(@"asset: %@", selectedMediaItemPreviewData.title);
-				PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:selectedMediaItemPreviewData.pmo];
+        PlexMediaObject *movieObj = selectedMediaItemPreviewData.pmo;
+        PlexMediaObject* detailed = [movieObj loadVideoDetails];
+        NSLog(@"Audio Streams: %@", [detailed audioStreamsForLanguage:nil haveFallback:NO]);
+        NSLog(@"Subs Streams: %@", [detailed subtitleStreamsForLanguage:@"English" haveFallback:NO]);
+          //-(void)setSubtitleStream:(PlexMediaStream*)streamOrNil;
+        
+        PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:selectedMediaItemPreviewData.pmo];
 				[player startPlaying];
 				[player autorelease];
 				break;

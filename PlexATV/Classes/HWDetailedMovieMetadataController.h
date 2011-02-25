@@ -25,6 +25,7 @@
 
 #import <Foundation/Foundation.h>
 #import <plex-oss/PlexMediaContainer.h>
+#import <plex-oss/PlexMediaObject.h>
 #import "PlexPreviewAsset.h"
 
 @interface HWDetailedMovieMetadataController : SMFMoviePreviewController<SMFMoviePreviewControllerDatasource, SMFMoviePreviewControllerDelegate> {
