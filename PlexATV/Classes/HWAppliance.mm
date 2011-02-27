@@ -56,7 +56,6 @@ NSString * const MachineNameKey = @"PlexMachineName";
 	BRTopShelfView *topShelf = [[BRTopShelfView alloc] init];
 	BRImageControl *imageControl = [topShelf productImage];
 	BRImage *theImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[HWPlexDir class]] pathForResource:@"PlexLogo" ofType:@"png"]];
-    //BRImage *theImage = [[BRThemeInfo sharedTheme] largeGeniusIconWithReflection];
 	[imageControl setImage:theImage];
 	
 	return [topShelf autorelease];
@@ -140,18 +139,19 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
 		NSLog(@"matchingCategory: %@", [matchingCategory type]);
 		if (matchingCategory.isMovie) {
-			[self showGridListControl:[matchingCategory contents]];
+			menuController = [self newMoviesController:[matchingCategory contents]];
 		} else if (matchingCategory.isTVShow) {
-			[self showSeriesController:[matchingCategory contents]];
+			menuController = [self newTVShowsController:[matchingCategory contents]];
 		} else {
-			HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
-			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
+			menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
 		}
+		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 	}    
 	return [menuController autorelease];
 }
 
-- (void)showSeriesController:(PlexMediaContainer *)tvShowCategory {
+- (BRController *)newTVShowsController:(PlexMediaContainer *)tvShowCategory {
+	BRController *menuController = nil;
 	PlexMediaObject *allTvShows=nil;
 	if (tvShowCategory.directories > 0) {
 		NSUInteger i, count = [tvShowCategory.directories count];
@@ -166,13 +166,14 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		}
 	}
 	
-	if (allTvShows){
-		HWTVShowsController* menuController = [[HWTVShowsController alloc] initWithPlexAllTVShows:[allTvShows contents]];
-		[[[BRApplicationStackManager singleton] stack] pushController:[menuController autorelease]];
+	if (allTvShows) {
+		menuController = [[HWTVShowsController alloc] initWithPlexAllTVShows:[allTvShows contents]];
 	}
+	return menuController;
 }
 
-- (void)showGridListControl:(PlexMediaContainer*)movieCategory {
+- (BRController *)newMoviesController:(PlexMediaContainer*)movieCategory {
+	BRController *menuController = nil;
 	PlexMediaObject *recent=nil;
 	PlexMediaObject *allMovies=nil;
     //NSLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
@@ -191,9 +192,9 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	
 	if (recent && allMovies){
 		NSLog(@"pushing shelfController");
-		HWMediaGridController *shelfController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
-		[[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
+		menuController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
 	}
+	return menuController;
 }
 
 - (id)applianceCategories {
