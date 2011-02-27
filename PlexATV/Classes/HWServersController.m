@@ -82,11 +82,13 @@
 - (void)showAddNewMachineWizard {
 	HWServerDetailsController *serverDetailsController = [[HWServerDetailsController alloc] initAndShowAddNewMachineWizard];
 	[[self stack] pushController:serverDetailsController];
+	[serverDetailsController release];
 }
 
 - (void)showEditMachineDetailsViewForMachine:(Machine *)machine {
 	HWServerDetailsController *serverDetailsController = [[HWServerDetailsController alloc] initWithMachine:machine];
 	[[self stack] pushController:serverDetailsController];
+	[serverDetailsController release];
 }
 
 

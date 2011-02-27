@@ -517,7 +517,7 @@
 	BROptionDialog *option = [[BROptionDialog alloc] init];
 	[option setIdentifier:ConnectionDialogIdentifier];
 	
-	[option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
+	[option setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 						 connection, @"connection",
 						 nil]];
 	

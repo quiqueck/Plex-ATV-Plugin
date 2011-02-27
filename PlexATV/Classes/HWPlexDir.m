@@ -205,6 +205,7 @@
 	BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
 	[preview setShowsMetadataImmediately:NO];
 	[preview setAsset:pma];	
+	[pma release];
 	[pmo release];
 	
 	return [preview autorelease];
@@ -229,10 +230,10 @@
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
 		[songlist autorelease];
 	}
-	else if ([@"movie" isEqualToString:pmo.type]) {
+	else if ([@"movie" isEqualToString:type]) {
 		[self showGridListControl:[pmo contents]];
 	}
-	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType] || [@"Track" isEqualToString:pmo.containerType]){
+	else if (pmo.hasMedia || [@"Video" isEqualToString:type] || [@"Track" isEqualToString:type]){
 #if LOCAL_DEBUG_ENABLED
 		NSLog(@"got some media, switching to PlexPlaybackController");
 #endif
@@ -288,7 +289,7 @@
 		BROptionDialog *optionDialogBox = [[BROptionDialog alloc] init];
 		[optionDialogBox setIdentifier:ModifyViewStatusOptionDialog];
 		
-		[optionDialogBox setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
+		[optionDialogBox setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 									  pmo, @"mediaObject",
 									  nil]];
 		
@@ -400,6 +401,7 @@
 			//set subtitle to year
 			subtitle = previewData.year;
 		}
+		[previewData release];
 		[menuItem setSubtitle:subtitle];
 		
 		result = [menuItem autorelease];

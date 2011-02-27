@@ -21,4 +21,5 @@
 @property(retain) NSMutableArray *applianceCat;
 
 - (void)showGridListControl:(PlexMediaContainer*)movieCategory;
+- (void)showSeriesController:(PlexMediaContainer *)tvShowCategory;
 @end
