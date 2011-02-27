@@ -132,7 +132,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		//HAZAA! we found it! Push new view
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
-		NSLog(@"matchingCategory: %@", [matchingCategory type]);
+		DLog(@"matchingCategory: %@", [matchingCategory type]);
 		if (matchingCategory.isMovie) {
 			menuController = [self newMoviesController:[matchingCategory contents]];
 		} else if (matchingCategory.isTVShow) {
@@ -153,7 +153,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		for (i = 0; i < count; i++) {
 			PlexMediaObject * obj = [tvShowCategory.directories objectAtIndex:i];
 			NSString *key = [obj.attributes objectForKey:@"key"];
-			NSLog(@"obj_type: %@",key);
+			DLog(@"obj_type: %@",key);
 			if ([key isEqualToString:@"all"]) {
 				allTvShows = obj;
 				break;
@@ -171,13 +171,13 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	BRController *menuController = nil;
 	PlexMediaObject *recent=nil;
 	PlexMediaObject *allMovies=nil;
-    //NSLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
+    //DLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
 	if (movieCategory.directories > 0) {
 		NSUInteger i, count = [movieCategory.directories count];
 		for (i = 0; i < count; i++) {
 			PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
 			NSString *key = [obj.attributes objectForKey:@"key"];
-			NSLog(@"obj_type: %@",key);
+			DLog(@"obj_type: %@",key);
 			if ([key isEqualToString:@"all"])
 				allMovies = obj;
 			else if ([key isEqualToString:@"recentlyAdded"])
@@ -186,7 +186,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 	}
 	
 	if (recent && allMovies){
-		NSLog(@"pushing shelfController");
+		DLog(@"pushing shelfController");
 		menuController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
 	}
 	return menuController;

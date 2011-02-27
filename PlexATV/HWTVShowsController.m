@@ -86,7 +86,7 @@
 #pragma mark -
 #pragma mark Plex_SMFBookcaseController Delegate Methods
 -(BOOL)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController allowSelectionForShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
-	NSLog(@"allow selection for: %d", index);
+	DLog(@"allow selection for: %d", index);
 	if (index == 1) {
 		return NO;
 	} else {
@@ -96,11 +96,11 @@
 }
 
 -(void)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController selectionWillOccurInShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
-	NSLog(@"select will occur");
+	DLog(@"select will occur");
 }
 
 -(void)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController selectionDidOccurInShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
-	NSLog(@"select did occur");	
+	DLog(@"select did occur");	
 }
 
 @end

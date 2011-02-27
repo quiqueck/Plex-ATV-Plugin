@@ -93,11 +93,11 @@ PlexMediaProvider* __provider = nil;
 -(void)startPlaying {
 	
 	if ([@"Track" isEqualToString:pmo.containerType]){
-		NSLog(@"ITS A TRAP(CK)!");
+		DLog(@"ITS A TRAP(CK)!");
 		[self playbackAudio];
 	}
 	else {
-		NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
+		DLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
 		
 		//we have offset, ie. already watched a part of the movie, show a dialog asking if you want to resume or start over
 		if ([pmo.attributes valueForKey:@"viewOffset"] != nil) {
@@ -221,12 +221,12 @@ PlexMediaProvider* __provider = nil;
 }
 
 -(void)playbackAudio {
-	NSLog(@"playbackAudioWithMediaObject");
+	DLog(@"playbackAudioWithMediaObject");
 	
 	NSError *error;
 	
-	NSLog(@"track_url: %@", [pmo mediaStreamURL]);
-	NSLog(@"key: %@", [pmo.attributes objectForKey:@"key"]);
+	DLog(@"track_url: %@", [pmo mediaStreamURL]);
+	DLog(@"key: %@", [pmo.attributes objectForKey:@"key"]);
 	
 	PlexSongAsset *psa = [[PlexSongAsset alloc] initWithURL:[pmo.attributes objectForKey:@"key"] mediaProvider:nil mediaObject:pmo];
 	BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAsset:psa error:&error];
