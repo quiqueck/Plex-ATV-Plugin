@@ -84,15 +84,10 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		[PlexRequest setStreamingKey:@"k3U6GLkZOoNIoSgjDshPErvqMIFdE0xMTx8kgsrhnC0=" forPublicKey:@"KQMIY6GATPC63AIMC4R2"];
 		//instrumentObjcMessageSends(YES);
 		
-		NSString *logPath = @"/tmp/PLEX.txt"; 
-		NSLog(@"==================== plex client starting up ====================");
-		NSLog(@"Redirecting Log to %@", logPath);
 		
-		/*		FILE fl1 = fopen([logPath fileSystemRepresentation], "a+");
-		 fclose(fl1);*/
-		freopen([logPath fileSystemRepresentation], "a+", stderr);
-		freopen([logPath fileSystemRepresentation], "a+", stdout);
+		DLog(@"==================== plex client starting up ====================");
 		
+		DLog(@"stuff: ",[[NSString stringWithCString:__FILE__ encoding:NSUTF8StringEncoding] lastPathComponent]);
 		_topShelfController = [[TopShelfController alloc] init];
 		_applianceCategories = [[NSMutableArray alloc] init];
 		
@@ -131,13 +126,13 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		NSArray *categories = [[machineWhoCategoryBelongsTo.request rootLevel] directories];
 		NSArray *matchingCategories = [categories filteredArrayUsingPredicate:categoryPredicate];
 		if ([matchingCategories count] != 1) {
-			NSLog(@"ERROR: incorrect number of category matches to selected appliance with name [%@]", categoryName);
+			DLog(@"ERROR: incorrect number of category matches to selected appliance with name [%@]", categoryName);
 			return nil;
 		}
 		
 		//HAZAA! we found it! Push new view
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
-    NSLog(@"matchingCategory: %@", [matchingCategory type]);
+    DLog(@"matchingCategory: %@", [matchingCategory type]);
     if ([@"movie" isEqualToString:[matchingCategory type]]) {
       [self showGridListControl:[matchingCategory contents]];
     }
@@ -154,13 +149,13 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 - (void)showGridListControl:(PlexMediaContainer*)movieCategory {
   PlexMediaObject *recent=nil;
   PlexMediaObject *allMovies=nil;
-    //NSLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
+    //DLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
   if (movieCategory.directories > 0) {
     NSUInteger i, count = [movieCategory.directories count];
     for (i = 0; i < count; i++) {
       PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
       NSString *key = [obj.attributes objectForKey:@"key"];
-      NSLog(@"obj_type: %@",key);
+      DLog(@"obj_type: %@",key);
       if ([key isEqualToString:@"all"])
         allMovies = obj;
       else if ([key isEqualToString:@"recentlyAdded"])
@@ -169,7 +164,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
   }
   
   if (recent && allMovies){
-    NSLog(@"pushing shelfController");
+    DLog(@"pushing shelfController");
     HWMediaGridController *shelfController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
     [[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
   }
@@ -225,13 +220,13 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		if ([machinesExcludedFromServerList containsObject:machineID]) {
 			//machine specifically excluded, skip
 #if LOCAL_DEBUG_ENABLED
-			NSLog(@"Machine [%@] is included in the server exclusion list, skipping", machineID);
+			DLog(@"Machine [%@] is included in the server exclusion list, skipping", machineID);
 #endif
 			continue;
 		} else if (!machine.canConnect) {
 			//machine is not connectable
 #if LOCAL_DEBUG_ENABLED
-			NSLog(@"Cannot connect to machine [%@], skipping", machine);
+			DLog(@"Cannot connect to machine [%@], skipping", machine);
 #endif
 			continue;
 		}
@@ -245,7 +240,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		for (PlexMediaObject *pmo in allDirectories) {
 			NSString *categoryName = [pmo.name copy];
 #if LOCAL_DEBUG_ENABLED
-			NSLog(@"Adding category [%@] for machine id [%@]", categoryName, machineID);
+			DLog(@"Adding category [%@] for machine id [%@]", categoryName, machineID);
 #endif
 			
 			//create the compoundIdentifier for the appliance identifier
@@ -270,7 +265,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 			if ([duplicateNameCategories count] > 1) {
 				//================== found duplicate category names ==================
 #if LOCAL_DEBUG_ENABLED
-				NSLog(@"Found [%d] duplicate categories with name [%@]", [duplicateNameCategories count], categoryName);
+				DLog(@"Found [%d] duplicate categories with name [%@]", [duplicateNameCategories count], categoryName);
 #endif
 				//iterate over all of them updating their names
 				for (BRApplianceCategory *appl in duplicateNameCategories) {			
@@ -301,14 +296,14 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 #pragma mark Machine Delegate Methods
 -(void)machineWasRemoved:(Machine*)m{
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Removed machine %@", m);
+	DLog(@"MachineManager: Removed machine %@", m);
 #endif
 	[self reloadCategories];
 }
 
 -(void)machineWasAdded:(Machine*)m {   
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Added machine %@", m);
+	DLog(@"MachineManager: Added machine %@", m);
 #endif
 	BOOL machineIsOnlineAndConnectable = m.isComplete;
 	
@@ -321,7 +316,7 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 
 -(void)machine:(Machine *)m updatedInfo:(ConnectionInfoType)updateMask {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Updated Info with update mask %d from machine %@", updateMask, m);
+	DLog(@"MachineManager: Updated Info with update mask %d from machine %@", updateMask, m);
 #endif
 	BOOL machinesCategoryListWasUpdated = (updateMask & (ConnectionInfoTypeRootLevel | ConnectionInfoTypeLibrarySections)) != 0;
 	BOOL machineHasEitherGoneOnlineOrOffline = (updateMask & ConnectionInfoTypeCanConnect) != 0;

@@ -56,7 +56,7 @@ enum
 
 
 - (long)countOfObjectsWithMediaType:(id)mediaType{
-	NSLog(@"Retuning Count");
+	DLog(@"Retuning Count");
 	return 1;
 }
 
@@ -74,13 +74,13 @@ enum
     NSSet * result = [NSSet setWithArray: types];
     [types release];
 	
-	NSLog(@"Returning Types %@", result);
+	DLog(@"Returning Types %@", result);
 	
     return ( result );
 }
 
 - (id)objectsWithEntityName:(id)entityName qualifiedByPredicate:(id)predicate sortDescriptors:(id)descriptors excludeHiddenObjects:(BOOL)objects error:(id *)error{
-	NSLog(@"entityName=%@, pred=%@, desc=%@", entityName, predicate, descriptors);
+	DLog(@"entityName=%@, pred=%@, desc=%@", entityName, predicate, descriptors);
   if ([[[UIDevice currentDevice] systemVersion] isEqualToString:@"4.1"]){
     PlexMediaAssetOld* pma = [[PlexMediaAssetOld alloc] initWithURL:nil mediaProvider:self mediaObject:nil];
     return [pma autorelease];
@@ -107,7 +107,7 @@ enum
 }
 
 - (void)reset{
-	NSLog(@"Did Reset Provider");
+	DLog(@"Did Reset Provider");
 	[self unload];
     [self load];
 }
@@ -139,13 +139,13 @@ enum
 
 - (void) _loadTimerCallback: (NSTimer *) timer
 {
-	NSLog(@"Finished load");
+	DLog(@"Finished load");
     [prov setStatus: kBRMediaProviderLoadedState];
 }
 
 - (void) _unloadTimerCallback: (NSTimer *) timer
 {
-	NSLog(@"Finished unload");
+	DLog(@"Finished unload");
     [prov setStatus: kBRMediaProviderUnloadedState];
 }
 @end

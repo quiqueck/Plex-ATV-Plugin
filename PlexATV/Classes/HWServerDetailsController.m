@@ -88,7 +88,7 @@
 
 - (void)wasPushed {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"--- Did push controller %@ %@", self, _machine);
+	DLog(@"--- Did push controller %@ %@", self, _machine);
 #endif
 	if (isCreatingNewMachine) {
 		[self startAddNewMachineWizard];
@@ -101,7 +101,7 @@
 
 - (void)wasPopped {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"--- Did pop controller %@ %@", self, _machine);
+	DLog(@"--- Did pop controller %@ %@", self, _machine);
 #endif	
 	[super wasPopped];
 }
@@ -109,7 +109,7 @@
 - (BOOL)isExcludedFromServerList {
 	NSArray *machinesExcludedFromServerList = [[HWUserDefaults preferences] objectForKey:PreferencesMachinesExcludedFromServerList];
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineID [%@], Excluded Machines [%@]", _machine.machineID, machinesExcludedFromServerList);
+	DLog(@"MachineID [%@], Excluded Machines [%@]", _machine.machineID, machinesExcludedFromServerList);
 #endif
 	return [machinesExcludedFromServerList containsObject:self.machine.machineID];
 }
@@ -207,7 +207,7 @@
 
 - (void)itemSelected:(long)selected {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"itemSelected: %d",selected);
+	DLog(@"itemSelected: %d",selected);
 #endif
 	if (selected == ServerPropertyServerNameIndex) {
 		isEditingServerName = YES;
@@ -258,7 +258,7 @@
 		int adjustedSelected = selected - ListItemCount;
 		self.selectedConnection = [self.machine.connections objectAtIndex:adjustedSelected];
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"connection selected: %@", self.selectedConnection);
+		DLog(@"connection selected: %@", self.selectedConnection);
 #endif
 		//show confirmation window
 		isDeletingMachine = NO;
@@ -396,18 +396,18 @@
 	[textCon setInitialTextEntryText:initialText];
 	[[[BRApplicationStackManager singleton] stack] pushController:textCon];
 	
-	NSLog(@"newMachine: %@", isCreatingNewMachine ? @"YES" : @"NO");
-	NSLog(@"newConnection: %@", isCreatingNewConnection ? @"YES" : @"NO");
-	NSLog(@"isEditingPW: %@", isEditingPassword ? @"YES" : @"NO");
-	NSLog(@"isEditingUsername: %@", isEditingUserName ? @"YES" : @"NO");
-	NSLog(@"isEditingServername: %@", isEditingServerName ? @"YES" : @"NO");
+	DLog(@"newMachine: %@", isCreatingNewMachine ? @"YES" : @"NO");
+	DLog(@"newConnection: %@", isCreatingNewConnection ? @"YES" : @"NO");
+	DLog(@"isEditingPW: %@", isEditingPassword ? @"YES" : @"NO");
+	DLog(@"isEditingUsername: %@", isEditingUserName ? @"YES" : @"NO");
+	DLog(@"isEditingServername: %@", isEditingServerName ? @"YES" : @"NO");
 }
 
 - (void)textDidEndEditing:(id)text
 {
 	NSString *textEntered = [text stringValue];
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"text string: %@", textEntered);
+	DLog(@"text string: %@", textEntered);
 #endif
 	if (isCreatingNewConnection) {
 		[self addNewConnectionWizardWithInput:textEntered];
@@ -556,7 +556,7 @@
 #pragma mark TestAndConditionallyAddConnectionProtocol Methods
 -(void)machine:(Machine*)m didAcceptConnection:(MachineConnectionBase*)con {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"machine %@ didAcceptConnection %@", m, con);
+	DLog(@"machine %@ didAcceptConnection %@", m, con);
 #endif
 	NSString *promptText;
 	if (isCreatingNewMachine) {
@@ -584,7 +584,7 @@
 
 -(void)machine:(Machine*)m didNotAcceptConnection:(MachineConnectionBase*)con error:(NSError*)err {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"machine %@ didNotAcceptConnection %@ with error %@", m, con, err);
+	DLog(@"machine %@ didNotAcceptConnection %@ with error %@", m, con, err);
 #endif
 	isCreatingNewMachine = NO;
 	isCreatingNewConnection = NO;
@@ -594,7 +594,7 @@
 		// We could not establish a connection to that machine. 
 		// It is either firewalled, not running or the connection data is wrong
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Machine is either firewalled, not running or the connection data is wrong");
+		DLog(@"Machine is either firewalled, not running or the connection data is wrong");
 #endif
 		promptText = @"Could not connect.\n Please verify the details, and try again";
 		//stop spinner
@@ -609,7 +609,7 @@
 		// We were able to connect, but it looks like the username/password 
 		// was wrong, so we were unable to determine which PMS it is
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Machine login details are incorrect");
+		DLog(@"Machine login details are incorrect");
 #endif
 		promptText = @"User credentials incorrect.\n Please verify the login details, and try again";
 		//stop spinner
@@ -626,7 +626,7 @@
 		// (using testAndConditionallyAddConnectionForHostName again) 
 		// to the machine stored in err.userInfo[machineForConnection]
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Machine is a duplicate. Add this connection to the other machine");
+		DLog(@"Machine is a duplicate. Add this connection to the other machine");
 #endif
 		Machine *alreadyExistingMachine = [err.userInfo objectForKey:@"machineForConnection"];
 		self.machine = alreadyExistingMachine;
@@ -641,7 +641,7 @@
 	} else {
 		//other kind of failure, cancel operation and reset
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Connection failed for uknown reason.");
+		DLog(@"Connection failed for uknown reason.");
 #endif
 		promptText = @"Unknown error";
 		

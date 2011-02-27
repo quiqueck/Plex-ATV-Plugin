@@ -45,10 +45,10 @@
 	if (self != nil) {
 		pmo = [o retain];
 		url = [u retain];
-		//NSLog(@"PMO attrs: %@", pmo.attributes);
+		//DLog(@"PMO attrs: %@", pmo.attributes);
 		//PlexRequest *req = pmo.request;
-		//NSLog(@"PMO request attrs: %@", req);
-		//NSLog(@"Ref = %x", [self mediaItemRef]);
+		//DLog(@"PMO request attrs: %@", req);
+		//DLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
 }
@@ -243,7 +243,7 @@
 	NSURL* turl = [pmo.request pathForScaledImage:thumbURL ofSize:CGSizeMake(512, 512)];
 	BRURLImageProxy *imageProxy = [BRURLImageProxy proxyWithURL:turl];
   [imageProxy setDefaultImage:[[BRThemeInfo sharedTheme] storeRentalPlaceholderImage]];
-    //NSLog(@"imageProxy_defaultImage: %@",[imageProxy defaultImage]);
+    //DLog(@"imageProxy_defaultImage: %@",[imageProxy defaultImage]);
 	return imageProxy;
 }
 
@@ -364,7 +364,7 @@
 }
 
 -(id)playbackMetadata {
-	NSLog(@"Metadata");
+	DLog(@"Metadata");
 	return [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSNumber numberWithLong:self.duration], @"duration",
 			self.mediaURL, @"mediaURL",
@@ -484,7 +484,7 @@
 }
 
 - (unsigned)startTimeInMS {
-  NSLog(@"startTimeInMS");
+  DLog(@"startTimeInMS");
   return [[pmo.attributes valueForKey:@"viewOffset"] intValue];
 }
 
@@ -542,7 +542,7 @@
 
 - (NSString *)mediaURL{
     //url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-	//NSLog(@"Wanted URL %@", [url description]);	
+	//DLog(@"Wanted URL %@", [url description]);	
 	return [url description];
 }
 

@@ -67,7 +67,7 @@ PlexMediaProvider* __provider = nil;
 }
 
 - (void) dealloc {
-	NSLog(@"deallocing player controller for %@", pmo.name);
+	DLog(@"deallocing player controller for %@", pmo.name);
   
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
@@ -91,11 +91,11 @@ PlexMediaProvider* __provider = nil;
 -(void)startPlaying {
   
   if ([@"Track" isEqualToString:pmo.containerType]){
-    NSLog(@"ITS A TRAP(CK)!");
+    DLog(@"ITS A TRAP(CK)!");
     [self playbackAudio];
   }
   else {
-    NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
+    DLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
     
       //we have offset, ie. already watched a part of the movie, show a dialog asking if you want to resume or start over
     if ([pmo.attributes valueForKey:@"viewOffset"] != nil) {
@@ -158,10 +158,10 @@ PlexMediaProvider* __provider = nil;
 	 */
 	
 	
-	NSLog(@"Quality: %@", pmo.request.machine.streamQuality);
+	DLog(@"Quality: %@", pmo.request.machine.streamQuality);
 	NSURL* mediaURL = [pmo mediaURL];
 	
-	NSLog(@"Starting Playback of %@", mediaURL);
+	DLog(@"Starting Playback of %@", mediaURL);
 	
 	BOOL didTimeOut = NO;
 	[pmo.request dataForURL:mediaURL authenticateStreaming:YES timeout:0  didTimeout:&didTimeOut];
@@ -192,16 +192,16 @@ PlexMediaProvider* __provider = nil;
 		pma = [[PlexMediaAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:pmo];
 	}
 	
-    //NSLog(@"mediaItem: %@", [pma mediaItemRef]);
+    //DLog(@"mediaItem: %@", [pma mediaItemRef]);
 	
 	BRMediaPlayerManager* mgm = [BRMediaPlayerManager singleton];
 	NSError * error = nil;
 	BRMediaPlayer * player = [mgm playerForMediaAsset:pma error: &error];
 	
-	NSLog(@"pma=%@, prov=%@, mgm=%@, play=%@, err=%@", pma, __provider, mgm, player, error);
+	DLog(@"pma=%@, prov=%@, mgm=%@, play=%@, err=%@", pma, __provider, mgm, player, error);
 	
 	if ( error != nil ){
-		NSLog(@"b0bben: error in brmediaplayer, aborting");
+		DLog(@"b0bben: error in brmediaplayer, aborting");
 		[pma release];
 		return ;
 	}
@@ -209,7 +209,7 @@ PlexMediaProvider* __provider = nil;
 	
     //[mgm presentMediaAsset:pma options:0];
 	[mgm presentPlayer:player options:0];
-	NSLog(@"presented player");
+	DLog(@"presented player");
 	playProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:10.0f 
                                                         target:self 
                                                       selector:@selector(reportProgress:) 
@@ -223,12 +223,12 @@ PlexMediaProvider* __provider = nil;
 }
 
 -(void)playbackAudio {
-  NSLog(@"playbackAudioWithMediaObject");
+  DLog(@"playbackAudioWithMediaObject");
   
   NSError *error;
   
-  NSLog(@"track_url: %@", [pmo mediaStreamURL]);
-  NSLog(@"key: %@", [pmo.attributes objectForKey:@"key"]);
+  DLog(@"track_url: %@", [pmo mediaStreamURL]);
+  DLog(@"key: %@", [pmo.attributes objectForKey:@"key"]);
   
   PlexSongAsset *psa = [[PlexSongAsset alloc] initWithURL:[pmo.attributes objectForKey:@"key"] mediaProvider:nil mediaObject:pmo];
   BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAsset:psa error:&error];
@@ -238,11 +238,11 @@ PlexMediaProvider* __provider = nil;
 
 -(void)reportProgress:(NSTimer*)tm {
 	BRMediaPlayer *playa = [[BRMediaPlayerManager singleton] activePlayer];
-	NSLog(@"Elapsed: %f, %i", playa.elapsedTime, playa.playerState);
+	DLog(@"Elapsed: %f, %i", playa.elapsedTime, playa.playerState);
 	
 	switch (playa.playerState) {
 		case kBRMediaPlayerStateStopped:
-			NSLog(@"Finished Playback");
+			DLog(@"Finished Playback");
 			
 			if (playProgressTimer){
 				[playProgressTimer invalidate];
@@ -257,7 +257,7 @@ PlexMediaProvider* __provider = nil;
 			
         //stop the transcoding on PMS
 			[pmo.request stopTranscoder];
-			NSLog(@"stopping transcoder");
+			DLog(@"stopping transcoder");
       
 			break;
 		case kBRMediaPlayerStatePlaying:
@@ -265,7 +265,7 @@ PlexMediaProvider* __provider = nil;
 			[pmo postMediaProgress: playa.elapsedTime];
 			return;
 		case kBRMediaPlayerStatePaused:
-			NSLog(@"paused playback, pinging transcoder");
+			DLog(@"paused playback, pinging transcoder");
 			[pmo.request pingTranscoder];
 			break;
 		default:
@@ -285,7 +285,7 @@ PlexMediaProvider* __provider = nil;
 		
 		if([[sender selectedText] hasPrefix:@"Resume from"]) {
 			[[[BRApplicationStackManager singleton] stack] popController]; //need this so we don't go back to option dialog when going back
-			NSLog(@"Resuming from %d ms", [viewOffset intValue]);
+			DLog(@"Resuming from %d ms", [viewOffset intValue]);
 			[self playbackVideoWithOffset:[viewOffset intValue]];
 		} else if ([[sender selectedText] isEqualToString:@"Play from the beginning"]) {
 			[[[BRApplicationStackManager singleton] stack] popController]; //need this so we don't go back to option dialog when going back

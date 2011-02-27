@@ -41,16 +41,16 @@
 		url = [u retain];
 		ppa = [[PlexPreviewAsset alloc] initWithURL:url mediaProvider:mediaProvider mediaObject:pmo];
 		
-		//NSLog(@"PMO attrs: %@", pmo.attributes);
+		//DLog(@"PMO attrs: %@", pmo.attributes);
 		//PlexRequest *req = pmo.request;
-		//NSLog(@"PMO request attrs: %@", req);
-		//NSLog(@"Ref = %x", [self mediaItemRef]);
+		//DLog(@"PMO request attrs: %@", req);
+		//DLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
 }
 
 - (void) dealloc {
-	NSLog(@"deallocing media asset for %@", pmo.name);
+	DLog(@"deallocing media asset for %@", pmo.name);
 	[pmo release];
 	[url release];
 	[ppa release];

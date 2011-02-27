@@ -84,12 +84,12 @@
 }
 
 - (void)convertDirToSongAssets:(NSArray*)plexDirectories {
-	NSLog(@"convertDirToSongAssets %@", plexDirectories);
+	DLog(@"convertDirToSongAssets %@", plexDirectories);
 	self.songs = [[NSMutableArray alloc] initWithCapacity:5];
 	
 	for (int i=0; i < [rootContainer.directories count]; i++) {
 		PlexMediaObject *track = [rootContainer.directories objectAtIndex:i];
-		NSLog(@"lastkeyComponent: %@",[track lastKeyComponent]);
+		DLog(@"lastkeyComponent: %@",[track lastKeyComponent]);
 		NSString* ipod = [track.attributes objectForKey:@"ipod"];
 		NSString* duration = [track.attributes objectForKey:@"duration"];
 		NSString* key = ipod!=nil?ipod:[track.request buildAbsoluteKey:track.key];
@@ -120,7 +120,7 @@
 }
 
 - (id)itemForRow:(long)row {
-	NSLog(@"itemForRow - SongListController");
+	DLog(@"itemForRow - SongListController");
 	if(row == 0) {
 		BRMenuItem * result = [[[BRMenuItem alloc] init] autorelease];
 		[result setText:@"Play all" withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
@@ -134,7 +134,7 @@
 	} else {
 		PlexSongAsset *song = [self.songs objectAtIndex:row-2];
 #if DEBUG
-		NSLog(@"itemForRow - %@", song.title);
+		DLog(@"itemForRow - %@", song.title);
 #endif
 		BRMenuItem * result = [[[BRMenuItem alloc] init] autorelease];
 		[result setText:[song title] withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
@@ -145,7 +145,7 @@
 	
 }
 - (void)itemSelected:(long)selected; { 
-	NSLog(@"itemSelected - SongListController");
+	DLog(@"itemSelected - SongListController");
 	if(selected == 0) {
 		// Play All
 		[self playAtIndex:0 withArray:self.songs];
@@ -169,8 +169,8 @@
 }
 
 - (void)playAtIndex:(NSInteger)index withArray:(NSArray *)songList {
-	NSLog(@"playAtIndex: %d", index);
-	NSLog(@"playAtIndex: songs count %d", [songList count]);
+	DLog(@"playAtIndex: %d", index);
+	DLog(@"playAtIndex: songs count %d", [songList count]);
     //BRTextWithSpinnerController *spinnerController = [[BRTextWithSpinnerController alloc] initWithTitle:@"Buffer" text:@"Getting Stream.."];
     //[[self stack] pushController:spinnerController];
     //[spinnerController release];
@@ -183,7 +183,7 @@
 } 
 - (id)previewControlForItem:(long)item {	
 #if DEBUG  
-    NSLog(@"previewControlForItem - SongListController");
+    DLog(@"previewControlForItem - SongListController");
 #endif
 	
 	if(item == 0) {
@@ -195,8 +195,8 @@
 	else {
 		
 		PlexMediaObject *mediaObj = [rootContainer.directories objectAtIndex:item -2];
-		NSLog(@"_song_list_previewControlForItem type: %@", mediaObj.type);
-		NSLog(@"viewgroup: %@, content:%@",mediaObj.mediaContainer.viewGroup, mediaObj.mediaContainer.content );
+		DLog(@"_song_list_previewControlForItem type: %@", mediaObj.type);
+		DLog(@"viewgroup: %@, content:%@",mediaObj.mediaContainer.viewGroup, mediaObj.mediaContainer.content );
 		if ([@"track" isEqualToString:mediaObj.type] || [@"songs" isEqualToString:mediaObj.mediaContainer.content]) {
 			PlexSongAsset *song = [self.songs objectAtIndex:item -2];
 			BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];

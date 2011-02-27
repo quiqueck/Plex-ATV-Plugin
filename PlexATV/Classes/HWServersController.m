@@ -57,7 +57,7 @@
 
 - (void)wasPushed {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"--- Did push controller");
+	DLog(@"--- Did push controller");
 #endif
 	[[ProxyMachineDelegate shared] registerDelegate:self];
 	[self.machines removeAllObjects];
@@ -69,7 +69,7 @@
 
 - (void)wasPopped {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"--- Did pop controller");
+	DLog(@"--- Did pop controller");
 #endif
 	[[ProxyMachineDelegate shared] removeDelegate:self];
 	
@@ -105,14 +105,14 @@
 
 - (void)itemSelected:(long)selected {
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"itemSelected: %d",selected);
+	DLog(@"itemSelected: %d",selected);
 #endif
 	if (selected == 0) {
 		[self showAddNewMachineWizard];
 	} else {
 		Machine* m = [self.machines objectAtIndex:selected -1]; //-1 'cause of the "Add remote server" that screws up things
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"machine selected: %@", m);
+		DLog(@"machine selected: %@", m);
 #endif
 		[self showEditMachineDetailsViewForMachine:m];
 	}
@@ -171,7 +171,7 @@
 
 -(void)setNeedsUpdate{
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"Updating UI");
+	DLog(@"Updating UI");
 #endif
 	[self.list reload];
 }
@@ -227,7 +227,7 @@
 #pragma mark Machine Delegate Methods
 -(void)machineWasRemoved:(Machine*)m{
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Removed machine %@", m);
+	DLog(@"MachineManager: Removed machine %@", m);
 #endif
 	[self.machines removeObject:m];
 	[self.machines sortUsingDescriptors:_machineSortDescriptors];
@@ -236,7 +236,7 @@
 
 -(void)machineWasAdded:(Machine*)m {	
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Added machine %@", m);
+	DLog(@"MachineManager: Added machine %@", m);
 #endif
 	[self.machines addObject:m];
 	[self.machines sortUsingDescriptors:_machineSortDescriptors];
@@ -245,7 +245,7 @@
 
 -(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
+	DLog(@"MachineManager: Received Info For connection %@ from machine %@", con, m);
 #endif
 }
 

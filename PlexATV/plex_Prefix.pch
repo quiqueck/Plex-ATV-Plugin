@@ -10,3 +10,18 @@
 #endif
 
 #define DEBUG 1
+
+
+  // DLog is almost a drop-in replacement for DLog
+  // DLog();
+  // DLog(@"here");
+  // DLog(@"value: %d", x);
+  // Unfortunately this doesn't work DLog(aStringVariable); you have to do this instead DLog(@"%@", aStringVariable);
+#if DEBUG
+#	define DLog(fmt, ...) NSLog((@"[PLEX ATV] %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#	define DLog(...)
+#endif
+
+  // ALog always displays output regardless of the DEBUG setting
+#define ALog(fmt, ...) NSLog((@"[PLEX ATV] %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);

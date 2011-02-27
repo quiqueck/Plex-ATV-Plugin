@@ -37,35 +37,35 @@
 	if (self != nil) {
 		pmo = [o retain];
 		url = [u retain];
-		NSLog(@"PMO attrs: %@", pmo.attributes);
+		DLog(@"PMO attrs: %@", pmo.attributes);
 		//PlexRequest *req = pmo.request;
-		//NSLog(@"PMO request attrs: %@", req);
-		NSLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
-		//NSLog(@"Ref = %x", [self mediaItemRef]);
+		//DLog(@"PMO request attrs: %@", req);
+		DLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
+		//DLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
 }
 
 - (void) dealloc
 {
-	NSLog(@"deallocing song asset for %@", pmo.name);
+	DLog(@"deallocing song asset for %@", pmo.name);
 	[pmo release];
 	[url release];
 	[super dealloc];
 }
 
 - (NSString*)assetID{
-    NSLog(@"Asset: %@", pmo.key);
+    DLog(@"Asset: %@", pmo.key);
 	return pmo.key;
 }
 
 - (NSString*)mediaURL{
-    NSLog(@"track url: %@", [url description]);
+    DLog(@"track url: %@", [url description]);
     return [url description];
 }
 
 -(id)playbackMetadata{
-	NSLog(@"Metadata");
+	DLog(@"Metadata");
 	return [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSNumber numberWithLong:self.duration], @"duration",
 			self.mediaURL, @"mediaURL",
@@ -78,7 +78,7 @@
 }
 
 -(long int)duration{
-	NSLog(@"Duration: %d, Totaltime: %d",[pmo.attributes integerForKey:@"duration"]/1000, [pmo.attributes integerForKey:@"totalTime"]/1000);
+	DLog(@"Duration: %d, Totaltime: %d",[pmo.attributes integerForKey:@"duration"]/1000, [pmo.attributes integerForKey:@"totalTime"]/1000);
 	
 	int _duration = [pmo.attributes integerForKey:@"duration"]/1000;
 	if (!(_duration > 0))
@@ -111,14 +111,14 @@
 
 - (id)previewURL {
 	[super previewURL];
-	NSLog(@"previewURL");
+	DLog(@"previewURL");
 	return nil;//[[NSURL fileURLWithPath:[pmo.thumb imagePath]] absoluteString];
 };
 
 
 - (id)imageProxy {
-	NSLog(@"imageproxy");
-    //NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
+	DLog(@"imageproxy");
+    //DLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
 	
 	NSString *thumbURL=@"";
 	
@@ -144,7 +144,7 @@
 };
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
-	NSLog(@"imageProxyWithBookMarkTimeInMS");
+	DLog(@"imageProxyWithBookMarkTimeInMS");
 	return [self imageProxy];
 };
 - (BOOL)hasCoverArt {
@@ -156,7 +156,7 @@
 };
 
 - (id)artist {
-	NSLog(@"artist");
+	DLog(@"artist");
 	if ([pmo.attributes objectForKey:@"artist"] != nil)
 		return [pmo.attributes objectForKey:@"artist"];
 	else if ([pmo.attributes objectForKey:@"grandparentTitle"] != nil)
@@ -169,7 +169,7 @@
 };
 
 - (id)AlbumName {
-    NSLog(@"AlbumNAme");
+    DLog(@"AlbumNAme");
 	if ([pmo.attributes objectForKey:@"album"] != nil)
 		return [pmo.attributes objectForKey:@"album"];
 	else
@@ -177,7 +177,7 @@
 };
 
 - (id)primaryCollectionTitle {
-    NSLog(@"primaryCollectionTitle");
+    DLog(@"primaryCollectionTitle");
 	if ([pmo.attributes objectForKey:@"album"] != nil)
 		return [pmo.attributes objectForKey:@"album"];
   else if ([pmo.attributes objectForKey:@"parentTitle"] != nil)
@@ -191,7 +191,7 @@
 }
 
 - (id)TrackNum {
-    NSLog(@"TrackNum");
+    DLog(@"TrackNum");
 	return [pmo.attributes valueForKey:@"index"];
 };
 - (id)composer {
@@ -328,14 +328,14 @@
 	return 1;
 };
 - (void)willBeDeleted {
-	NSLog(@"willBeDeleted");
+	DLog(@"willBeDeleted");
 };
 - (void)preparePlaybackContext
 {
-	NSLog(@"preparePlaybackContext");
+	DLog(@"preparePlaybackContext");
 };
 - (void)cleanUpPlaybackContext {
-	NSLog(@"cleanUpPlaybackContext");
+	DLog(@"cleanUpPlaybackContext");
 };
 - (long)parentalControlRatingSystemID {
 	return 1;
@@ -350,7 +350,7 @@
 
 /*
  - (void *)createMovieWithProperties:(void *)fp8 count:(long)fp12 {
- NSLog(@"createMovieWithProperties");
+ DLog(@"createMovieWithProperties");
  };
  */
 
@@ -388,56 +388,56 @@
 }
 
 - (BOOL)isAvailable{
-	NSLog(@"Avail?");
+	DLog(@"Avail?");
 	return YES;
 }
 
 - (BOOL)isCheckedOut{
-	NSLog(@"CheckedOut?");
+	DLog(@"CheckedOut?");
 	return YES;
 }
 
 - (BOOL)isDisabled{
-	NSLog(@"Disabled?");
+	DLog(@"Disabled?");
 	return NO;
 }
 
 - (BOOL)isExplicit{
-	NSLog(@"Explicit?");
+	DLog(@"Explicit?");
 	return NO;
 }
 
 - (BOOL)isHD{
-	NSLog(@"HD?");
+	DLog(@"HD?");
 	return NO;
 }
 
 - (BOOL)isInappropriate{
-	NSLog(@"Inapprop?");
+	DLog(@"Inapprop?");
 	return NO;
 }
 
 - (BOOL)isLocal{
-	NSLog(@"Local?");
+	DLog(@"Local?");
 	return NO;
 }
 
 - (BOOL)isPlaying{
-	NSLog(@"Playing = %i", [super isPlaying]);
+	DLog(@"Playing = %i", [super isPlaying]);
 	return [super isPlaying];
 }
 
 - (BOOL)isPlayingOrPaused{
-	NSLog(@"PlayingOrPause = %i", [super isPlayingOrPaused]);
+	DLog(@"PlayingOrPause = %i", [super isPlayingOrPaused]);
 	return [super isPlayingOrPaused];
 }
 - (BOOL)isProtectedContent{
-	NSLog(@"Protected?");
+	DLog(@"Protected?");
 	return NO;
 }
 
 - (BOOL)isWidescreen{
-	NSLog(@"Widescreen?");
+	DLog(@"Widescreen?");
 	return YES;
 }
 
@@ -455,10 +455,10 @@
 #pragma mark BRImageProvider
 - (NSString*)imageID{return nil;}
 - (void)registerAsPendingImageProvider:(BRImageLoader*)loader {
-	NSLog(@"registerAsPendingImageProvider");
+	DLog(@"registerAsPendingImageProvider");
 }
 - (void)loadImage:(BRImageLoader*)loader{ 
-	NSLog(@"load Image");
+	DLog(@"load Image");
 }
 
 

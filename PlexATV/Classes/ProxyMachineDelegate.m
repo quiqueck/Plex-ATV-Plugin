@@ -38,14 +38,14 @@
 -(void)registerDelegate:(id<MachineManagerDelegate>)del{
 	if ([MachineManager sharedMachineManager].delegate != self) {
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Hooking up machine Delegate");
+		DLog(@"Hooking up machine Delegate");
 #endif
 		[[MachineManager sharedMachineManager] setDelegate:self];
 	}
 	
 	if (![delegates containsObject:del] && del!=nil){
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Added machine Delegate %@", del);
+		DLog(@"Added machine Delegate %@", del);
 #endif
 		[delegates addObject:del];
 		
@@ -60,7 +60,7 @@
 
 -(void)removeDelegate:(id<MachineManagerDelegate>)del{
 #ifdef LOCAL_DEBUG_ENABLED
-	NSLog(@"Removed machine Delegate %@", del);
+	DLog(@"Removed machine Delegate %@", del);
 #endif
 	[delegates removeObject:del];
 }
@@ -71,7 +71,7 @@
 -(void)machineWasAdded:(Machine*)m;{
 	for (id<MachineManagerDelegate> d in delegates){
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Send machineWasAdded to %@", d);
+		DLog(@"Send machineWasAdded to %@", d);
 #endif
 		[d machineWasAdded:m];
 	}
@@ -80,7 +80,7 @@
 -(void)machineWasRemoved:(Machine*)m{
 	for (id<MachineManagerDelegate> d in delegates){
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Send machineWasRemoved to %@", d);
+		DLog(@"Send machineWasRemoved to %@", d);
 #endif
 		[d machineWasRemoved:m];
 	}
@@ -91,7 +91,7 @@
 -(void)machineWasChanged:(Machine*)m{
 	for (id<MachineManagerDelegate> d in delegates){
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Send machineWasChanged to %@", d);
+		DLog(@"Send machineWasChanged to %@", d);
 #endif
 		if ([d respondsToSelector:@selector(machineWasChanged:)]) {
 			[d machineWasChanged:m];
@@ -102,7 +102,7 @@
 -(void)machine:(Machine*)m changedConnection:(MachineConnectionBase*)con{
 	for (id<MachineManagerDelegate> d in delegates){
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Send machine:changedConnection to %@", d);
+		DLog(@"Send machine:changedConnection to %@", d);
 #endif
 		if ([d respondsToSelector:@selector(machine:changedConnection:)]) {
 			[d machine:m changedConnection:con];
@@ -113,7 +113,7 @@
 -(void)machine:(Machine*)m updatedInfo:(ConnectionInfoType)updateMask{
 	for (id<MachineManagerDelegate> d in delegates){
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Send machine:updatedInfo to %@", d);
+		DLog(@"Send machine:updatedInfo to %@", d);
 #endif
 		if ([d respondsToSelector:@selector(machine:updatedInfo:)]) {
 			[d machine:m updatedInfo:updateMask];
@@ -124,7 +124,7 @@
 -(void)machine:(Machine*)m changedClientTo:(ClientConnection*)cc{
 	for (id<MachineManagerDelegate> d in delegates){
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Send machine:changedClientTo to %@", d);
+		DLog(@"Send machine:changedClientTo to %@", d);
 #endif
 		if ([d respondsToSelector:@selector(machine:changedClientTo:)]) {
 			[d machine:m changedClientTo:cc];
@@ -135,7 +135,7 @@
 -(void)machine:(Machine*)m receivedInfoForConnection:(MachineConnectionBase*)con updated:(ConnectionInfoType)updateMask{
 	for (id<MachineManagerDelegate> d in delegates){
 #ifdef LOCAL_DEBUG_ENABLED
-		NSLog(@"Send machine:receivedInfoForConnection to %@", d);
+		DLog(@"Send machine:receivedInfoForConnection to %@", d);
 #endif
 		if ([d respondsToSelector:@selector(machine:receivedInfoForConnection:updated:)]) {
 			[d machine:m receivedInfoForConnection:con updated:updateMask];

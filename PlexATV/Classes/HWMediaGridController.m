@@ -44,7 +44,7 @@ void checkNil(NSObject *ctrl)
   [allMovies retain];
   [recentMovies retain];
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"initWithPlexContaner - converting to assets");
+  DLog(@"initWithPlexContaner - converting to assets");
 #endif
 
     // we'll cut the recent movies down to MAX_RECENT_ITEMS, since recent actually has all movies, only sorted by added date
@@ -62,7 +62,7 @@ void checkNil(NSObject *ctrl)
 
 -(void)dealloc {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"deallocing HWMediaShelfController");
+	DLog(@"deallocing HWMediaShelfController");
 #endif
 	_shelfAssets = nil;
   _gridAssets = nil;
@@ -77,7 +77,7 @@ void checkNil(NSObject *ctrl)
 }
 
 - (NSArray *)convertContainerToMediaAssets:(PlexMediaContainer *)container {
-  NSLog(@"convertContainerToMediaAssets %@", container);
+  DLog(@"convertContainerToMediaAssets %@", container);
   NSMutableArray *assets = [[NSMutableArray alloc] initWithCapacity:5];
   
   for (int i=0; i < [container.directories count]; i++) {
@@ -89,14 +89,14 @@ void checkNil(NSObject *ctrl)
   }
   
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"converted %d assets", [assets count]);
+  DLog(@"converted %d assets", [assets count]);
 #endif
   return assets;
 }
 
 - (void) drawSelf
 {
-  NSLog(@"drawSelf");
+  DLog(@"drawSelf");
   [self _removeAllControls];
   
   CGRect masterFrame = [BRWindow interfaceFrame];
@@ -106,7 +106,7 @@ void checkNil(NSObject *ctrl)
    * Controls init
    */
   
-  NSLog(@"controls init");
+  DLog(@"controls init");
  
   _spinner=[[BRWaitSpinnerControl alloc]init];
  
@@ -153,7 +153,7 @@ void checkNil(NSObject *ctrl)
   /*
    * Shelf
    */
-  NSLog(@"shelf");
+  DLog(@"shelf");
   _shelfControl = [[BRMediaShelfControl alloc] init];
   [_shelfControl setProvider:[self getProviderForShelf]];
   [_shelfControl setColumnCount:7];
@@ -163,7 +163,7 @@ void checkNil(NSObject *ctrl)
 
   logFrame(_shelfControl.frame);
   
-  NSLog(@"box");
+  DLog(@"box");
   BRBoxControl *shelfBox = [[BRBoxControl alloc] init];
   [shelfBox setAcceptsFocus:YES];
   [shelfBox setDividerSuggestedHeight:26.f];
@@ -195,7 +195,7 @@ void checkNil(NSObject *ctrl)
   [div2 setFrame:dividerFrame];
   
   
-  NSLog(@"grid");
+  DLog(@"grid");
   [_gridControl setProvider:[self getProviderForGrid]];
   [_gridControl setColumnCount:6];
   [_gridControl setWrapsNavigation:YES];
@@ -255,7 +255,7 @@ void checkNil(NSObject *ctrl)
   [self layoutSubcontrols];
   
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"drawSelf done");
+  DLog(@"drawSelf done");
 #endif
   
   
@@ -263,7 +263,7 @@ void checkNil(NSObject *ctrl)
 
 -(id)getProviderForShelf {
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"getProviderForShelf_start");
+  DLog(@"getProviderForShelf_start");
 #endif
   NSSet *_set = [NSSet setWithObject:[BRMediaType photo]];
   NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType photo]];
@@ -272,12 +272,12 @@ void checkNil(NSObject *ctrl)
   for (int i=0;i<[_shelfAssets count];i++)
   {
     PlexPreviewAsset *asset = [_shelfAssets objectAtIndex:i];
-      //NSLog(@"asset_title: %@", [asset title]);
+      //DLog(@"asset_title: %@", [asset title]);
     [store addObject:asset];
       //[asset release];
   }
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"getProviderForShelf - have assets, creating datastore and provider");
+  DLog(@"getProviderForShelf - have assets, creating datastore and provider");
 #endif
   BRPosterControlFactory *tcControlFactory = [BRPosterControlFactory factory];
 	[tcControlFactory setDefaultImage:[[BRThemeInfo sharedTheme] storeRentalPlaceholderImage]];
@@ -287,7 +287,7 @@ void checkNil(NSObject *ctrl)
   
   
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"getProviderForShelf_end");
+  DLog(@"getProviderForShelf_end");
 #endif
   [store release];
   return provider;
@@ -297,7 +297,7 @@ void checkNil(NSObject *ctrl)
 -(id)getProviderForGrid
 {
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"getProviderForGrid_start");
+  DLog(@"getProviderForGrid_start");
 #endif
   NSSet *_set = [NSSet setWithObject:[BRMediaType photo]];
   NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType photo]];
@@ -310,7 +310,7 @@ void checkNil(NSObject *ctrl)
     [store addObject:asset];
   }
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"getProviderForGrid - have assets, creating datastore and provider");
+  DLog(@"getProviderForGrid - have assets, creating datastore and provider");
 #endif
   
   BRPhotoDataStoreProvider* provider = [BRPhotoDataStoreProvider providerWithDataStore:store 
@@ -318,7 +318,7 @@ void checkNil(NSObject *ctrl)
   
   
 #if LOCAL_DEBUG_ENABLED
-  NSLog(@"getProviderForGrid_end");
+  DLog(@"getProviderForGrid_end");
 #endif
   
   return provider;
@@ -338,7 +338,7 @@ void checkNil(NSObject *ctrl)
       index = [_shelfControl focusedIndex];
       assets = _shelfAssets;
 #if LOCAL_DEBUG_ENABLED
-      NSLog(@"item in shelf selected. assets: %d, index:%d",[assets count], index);
+      DLog(@"item in shelf selected. assets: %d, index:%d",[assets count], index);
 #endif      
     }
     
@@ -346,21 +346,21 @@ void checkNil(NSObject *ctrl)
       index = [_gridControl _indexOfFocusedControl];
       assets = _gridAssets;
 #if LOCAL_DEBUG_ENABLED
-      NSLog(@"item in grid selected. assets: %d, index:%d",[assets count], index);
+      DLog(@"item in grid selected. assets: %d, index:%d",[assets count], index);
 #endif      
       
     }
 
     if (assets) {
 #if LOCAL_DEBUG_ENABLED
-      NSLog(@"brEventaction. have %d assets and index %d, showing movie preview ctrl",[assets count], index);
+      DLog(@"brEventaction. have %d assets and index %d, showing movie preview ctrl",[assets count], index);
 #endif      
       
       HWDetailedMovieMetadataController* previewController = [[HWDetailedMovieMetadataController alloc] initWithPreviewAssets:assets withSelectedIndex:index];
       [[[BRApplicationStackManager singleton] stack] pushController:[previewController autorelease]];      
     }
     else {
-      NSLog(@"error: no selected asset");
+      DLog(@"error: no selected asset");
     }
 
     
@@ -373,14 +373,14 @@ void checkNil(NSObject *ctrl)
 
 -(void)controlWasActivated
 {
-  NSLog(@"controlWasActivated");
+  DLog(@"controlWasActivated");
 	[self drawSelf];
   [super controlWasActivated];
 	
 }
 
 void logFrame(CGRect frame) {
-  NSLog(@"x:%f, y:%f - width:%f, height:%f",frame.origin.x,frame.origin.y,frame.size.width,frame.size.height);
+  DLog(@"x:%f, y:%f - width:%f, height:%f",frame.origin.x,frame.origin.y,frame.size.width,frame.size.height);
 }
 
 @end

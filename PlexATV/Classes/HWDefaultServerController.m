@@ -43,14 +43,14 @@
 }
 
 - (void)wasPushed{
-	NSLog(@"--- Did push controller %@ %@", self, _names);
+	DLog(@"--- Did push controller %@ %@", self, _names);
 	[[ProxyMachineDelegate shared] registerDelegate:self];
 	
 	[super wasPushed];
 }
 
 - (void)wasPopped{
-	NSLog(@"--- Did pop controller %@", self);
+	DLog(@"--- Did pop controller %@", self);
 	[[ProxyMachineDelegate shared] removeDelegate:self];
 	
 	[super wasPopped];
@@ -71,7 +71,7 @@
 
 - (void)itemSelected:(long)selected {
 	Machine* m = [_names objectAtIndex:selected];
-	NSLog(@"machine selected: %@", m);
+	DLog(@"machine selected: %@", m);
 	
 	[[HWUserDefaults preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
 	[[HWUserDefaults preferences] setObject:m.machineID forKey:PreferencesDefaultServerUid];
@@ -114,7 +114,7 @@
 }
 
 -(void)setNeedsUpdate{
-	NSLog(@"Updating UI");
+	DLog(@"Updating UI");
     //  [self updatePreviewController];
     //	[self refreshControllerForModelUpdate];
 	[self.list reload];
@@ -124,7 +124,7 @@
 #pragma mark
 #pragma mark Machine Manager Delegate
 -(void)machineWasRemoved:(Machine*)m;{
-	NSLog(@"Removed %@", m);
+	DLog(@"Removed %@", m);
 	[_names removeObject:m];
 }
 
@@ -132,7 +132,7 @@
 	if (!runsServer(m.role)) return;
 	
 	[_names addObject:m];
-	NSLog(@"Added %@", m);
+	DLog(@"Added %@", m);
 	
     //[m resolveAndNotify:self];
 	[self setNeedsUpdate];
@@ -146,9 +146,9 @@
 		return;
 	} else if (!runsServer(m.role) && [_names containsObject:m]){
 		[_names removeObject:m];
-		NSLog(@"Removed %@", m);
+		DLog(@"Removed %@", m);
 	} else {
-		NSLog(@"Changed %@", m);
+		DLog(@"Changed %@", m);
 	}
 	
 	[self setNeedsUpdate];

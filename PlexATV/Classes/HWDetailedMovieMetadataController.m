@@ -60,7 +60,7 @@ typedef enum {
 	}
 	
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"converted %d assets", [newAssets count]);
+	DLog(@"converted %d assets", [newAssets count]);
 #endif
 	return newAssets;
 }
@@ -69,7 +69,7 @@ typedef enum {
 	if (self = [super init]) {
 		self.assets = previewAssets;
 #if LOCAL_DEBUG_ENABLED
-		NSLog(@"init with asset count:%d and index:%d", [self.assets count], selIndex);
+		DLog(@"init with asset count:%d and index:%d", [self.assets count], selIndex);
 #endif
 		if ([self.assets count] > selIndex) {
 			currentSelectedIndex = selIndex;
@@ -85,7 +85,7 @@ typedef enum {
 		self.delegate = self;
 		
 #if LOCAL_DEBUG_ENABLED
-		NSLog(@"init done. assets rigged");
+		DLog(@"init done. assets rigged");
 #endif
 	}
 	return self;
@@ -98,7 +98,7 @@ typedef enum {
 
 -(void)dealloc {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"deallocing HWMovieListing");
+	DLog(@"deallocing HWMovieListing");
 #endif
 	self.assets = nil;
 	self.selectedMediaItemPreviewData = nil;
@@ -138,7 +138,7 @@ typedef enum {
 		newIndex = currentSelectedIndex - 1;
 	}
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"switching from item %d to previous one %d", currentSelectedIndex, newIndex);
+	DLog(@"switching from item %d to previous one %d", currentSelectedIndex, newIndex);
 #endif
 	lastFocusedIndex = newIndex;
 	[self changeMetadataViewToShowDataForIndex:lastFocusedIndex];
@@ -160,7 +160,7 @@ typedef enum {
 		newIndex = 0;
 	}
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"switching from item %d to next one %d", currentSelectedIndex, newIndex);
+	DLog(@"switching from item %d to next one %d", currentSelectedIndex, newIndex);
 #endif
 	lastFocusedIndex = newIndex;
 	[self changeMetadataViewToShowDataForIndex:lastFocusedIndex];
@@ -170,24 +170,19 @@ typedef enum {
 
 -(void)controller:(SMFMoviePreviewController *)c selectedControl:(BRControl *)ctrl {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"controller selected %@", ctrl);
+	DLog(@"controller selected %@", ctrl);
 #endif
 	if ([ctrl isKindOfClass:[BRButtonControl class]]) {
 		//one of the buttons have been pushed
 		BRButtonControl *buttonControl = (BRButtonControl *)ctrl;
 #if LOCAL_DEBUG_ENABLED
-		NSLog(@"button chosen: %@", buttonControl.identifier);
+		DLog(@"button chosen: %@", buttonControl.identifier);
 #endif
 		int buttonId = [buttonControl.identifier intValue];
 		switch (buttonId) {
 			case kPlayButton:
-				NSLog(@"play movie plz kthxbye");
-				NSLog(@"asset: %@", selectedMediaItemPreviewData.title);
-        PlexMediaObject *movieObj = selectedMediaItemPreviewData.pmo;
-        PlexMediaObject* detailed = [movieObj loadVideoDetails];
-        NSLog(@"Audio Streams: %@", [detailed audioStreamsForLanguage:nil haveFallback:NO]);
-        NSLog(@"Subs Streams: %@", [detailed subtitleStreamsForLanguage:@"English" haveFallback:NO]);
-          //-(void)setSubtitleStream:(PlexMediaStream*)streamOrNil;
+				DLog(@"play movie plz kthxbye");
+				DLog(@"asset: %@", selectedMediaItemPreviewData.title);
         
         PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:selectedMediaItemPreviewData.pmo];
 				[player startPlaying];
@@ -210,7 +205,7 @@ typedef enum {
 -(void)controller:(SMFMoviePreviewController *)c switchedFocusTo:(BRControl *)newControl {
 	if ([newControl isKindOfClass:[BRButtonControl class]]) {		
 		//one of the buttons is now focused
-		NSLog(@"switchedFocusTo button focused");
+		DLog(@"switchedFocusTo button focused");
 		if (shelfIsSelected)
 			shelfIsSelected = NO; //shelf was focused, and now one of the buttons are.
 	} else if (newControl == self._shelfControl) {
@@ -233,21 +228,21 @@ typedef enum {
 #pragma mark datasource methods
 -(NSString *)title {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"title: %@", [self.selectedMediaItemPreviewData title]);
+	DLog(@"title: %@", [self.selectedMediaItemPreviewData title]);
 #endif
 	return [self.selectedMediaItemPreviewData title];
 }
 
 -(NSString *)subtitle {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"subtitle: %@", [self.selectedMediaItemPreviewData broadcaster]);
+	DLog(@"subtitle: %@", [self.selectedMediaItemPreviewData broadcaster]);
 #endif
 	return [self.selectedMediaItemPreviewData broadcaster];
 }
 
 -(NSString *)summary {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"summary: %@", [self.selectedMediaItemPreviewData mediaSummary]);
+	DLog(@"summary: %@", [self.selectedMediaItemPreviewData mediaSummary]);
 #endif
 	return [self.selectedMediaItemPreviewData mediaSummary];
 }
@@ -310,14 +305,14 @@ typedef enum {
 	
 	// ======= done building table ======
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"table: %@", table);
+	DLog(@"table: %@", table);
 #endif
 	return table;
 }
 
 -(NSString *)rating {
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"rating: %@", [self.selectedMediaItemPreviewData rating]);
+	DLog(@"rating: %@", [self.selectedMediaItemPreviewData rating]);
 #endif
 	return [self.selectedMediaItemPreviewData rating];
 }
@@ -328,7 +323,7 @@ typedef enum {
 		coverArt = [self.selectedMediaItemPreviewData coverArt];
 	}
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"coverArt: %@", coverArt);
+	DLog(@"coverArt: %@", coverArt);
 #endif
 	return coverArt;
 }
@@ -381,7 +376,7 @@ typedef enum {
 	id provider = [BRPhotoDataStoreProvider providerWithDataStore:store controlFactory:tcControlFactory];
 	[store release];
 #if LOCAL_DEBUG_ENABLED
-	NSLog(@"providerForShelf: %@", provider);
+	DLog(@"providerForShelf: %@", provider);
 #endif
 	return provider;
 }

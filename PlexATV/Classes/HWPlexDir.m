@@ -75,7 +75,7 @@
 	PlexMediaContainer *pmc = container;
 	
 	BOOL skipFilteringOptionsMenu = [[HWUserDefaults preferences] boolForKey:PreferencesAdvancedEnableSkipFilteringOptionsMenu];
-	NSLog(@"skipFilteringOption: %@", skipFilteringOptionsMenu ? @"YES" : @"NO");
+	DLog(@"skipFilteringOption: %@", skipFilteringOptionsMenu ? @"YES" : @"NO");
 	
 	if (pmc.sectionRoot && !pmc.requestsMessage && skipFilteringOptionsMenu) { 
 		//open "/library/section/x/all or the first item in the list"
@@ -93,7 +93,7 @@
 		PlexMediaContainer* new_pmc = nil;
 		
 		for(PlexMediaObject* po in pmc.directories){
-			NSLog(@"%@: %@ == %@", pmc.key, po.lastKeyComponent, filter);
+			DLog(@"%@: %@ == %@", pmc.key, po.lastKeyComponent, filter);
 			if ([filter isEqualToString:po.lastKeyComponent]){
 				PlexMediaContainer* my_new_pmc = [po contents];
 				if (my_new_pmc.directories.count>0) new_pmc = my_new_pmc;
@@ -102,7 +102,7 @@
 			}
 		}
 		
-		NSLog(@"handled: %@", handled ? @"YES" : @"NO");
+		DLog(@"handled: %@", handled ? @"YES" : @"NO");
 		if (handled && new_pmc==nil) new_pmc = [[pmc.directories objectAtIndex:0] contents];
 		if (new_pmc==nil || new_pmc.directories.count==0){
 			for(PlexMediaObject* po in pmc.directories){
@@ -121,17 +121,17 @@
 		
 		if (!handled && pmc.directories.count>0) pmc = [[pmc.directories objectAtIndex:0] contents];
 	}
-	NSLog(@"done filtering");
+	DLog(@"done filtering");
 	return pmc;
 }
 
 - (void)log:(NSNotificationCenter *)note {
-	NSLog(@"note = %@", note);
+	DLog(@"note = %@", note);
 }
 
 -(void)dealloc
 {
-	NSLog(@"deallocing HWPlexDir");
+	DLog(@"deallocing HWPlexDir");
 	[playbackItem release];
 	[rootContainer release];
 	
@@ -165,7 +165,7 @@
 			return YES;
 			break;
 		case kBREventRemoteActionPlayPause:
-			NSLog(@"play/pause event");
+			DLog(@"play/pause event");
 			if([event value] == 1)
 				[self playPauseActionForRow:[self getSelection]];
 			
@@ -195,7 +195,7 @@
 - (id)previewControlForItem:(long)item
 {
 #if DEBUG
-	NSLog(@"HWPlexDir_previewControlForItem");
+	DLog(@"HWPlexDir_previewControlForItem");
 #endif
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:item];
 	[pmo retain];
@@ -219,12 +219,12 @@
 	if ([type empty]) type = pmo.containerType;
 	type = [type lowercaseString];
 	
-	NSLog(@"Item Selected: %@, type:%@", pmo.debugSummary, pmo.containerType);
+	DLog(@"Item Selected: %@, type:%@", pmo.debugSummary, pmo.containerType);
 	
-	NSLog(@"viewgroup: %@, viewmode:%@",pmo.mediaContainer.viewGroup, pmo.containerType);
+	DLog(@"viewgroup: %@, viewmode:%@",pmo.mediaContainer.viewGroup, pmo.containerType);
 	
 	if ([PlexViewGroupAlbum isEqualToString:pmo.mediaContainer.viewGroup] || [@"albums" isEqualToString:pmo.mediaContainer.content] || [@"playlists" isEqualToString:pmo.mediaContainer.content]) {
-		NSLog(@"Accessing Artist/Album %@", pmo);
+		DLog(@"Accessing Artist/Album %@", pmo);
 		SongListController *songlist = [[SongListController alloc] initWithPlexContainer:[pmo contents] title:pmo.name];
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
 		[songlist autorelease];
@@ -234,7 +234,7 @@
 	}
 	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType] || [@"Track" isEqualToString:pmo.containerType]){
 #if LOCAL_DEBUG_ENABLED
-		NSLog(@"got some media, switching to PlexPlaybackController");
+		DLog(@"got some media, switching to PlexPlaybackController");
 #endif
 		PlexPlaybackController *player = [[PlexPlaybackController alloc] initWithPlexMediaObject:pmo];
 		[player startPlaying];
@@ -251,13 +251,13 @@
 - (void)showGridListControl:(PlexMediaContainer*)movieCategory {
 	PlexMediaObject *recent=nil;
 	PlexMediaObject *allMovies=nil;
-    //NSLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
+    //DLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
 	if (movieCategory.directories > 0) {
 		NSUInteger i, count = [movieCategory.directories count];
 		for (i = 0; i < count; i++) {
 			PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
 			NSString *key = [obj.attributes objectForKey:@"key"];
-			//NSLog(@"obj_type: %@",key);
+			//DLog(@"obj_type: %@",key);
 			if ([key isEqualToString:@"all"])
 				allMovies = obj;
 			else if ([key isEqualToString:@"recentlyAdded"])
@@ -266,7 +266,7 @@
 	}
 	
 	if (recent && allMovies){
-		NSLog(@"pushing shelfController");
+		DLog(@"pushing shelfController");
 		HWMediaGridController *shelfController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
 		[[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
 	}
@@ -278,7 +278,7 @@
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:row];
 	NSString *plexMediaObjectType = [pmo.attributes valueForKey:@"type"];
 	
-	NSLog(@"HERE: %@", plexMediaObjectType);
+	DLog(@"HERE: %@", plexMediaObjectType);
 	
 	if (pmo.hasMedia 
 		|| [@"Video" isEqualToString:pmo.containerType]
@@ -328,13 +328,13 @@
 		if([[sender selectedText] hasSuffix:@"Watched"]) {
 			//mark item(s) as watched
 			[[[BRApplicationStackManager singleton] stack] popController]; //need this so we don't go back to option dialog when going back
-			NSLog(@"Marking as watched: %@", pmo.name);
+			DLog(@"Marking as watched: %@", pmo.name);
 			[pmo markSeen];
 			[self.list reload];
 		} else if ([[sender selectedText] hasSuffix:@"Unwatched"]) {
 			//mark item(s) as unwatched
 			[[self stack] popController]; //need this so we don't go back to option dialog when going back
-			NSLog(@"Marking as unwatched: %@", pmo.name);
+			DLog(@"Marking as unwatched: %@", pmo.name);
 			[pmo markUnseen];
 			[self.list reload];
 		} else if ([[sender selectedText] isEqualToString:@"Go back"]) {

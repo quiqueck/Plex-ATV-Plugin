@@ -36,7 +36,7 @@
 }
 
 - (void)wasPopped{
-	NSLog(@"Did pop controller %@", self);
+	DLog(@"Did pop controller %@", self);
 	[super wasPopped];
 }
 
