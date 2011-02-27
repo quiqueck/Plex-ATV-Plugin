@@ -333,32 +333,31 @@ typedef enum {
 	// deleteActionImage, menuActionUnfocusedImage, playActionImage,
 	// previewActionImage, queueActionImage, rateActionImage
 	NSMutableArray *buttons = [NSMutableArray array];
-    BRButtonControl* b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]previewActionImage] 
-                                                        subtitle:@"Preview" 
-                                                           badge:nil] retain];
-    b.identifier = [NSNumber numberWithInt:kPreviewButton];
-    [buttons addObject:b];
-    
-    b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]playActionImage] 
-                                       subtitle:@"Play"
-                                          badge:nil]retain];
+	BRButtonControl* b = [BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]previewActionImage] 
+													   subtitle:@"Preview" 
+														  badge:nil];
+	[b setIdentifier:[NSNumber numberWithInt:kPreviewButton]];
+	[buttons addObject:b];
 	
-    b.identifier = [NSNumber numberWithInt:kPlayButton];
-    [buttons addObject:b];
-    
-    b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]queueActionImage] 
-                                       subtitle:@"Queue" 
-                                          badge:nil]retain];
-    b.identifier = [NSNumber numberWithInt:kQueueButton];
-    [buttons addObject:b];
-    
-    b = [[BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]rateActionImage] 
-                                       subtitle:@"More" 
-                                          badge:nil]retain];
-    b.identifier = [NSNumber numberWithInt:kMoreButton];
-    [buttons addObject:b];
-    return buttons;
-    
+	b = [BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]playActionImage] 
+									  subtitle:@"Play"
+										 badge:nil];
+	[b setIdentifier:[NSNumber numberWithInt:kPlayButton]];	
+	[buttons addObject:b];
+	
+	b = [BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]queueActionImage] 
+									  subtitle:@"Queue" 
+										 badge:nil];
+	[b setIdentifier:[NSNumber numberWithInt:kQueueButton]];
+	[buttons addObject:b];
+	
+	b = [BRButtonControl actionButtonWithImage:[[BRThemeInfo sharedTheme]rateActionImage] 
+									  subtitle:@"More" 
+										 badge:nil];
+	[b setIdentifier:[NSNumber numberWithInt:kMoreButton]];
+	[buttons addObject:b];
+	return buttons;
+	
 }
 
 -(BRPhotoDataStoreProvider *)providerForShelf {

@@ -47,29 +47,31 @@ PlexMediaProvider* __provider = nil;
 
 - (id) init
 {
-  self = [super init];
-  if (self != nil) {
-      //register for notifications when a movie has finished playing properly to the end.
-      //used to mark movie as seen
+	self = [super init];
+	if (self != nil) {
+		//register for notifications when a movie has finished playing properly to the end.
+		//used to mark movie as seen
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinished:) name:@"AVPlayerItemDidPlayToEndTimeNotification" object:nil];
-  }
-  return self;
+	}
+	return self;
 }
 
 -(id)initWithPlexMediaObject:(PlexMediaObject*)mediaObject {
-  [self init];
-  
-  if (self != nil) {
-    pmo = [mediaObject retain];
-  }
-  
-  return self;
+	[self init];
+	
+	if (self != nil) {
+		pmo = [mediaObject retain];
+	}
+	
+	return self;
 }
 
 - (void) dealloc {
 	DLog(@"deallocing player controller for %@", pmo.name);
   
   [[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	if (playProgressTimer){
 		[playProgressTimer invalidate];
@@ -81,7 +83,7 @@ PlexMediaProvider* __provider = nil;
 		[__player release];
 		__player = nil;
 	}
-  
+	
 	[pmo release];
 	[super dealloc];
 }
@@ -89,49 +91,49 @@ PlexMediaProvider* __provider = nil;
 
 
 -(void)startPlaying {
-  
-  if ([@"Track" isEqualToString:pmo.containerType]){
-    DLog(@"ITS A TRAP(CK)!");
-    [self playbackAudio];
-  }
-  else {
-    DLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
-    
-      //we have offset, ie. already watched a part of the movie, show a dialog asking if you want to resume or start over
-    if ([pmo.attributes valueForKey:@"viewOffset"] != nil) {
-      NSNumber *viewOffset = [NSNumber numberWithInt:[[pmo.attributes valueForKey:@"viewOffset"] intValue]];
-      
-      BROptionDialog *option = [[BROptionDialog alloc] init];
-      [option setIdentifier:ResumeOptionDialog];
-      
-      [option setUserInfo:[[NSDictionary alloc] initWithObjectsAndKeys:
-                           viewOffset, @"viewOffset", 
-                           pmo, @"mediaObject",
-                           nil]];
-      [option setPrimaryInfoText:@"You have already watched a part of this video.\nWould you like to continue where you left off, or start from beginning?"];
-      [option setSecondaryInfoText:pmo.name];
-      
-      int offsetInHrs = [viewOffset intValue] / (1000*60*60);
-      int offsetInMins = ([viewOffset intValue] % (1000*60*60)) / (1000*60);
-      int offsetInSecs = (([viewOffset intValue] % (1000*60*60)) % (1000*60)) / 1000;
-      
-      if (offsetInHrs > 0)
-        [option addOptionText:[NSString stringWithFormat:@"Resume from %d hrs %d mins %d secs", offsetInHrs, offsetInMins, offsetInSecs]];
-      else
-        [option addOptionText:[NSString stringWithFormat:@"Resume from %d mins %d secs", offsetInMins, offsetInSecs]];
-      
-      [option addOptionText:@"Play from the beginning"];
-      [option addOptionText:@"Go back"];
-      [option setActionSelector:@selector(optionSelected:) target:self];
-      [[[BRApplicationStackManager singleton] stack] pushController:option];
-      [option release];
-    }
-    else {
-      [self playbackVideoWithOffset:0]; //not previously unwatched, just start playback from beginning
-    }
-    
-  }
-  
+	
+	if ([@"Track" isEqualToString:pmo.containerType]){
+		NSLog(@"ITS A TRAP(CK)!");
+		[self playbackAudio];
+	}
+	else {
+		NSLog(@"viewOffset: %@", [pmo.attributes valueForKey:@"viewOffset"]);
+		
+		//we have offset, ie. already watched a part of the movie, show a dialog asking if you want to resume or start over
+		if ([pmo.attributes valueForKey:@"viewOffset"] != nil) {
+			NSNumber *viewOffset = [NSNumber numberWithInt:[[pmo.attributes valueForKey:@"viewOffset"] intValue]];
+			
+			BROptionDialog *option = [[BROptionDialog alloc] init];
+			[option setIdentifier:ResumeOptionDialog];
+			
+			[option setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+								 viewOffset, @"viewOffset", 
+								 pmo, @"mediaObject",
+								 nil]];
+			[option setPrimaryInfoText:@"You have already watched a part of this video.\nWould you like to continue where you left off, or start from beginning?"];
+			[option setSecondaryInfoText:pmo.name];
+			
+			int offsetInHrs = [viewOffset intValue] / (1000*60*60);
+			int offsetInMins = ([viewOffset intValue] % (1000*60*60)) / (1000*60);
+			int offsetInSecs = (([viewOffset intValue] % (1000*60*60)) % (1000*60)) / 1000;
+			
+			if (offsetInHrs > 0)
+				[option addOptionText:[NSString stringWithFormat:@"Resume from %d hrs %d mins %d secs", offsetInHrs, offsetInMins, offsetInSecs]];
+			else
+				[option addOptionText:[NSString stringWithFormat:@"Resume from %d mins %d secs", offsetInMins, offsetInSecs]];
+			
+			[option addOptionText:@"Play from the beginning"];
+			[option addOptionText:@"Go back"];
+			[option setActionSelector:@selector(optionSelected:) target:self];
+			[[[BRApplicationStackManager singleton] stack] pushController:option];
+			[option release];
+		}
+		else {
+			[self playbackVideoWithOffset:0]; //not previously unwatched, just start playback from beginning
+		}
+		
+	}
+	
 }
 
 -(void)playbackVideoWithOffset:(int)offset {
@@ -184,7 +186,7 @@ PlexMediaProvider* __provider = nil;
 		[__player release];
 		__player = nil;
 	}
-  
+	
 	BRBaseMediaAsset* pma = nil;
 	if ([[[UIDevice currentDevice] systemVersion] isEqualToString:@"4.1"]){
 		pma = [[PlexMediaAssetOld alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
@@ -211,29 +213,26 @@ PlexMediaProvider* __provider = nil;
 	[mgm presentPlayer:player options:0];
 	DLog(@"presented player");
 	playProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:10.0f 
-                                                        target:self 
-                                                      selector:@selector(reportProgress:) 
-                                                      userInfo:nil 
-                                                       repeats:YES] retain];
-	
-	
-	
-	return;
-	
+														  target:self 
+														selector:@selector(reportProgress:) 
+														userInfo:nil 
+														 repeats:YES] retain];
+	[pma release];
 }
 
 -(void)playbackAudio {
-  DLog(@"playbackAudioWithMediaObject");
-  
-  NSError *error;
-  
-  DLog(@"track_url: %@", [pmo mediaStreamURL]);
-  DLog(@"key: %@", [pmo.attributes objectForKey:@"key"]);
-  
-  PlexSongAsset *psa = [[PlexSongAsset alloc] initWithURL:[pmo.attributes objectForKey:@"key"] mediaProvider:nil mediaObject:pmo];
-  BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAsset:psa error:&error];
+	NSLog(@"playbackAudioWithMediaObject");
+	
+	NSError *error;
+	
+	NSLog(@"track_url: %@", [pmo mediaStreamURL]);
+	NSLog(@"key: %@", [pmo.attributes objectForKey:@"key"]);
+	
+	PlexSongAsset *psa = [[PlexSongAsset alloc] initWithURL:[pmo.attributes objectForKey:@"key"] mediaProvider:nil mediaObject:pmo];
+	BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAsset:psa error:&error];
+	[psa release];
     //BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAssetAtIndex:index inTrackList:songList error:&error];
-  [[BRMediaPlayerManager singleton] presentPlayer:player options:nil];	
+	[[BRMediaPlayerManager singleton] presentPlayer:player options:nil];	
 }
 
 -(void)reportProgress:(NSTimer*)tm {
@@ -250,18 +249,19 @@ PlexMediaProvider* __provider = nil;
 				playProgressTimer = nil;
 			}
 			
+#warning why are we releasing the singleton ?
 			if (playa){
 				[playa release];
 				playa = nil;
 			}
 			
-        //stop the transcoding on PMS
+			//stop the transcoding on PMS
 			[pmo.request stopTranscoder];
 			DLog(@"stopping transcoder");
       
 			break;
 		case kBRMediaPlayerStatePlaying:
-        //report time back to PMS so we can continue in the right spot
+			//report time back to PMS so we can continue in the right spot
 			[pmo postMediaProgress: playa.elapsedTime];
 			return;
 		case kBRMediaPlayerStatePaused:
@@ -291,7 +291,7 @@ PlexMediaProvider* __provider = nil;
 			[[[BRApplicationStackManager singleton] stack] popController]; //need this so we don't go back to option dialog when going back
 			[self playbackVideoWithOffset:0]; //0 offset is beginning, mkay?
 		} else if ([[sender selectedText] isEqualToString:@"Go back"]) {
-        //go back to movie listing...
+			//go back to movie listing...
 			[[[BRApplicationStackManager singleton] stack] popController];
 		}
 	}

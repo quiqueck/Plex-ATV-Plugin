@@ -12,6 +12,7 @@
 #import "HWUserDefaults.h"
 #import "Constants.h"
 #import "HWMediaGridController.h"
+#import "HWTVShowsController.h"
 
 #define SERVER_LIST_ID @"hwServerList"
 #define SETTINGS_ID @"hwSettings"
@@ -55,7 +56,6 @@ NSString * const MachineNameKey = @"PlexMachineName";
 	BRTopShelfView *topShelf = [[BRTopShelfView alloc] init];
 	BRImageControl *imageControl = [topShelf productImage];
 	BRImage *theImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[HWPlexDir class]] pathForResource:@"PlexLogo" ofType:@"png"]];
-    //BRImage *theImage = [[BRThemeInfo sharedTheme] largeGeniusIconWithReflection];
 	[imageControl setImage:theImage];
 	
 	return [topShelf autorelease];
@@ -132,42 +132,64 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		
 		//HAZAA! we found it! Push new view
 		PlexMediaObject* matchingCategory = [matchingCategories objectAtIndex:0];
-    DLog(@"matchingCategory: %@", [matchingCategory type]);
-    if ([@"movie" isEqualToString:[matchingCategory type]]) {
-      [self showGridListControl:[matchingCategory contents]];
-    }
-    else {
-      HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
-      [[[BRApplicationStackManager singleton] stack] pushController:menuController];      
-        //}
-    }
-  }    
-  return [menuController autorelease];
+		NSLog(@"matchingCategory: %@", [matchingCategory type]);
+		if (matchingCategory.isMovie) {
+			menuController = [self newMoviesController:[matchingCategory contents]];
+		} else if (matchingCategory.isTVShow) {
+			menuController = [self newTVShowsController:[matchingCategory contents]];
+		} else {
+			menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
+		}
+		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
+	}    
+	return [menuController autorelease];
 }
 
+- (BRController *)newTVShowsController:(PlexMediaContainer *)tvShowCategory {
+	BRController *menuController = nil;
+	PlexMediaObject *allTvShows=nil;
+	if (tvShowCategory.directories > 0) {
+		NSUInteger i, count = [tvShowCategory.directories count];
+		for (i = 0; i < count; i++) {
+			PlexMediaObject * obj = [tvShowCategory.directories objectAtIndex:i];
+			NSString *key = [obj.attributes objectForKey:@"key"];
+			NSLog(@"obj_type: %@",key);
+			if ([key isEqualToString:@"all"]) {
+				allTvShows = obj;
+				break;
+			}
+		}
+	}
+	
+	if (allTvShows) {
+		menuController = [[HWTVShowsController alloc] initWithPlexAllTVShows:[allTvShows contents]];
+	}
+	return menuController;
+}
 
-- (void)showGridListControl:(PlexMediaContainer*)movieCategory {
-  PlexMediaObject *recent=nil;
-  PlexMediaObject *allMovies=nil;
-    //DLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
-  if (movieCategory.directories > 0) {
-    NSUInteger i, count = [movieCategory.directories count];
-    for (i = 0; i < count; i++) {
-      PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
-      NSString *key = [obj.attributes objectForKey:@"key"];
-      DLog(@"obj_type: %@",key);
-      if ([key isEqualToString:@"all"])
-        allMovies = obj;
-      else if ([key isEqualToString:@"recentlyAdded"])
-        recent = obj;
-    }
-  }
-  
-  if (recent && allMovies){
-    DLog(@"pushing shelfController");
-    HWMediaGridController *shelfController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
-    [[[BRApplicationStackManager singleton] stack] pushController:[shelfController autorelease]];
-  }
+- (BRController *)newMoviesController:(PlexMediaContainer*)movieCategory {
+	BRController *menuController = nil;
+	PlexMediaObject *recent=nil;
+	PlexMediaObject *allMovies=nil;
+    //NSLog(@"showGridListControl_movieCategory_directories: %@", movieCategory.directories);
+	if (movieCategory.directories > 0) {
+		NSUInteger i, count = [movieCategory.directories count];
+		for (i = 0; i < count; i++) {
+			PlexMediaObject * obj = [movieCategory.directories objectAtIndex:i];
+			NSString *key = [obj.attributes objectForKey:@"key"];
+			NSLog(@"obj_type: %@",key);
+			if ([key isEqualToString:@"all"])
+				allMovies = obj;
+			else if ([key isEqualToString:@"recentlyAdded"])
+				recent = obj;
+		}
+	}
+	
+	if (recent && allMovies){
+		NSLog(@"pushing shelfController");
+		menuController = [[HWMediaGridController alloc] initWithPlexAllMovies:[allMovies contents] andRecentMovies:[recent contents]];
+	}
+	return menuController;
 }
 
 - (id)applianceCategories {

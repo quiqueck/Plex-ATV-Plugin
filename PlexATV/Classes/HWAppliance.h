@@ -20,5 +20,6 @@
 @property(nonatomic, readonly, retain) id topShelfController;
 @property(retain) NSMutableArray *applianceCat;
 
-- (void)showGridListControl:(PlexMediaContainer*)movieCategory;
+- (BRController *)newMoviesController:(PlexMediaContainer*)movieCategory;
+- (BRController *)newTVShowsController:(PlexMediaContainer *)tvShowCategory;
 @end
