@@ -49,7 +49,7 @@
 
 - (NSInteger)numberOfShelfsInBookcaseController:(Plex_SMFBookcaseController *)bookcaseController {
 	[allTvShowsSeasonsPlexMediaContainer removeAllObjects];
-	return 3;//[tvShows.directories count];
+	return [tvShows.directories count];
 }
 
 - (NSString *)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController titleForShelfAtIndex:(NSInteger)index {
