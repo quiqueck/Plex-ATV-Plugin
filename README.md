@@ -17,11 +17,9 @@ Apple TV guru and project consultant: tomcool420
 		apt-get update
 		apt-get install com.plex.client-plugin
 		
-6. Get a copy of the Plex Apple TV Client using a the link at the github repository
+6. Get a copy of the Plex Apple TV Client using the link at the github repository
 7. cd into the code's base directory (with name Plex-ATV-Plugin)
-8. Get build dependencies (ATV2Includes and SMFramework). These are included as submodules in the _contrib folder. The folders will be empty when you do a fresh clone, so type in:
-      git submodule init
-   This will initialize the folders
+8. Get build dependencies ([ATV2Includes](https://github.com/tomcool420/ATV2Includes) and [SMFramework](https://github.com/tomcool420/SMFramework)). These are included as submodules in the _contrib folder. The folders will be empty when you do a fresh clone, so type in: `git submodule init`. This will initialize the folders
 9. now either:   
    * Retrieve the latest commit (recommended): `git submodule update`
    * Retrieve the entire branch (if you intend to submit code changes to this repository): `git submodule add`
@@ -33,6 +31,9 @@ Apple TV guru and project consultant: tomcool420
 ### SMFramework
 _This might not be required, but the Plex client does very often stay on the 'bleeding edge' with SMFramework._
 The `../Plex-ATV-Plugin/_contrib/SMFramework/Documentation` folder contains documentation on how to set up your environment and build a new version of SMFramework.
+
+Summary: you will need to download theos, dpkg, gnutar. Create a new symlink to gnutar, 
+
 Make sure to install the new version on your Apple TV.
 
 
