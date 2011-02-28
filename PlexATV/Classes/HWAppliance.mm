@@ -140,7 +140,6 @@ NSString * const CompoundIdentifierDelimiter = @"|||";
 		} else {
 			menuController = [[HWPlexDir alloc] initWithRootContainer:[matchingCategory contents]];
 		}
-		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 	}    
 	return [menuController autorelease];
 }
