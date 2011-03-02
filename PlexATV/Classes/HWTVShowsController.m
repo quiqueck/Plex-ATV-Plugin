@@ -9,6 +9,7 @@
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexMediaObject.h>
 #import "PlexPreviewAsset.h"
+#import "HWPlexDir.h"
 
 @interface BRThemeInfo (PlexExtentions)
 - (id)storeRentalPlaceholderImage;
