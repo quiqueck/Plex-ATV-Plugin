@@ -29,13 +29,14 @@
 #import <plex-oss/PlexMediaStream.h>
 #import "PlexPreviewAsset.h"
 
-@interface HWDetailedMovieMetadataController : SMFMoviePreviewController<SMFMoviePreviewControllerDatasource, SMFMoviePreviewControllerDelegate> {
+@interface HWDetailedMovieMetadataController : SMFMoviePreviewController<SMFMoviePreviewControllerDatasource, SMFMoviePreviewControllerDelegate, SMFListDropShadowDatasource, SMFListDropShadowDelegate> {
 	NSArray *_assets;
 	
 	BOOL shelfIsSelected;
 	int currentSelectedIndex;
 	int lastFocusedIndex;
 	PlexPreviewAsset *selectedMediaItemPreviewData;
+ 	SMFListDropShadowControl *listDropShadowControl; //popup
 }
 @property (retain) NSArray *assets;
 @property (retain) PlexPreviewAsset *selectedMediaItemPreviewData;

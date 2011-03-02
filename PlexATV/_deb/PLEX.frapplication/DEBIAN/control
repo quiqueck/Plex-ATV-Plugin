@@ -1,23 +1,16 @@
 Package: com.plex.client-plugin
 Name: AppleTV PLEX Plugin
-Version: 0.6.6
+Version: 0.7.0
 Priority: optional
 Size: 1083178
 Installed-Size: 2662
-Depends: beigelist,com.nito
+Depends: beigelist,com.nito,org.tomcool.smframework (>= 0.7.2-2)
 Replaces: plex-client-plugin
 Architecture: iphoneos-arm
 Description: A PLEX Client for Lowtide (experimental)
  This Lowtide Plugin allows you to browse your local PMS Libraries 
  and play back videos.
- added by ccjensen:
-   - Settings Screen
-   - Toplevel, unified sections
- added by b0bben:
-   - Details-Display while browsing 
-   - Music Playback
-   - Video Duration (seek and resume)
-Changes: More details when browsing the library and music playback (Added by b0bben)
+Changes: New machine manager, new views for movies and shows + a lot of minor fixes
 Homepage: http://plexapp.com/
 Maintainer: Quiqueck <quiqueck@ambertation.de>
 Author: Quiqueck <quiqueck@ambertation.de>

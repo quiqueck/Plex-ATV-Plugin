@@ -501,7 +501,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../SMFramework/_/Library/Frameworks\"",
+					"\"$(SRCROOT)/../_Contrib/SMFramework/_/Library/Frameworks\"",
 				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -518,7 +518,6 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Bundles";
 				LIBRARY_SEARCH_PATHS = (
-					../../ATV2Includes,
 					"\"$(SRCROOT)/theos/include\"",
 					"\"$(SRCROOT)/../_Contrib/lib\"",
 				);
