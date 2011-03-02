@@ -101,7 +101,15 @@
 }
 
 -(void)bookcaseController:(SMFBookcaseController *)bookcaseController selectionDidOccurInShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
-	DLog(@"select did occur");	
+	DLog(@"select did occur at index: %d and shelfindex: %d",index, [shelfControl focusedIndex]);	
+  
+   PlexMediaObject *tvshow = [tvShows.directories objectAtIndex:index];  
+   PlexMediaObject *season = [[tvshow contents].directories objectAtIndex:[shelfControl focusedIndex]];
+   if ([season contents].hasOnlyEpisodes) {
+   HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[season contents]];
+   [[[BRApplicationStackManager singleton] stack] pushController:menuController];
+   [menuController autorelease];    
+   }
 }
 
 @end
