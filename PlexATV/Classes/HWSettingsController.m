@@ -14,7 +14,6 @@
 //
 
 #import "HWSettingsController.h"
-#import "HWDefaultServerController.h"
 #import "HWServersController.h"
 #import "HWAdvancedSettingsController.h"
 #import "HWUserDefaults.h"
