@@ -26,11 +26,9 @@
 #define PlexPluginVersion @"0.7.0b"
 
 #define ServersIndex 0
-#define CombinedPmsCategoriesIndex 1
-#define DefaultServerIndex 2
-#define QualitySettingIndex 3
-#define AdvancedSettingsIndex 4
-#define PluginVersionNumberIndex 5
+#define QualitySettingIndex 1
+#define AdvancedSettingsIndex 2
+#define PluginVersionNumberIndex 3
 
 #pragma mark -
 #pragma mark init/dealoc
@@ -59,32 +57,6 @@
 	SMFMenuItem *serversMenuItem = [SMFMenuItem folderMenuItem];
 	[serversMenuItem setTitle:@"Manage server list"];
 	[_items addObject:serversMenuItem];
-	
-	
-	// =========== combined PMS category view ===========
-	SMFMenuItem *combinedPmsCategoriesMenuItem = [SMFMenuItem menuItem];
-	
-	NSString *combinedPmsCategories = [[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView] ? @"Combined" : @"Default Server";
-	NSString *combinedPmsCategoriesTitle = [[NSString alloc] initWithFormat:@"View mode:    %@", combinedPmsCategories];
-	[combinedPmsCategoriesMenuItem setTitle:combinedPmsCategoriesTitle];
-	[combinedPmsCategoriesTitle release];
-	[_items addObject:combinedPmsCategoriesMenuItem];
-	
-	
-	// =========== default server ===========
-	SMFMenuItem *defaultServerMenuItem = [SMFMenuItem folderMenuItem];
-	
-	NSString *defaultServer = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerName];
-	if (defaultServer == nil) {
-		[[HWUserDefaults preferences] setObject:@"<No Default Selected>" forKey:PreferencesDefaultServerName];
-		defaultServer = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerName];
-	}
-	[defaultServerMenuItem setDimmed:[[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView]];
-	
-	NSString *defaultServerTitle = [[NSString alloc] initWithFormat:@"Default Server:    %@", defaultServer];
-	[defaultServerMenuItem setTitle:defaultServerTitle];
-	[defaultServerTitle release];
-	[_items addObject:defaultServerMenuItem];
 	
 	
 	// =========== quality setting ===========
@@ -149,21 +121,6 @@
 			[menuController autorelease];
 			break;
 		}
-		case CombinedPmsCategoriesIndex: {
-			// =========== combined PMS category view ===========
-			BOOL isTurnedOn = [[HWUserDefaults preferences] boolForKey:PreferencesUseCombinedPmsView];
-			[[HWUserDefaults preferences] setBool:!isTurnedOn forKey:PreferencesUseCombinedPmsView];
-			[self setupList];
-			[self.list reload];
-			break;
-		}
-		case DefaultServerIndex: {
-			// =========== default server ===========
-			HWDefaultServerController* menuController = [[HWDefaultServerController alloc] init];
-			[[[BRApplicationStackManager singleton] stack] pushController:menuController];
-			[menuController autorelease];
-			break;
-		}
 		case QualitySettingIndex: {
 			// =========== quality setting ===========
 			NSString *qualitySetting = [[HWUserDefaults preferences] objectForKey:PreferencesQualitySetting];
@@ -205,18 +162,6 @@
 			// =========== servers ===========
 			[asset setTitle:@"Manage server list"];
 			[asset setSummary:@"Add new or modify current servers, their connections and their 'inclusion in main menu' status"];
-			break;
-		}
-		case CombinedPmsCategoriesIndex: {
-			// =========== combined PMS category view ===========
-			[asset setTitle:@"Switch between main menu view modes (REPLACED)"];
-			[asset setSummary:@"Toggles between using a categories from a single default server or a combined view of categories from all available PMS'"];
-			break;
-		}
-		case DefaultServerIndex: {
-			// =========== default server ===========
-			[asset setTitle:@"Select the default server (REPLACED)"];
-			[asset setSummary:@"Shows the category's belonging to the default server (Only used if 'Default Server' view mode is selected"];
 			break;
 		}
 		case QualitySettingIndex: {

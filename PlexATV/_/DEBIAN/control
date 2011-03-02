@@ -1,0 +1,9 @@
+Package: com.plex.client-plugin
+Name: Plex
+Version: 0.6.7b-1
+Architecture: iphoneos-arm
+Description: Plex Client
+Maintainer: b0bben & ccjensen
+Author: quiqueck
+Section: Media
+Installed-Size: 428

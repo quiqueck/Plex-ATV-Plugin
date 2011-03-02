@@ -19,9 +19,6 @@
         _plexPreferences = [[SMFPreferences alloc] initWithPersistentDomainName:PreferencesDomain];		
 		[_plexPreferences registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 											[NSArray array], PreferencesMachinesExcludedFromServerList,
-											NO, PreferencesUseCombinedPmsView, 
-											@"<No Default Selected>", PreferencesDefaultServerName,
-											@"", PreferencesDefaultServerUid,
 											@"Low", PreferencesQualitySetting,
 											NO, PreferencesAdvancedEnableSkipFilteringOptionsMenu,
 											NO, PreferencesAdvancedEnableDebug,

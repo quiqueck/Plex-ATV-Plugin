@@ -1,14 +1,7 @@
 
 #define PreferencesDomain @"com.plex.client-plugin"
-
-#define PreferencesUseCombinedPmsView @"PreferencesUseCombinedPmsView"
-#define PreferencesDefaultServerName @"PreferencesDefaultServerName"
-#define PreferencesDefaultServerUid @"PreferencesDefaultServerUid"
-
 #define PreferencesMachinesExcludedFromServerList @"PreferencesMachinesExcludedFromServerList"
-
 #define PreferencesQualitySetting @"PreferencesQualitySetting"
-
 #define PreferencesAdvancedEnableDebug @"PreferencesAdvancedEnableDebug"
 #define PreferencesAdvancedEnableSkipFilteringOptionsMenu @"PreferencesAdvancedEnableSkipFilteringOptionsMenu"
 
