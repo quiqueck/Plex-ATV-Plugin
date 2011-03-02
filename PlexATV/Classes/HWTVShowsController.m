@@ -37,27 +37,27 @@
 }
 
 #pragma mark -
-#pragma mark Plex_SMFBookcaseController Datasource Methods
-- (NSString *)headerTitleForBookcaseController:(Plex_SMFBookcaseController *)bookcaseController {
+#pragma mark SMFBookcaseController Datasource Methods
+- (NSString *)headerTitleForBookcaseController:(SMFBookcaseController *)bookcaseController {
 	return @"TV Shows";
 }
 
-- (BRImage *)headerIconForBookcaseController:(Plex_SMFBookcaseController *)bookcaseController {
+- (BRImage *)headerIconForBookcaseController:(SMFBookcaseController *)bookcaseController {
 	NSString *headerIcon = [[NSBundle bundleForClass:[HWTVShowsController class]] pathForResource:@"PlexTextLogo" ofType:@"png"];
 	return [BRImage imageWithPath:headerIcon];
 }
 
-- (NSInteger)numberOfShelfsInBookcaseController:(Plex_SMFBookcaseController *)bookcaseController {
+- (NSInteger)numberOfShelfsInBookcaseController:(SMFBookcaseController *)bookcaseController {
 	[allTvShowsSeasonsPlexMediaContainer removeAllObjects];
 	return [tvShows.directories count];
 }
 
-- (NSString *)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController titleForShelfAtIndex:(NSInteger)index {
+- (NSString *)bookcaseController:(SMFBookcaseController *)bookcaseController titleForShelfAtIndex:(NSInteger)index {
 	PlexMediaObject *tvshow = [tvShows.directories objectAtIndex:index];
 	return tvshow.name;
 }
 
-- (BRPhotoDataStoreProvider *)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController datastoreProviderForShelfAtIndex:(NSInteger)index {
+- (BRPhotoDataStoreProvider *)bookcaseController:(SMFBookcaseController *)bookcaseController datastoreProviderForShelfAtIndex:(NSInteger)index {
 	NSSet *_set = [NSSet setWithObject:[BRMediaType photo]];
 	NSPredicate *_pred = [NSPredicate predicateWithFormat:@"mediaType == %@",[BRMediaType photo]];
 	BRDataStore *store = [[BRDataStore alloc] initWithEntityName:@"Hello" predicate:_pred mediaTypes:_set];
@@ -74,18 +74,19 @@
 		[ppa release];
 	}
 	
-	BRPosterControlFactory *tcControlFactory = [BRPosterControlFactory factory];
-	[tcControlFactory setDefaultImage:[[BRThemeInfo sharedTheme] storeRentalPlaceholderImage]];
+	SMFControlFactory *controlFactory = [SMFControlFactory posterControlFactory];
+	controlFactory.favorProxy = YES;
+	controlFactory.defaultImage = [[BRThemeInfo sharedTheme] storeRentalPlaceholderImage];
 	
-	id provider = [BRPhotoDataStoreProvider providerWithDataStore:store controlFactory:tcControlFactory];
+	id provider = [BRPhotoDataStoreProvider providerWithDataStore:store controlFactory:controlFactory];
 	[store release];
 	return provider; 
 }
 
 
 #pragma mark -
-#pragma mark Plex_SMFBookcaseController Delegate Methods
--(BOOL)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController allowSelectionForShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
+#pragma mark SMFBookcaseController Delegate Methods
+-(BOOL)bookcaseController:(SMFBookcaseController *)bookcaseController allowSelectionForShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
 	DLog(@"allow selection for: %d", index);
 	if (index == 1) {
 		return NO;
@@ -95,11 +96,11 @@
 
 }
 
--(void)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController selectionWillOccurInShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
+-(void)bookcaseController:(SMFBookcaseController *)bookcaseController selectionWillOccurInShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
 	DLog(@"select will occur");
 }
 
--(void)bookcaseController:(Plex_SMFBookcaseController *)bookcaseController selectionDidOccurInShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
+-(void)bookcaseController:(SMFBookcaseController *)bookcaseController selectionDidOccurInShelf:(BRMediaShelfControl *)shelfControl atIndex:(NSInteger)index {
 	DLog(@"select did occur");	
 }
 

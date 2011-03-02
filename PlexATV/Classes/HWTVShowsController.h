@@ -6,10 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Plex_SMFBookcaseController.h"
+#import <SMFramework/SMFBookcaseController.h>
 
 @class PlexMediaContainer;
-@interface HWTVShowsController : Plex_SMFBookcaseController <Plex_SMFBookcaseControllerDatasource, Plex_SMFBookcaseControllerDelegate> {
+@interface HWTVShowsController : SMFBookcaseController <SMFBookcaseControllerDatasource, SMFBookcaseControllerDelegate> {
 	PlexMediaContainer *tvShows;
 	NSMutableArray *allTvShowsSeasonsPlexMediaContainer;
 }

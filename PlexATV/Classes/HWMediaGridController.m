@@ -312,7 +312,7 @@ void checkNil(NSObject *ctrl)
 #if LOCAL_DEBUG_ENABLED
 	DLog(@"getProviderForGrid - have assets, creating datastore and provider");
 #endif
-	SMFPhotoControlFactory *controlFactory = [SMFPhotoControlFactory posterControlFactory];
+	SMFControlFactory *controlFactory = [SMFControlFactory posterControlFactory];
 	controlFactory.favorProxy = YES;
 	controlFactory.defaultImage = [[BRThemeInfo sharedTheme] storeRentalPlaceholderImage];
 	
