@@ -78,6 +78,7 @@
 }
 
 - (void)dealloc {
+  DLog(@"releasing %@", self.rootContainer)
 	[self.songs release];
 	[self.rootContainer release];
 	[super dealloc];

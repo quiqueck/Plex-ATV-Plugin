@@ -37,7 +37,6 @@
 #import "PlexPreviewAsset.h"
 #import "PlexSongAsset.h"
 
-BRMediaPlayer* __player = nil;
 PlexMediaProvider* __provider = nil;
 
 #define ResumeOptionDialog @"ResumeOptionDialog"
@@ -71,17 +70,10 @@ PlexMediaProvider* __provider = nil;
   
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
 	if (playProgressTimer){
 		[playProgressTimer invalidate];
 		[playProgressTimer release];
 		playProgressTimer = nil;
-	}
-	
-	if (__player){
-		[__player release];
-		__player = nil;
 	}
 	
 	[pmo release];
@@ -181,12 +173,7 @@ PlexMediaProvider* __provider = nil;
 		[playProgressTimer release];
 		playProgressTimer = nil;
 	}
-	
-	if (__player){
-		[__player release];
-		__player = nil;
-	}
-	
+		
 	BRBaseMediaAsset* pma = nil;
 	if ([[[UIDevice currentDevice] systemVersion] isEqualToString:@"4.1"]){
 		pma = [[PlexMediaAssetOld alloc] initWithURL:mediaURL mediaProvider:__provider mediaObject:pmo];
@@ -229,10 +216,13 @@ PlexMediaProvider* __provider = nil;
 	DLog(@"key: %@", [pmo.attributes objectForKey:@"key"]);
 	
 	PlexSongAsset *psa = [[PlexSongAsset alloc] initWithURL:[pmo.attributes objectForKey:@"key"] mediaProvider:nil mediaObject:pmo];
-	BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAsset:psa error:&error];
-	[psa release];
-    //BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAssetAtIndex:index inTrackList:songList error:&error];
-	[[BRMediaPlayerManager singleton] presentPlayer:player options:nil];	
+  
+  BRMediaPlayer *player = [[BRMediaPlayerManager singleton] playerForMediaAsset:psa error:&error];
+  [psa release];
+  
+	[[BRMediaPlayerManager singleton] presentPlayer:player options:nil];
+  
+  DLog(@"presented audio player");
 }
 
 -(void)reportProgress:(NSTimer*)tm {

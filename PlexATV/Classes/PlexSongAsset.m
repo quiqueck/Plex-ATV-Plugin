@@ -36,6 +36,10 @@
 	self = [super init];
 	if (self != nil) {
 		pmo = [o retain];
+
+#warning Frank, why is this needed? it's nil otherwise
+    [pmo.mediaContainer retain]; 
+    
 		url = [u retain];
 		DLog(@"PMO attrs: %@", pmo.attributes);
 		//PlexRequest *req = pmo.request;
@@ -48,7 +52,7 @@
 
 - (void) dealloc
 {
-	DLog(@"deallocing song asset for %@", pmo.name);
+	DLog(@"deallocing song asset");
 	[pmo release];
 	[url release];
 	[super dealloc];
@@ -117,8 +121,7 @@
 
 
 - (id)imageProxy {
-	DLog(@"imageproxy");
-    //DLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
+	DLog(@"imageproxy for media obj: %@",pmo);
 	
 	NSString *thumbURL=@"";
 	

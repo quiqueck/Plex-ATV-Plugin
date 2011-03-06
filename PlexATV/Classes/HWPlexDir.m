@@ -194,18 +194,19 @@
 
 - (id)previewControlForItem:(long)item
 {
-#if DEBUG
-	DLog(@"HWPlexDir_previewControlForItem");
-#endif
+
 	PlexMediaObject* pmo = [rootContainer.directories objectAtIndex:item];
-	[pmo retain];
-	
+
+#if LOCAL_DEBUG_ENABLED
+	DLog(@"media object: %@", pmo);
+#endif	
+
 	NSURL* mediaURL = [pmo mediaStreamURL];
 	PlexPreviewAsset* pma = [[PlexPreviewAsset alloc] initWithURL:mediaURL mediaProvider:nil mediaObject:pmo];
 	BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
 	[preview setShowsMetadataImmediately:NO];
-	[preview setAsset:pma];	
-	[pma release];
+	[preview setAsset:pma];
+  [pma release];
 	[pmo release];
 	
 	return [preview autorelease];
@@ -220,7 +221,7 @@
 	if ([type empty]) type = pmo.containerType;
 	type = [type lowercaseString];
 	
-	DLog(@"Item Selected: %@, type:%@", pmo.debugSummary, pmo.containerType);
+	DLog(@"Item Selected: %@, type:%@", pmo.debugSummary, type);
 	
 	DLog(@"viewgroup: %@, viewmode:%@",pmo.mediaContainer.viewGroup, pmo.containerType);
 	
@@ -230,10 +231,7 @@
 		[[[BRApplicationStackManager singleton] stack] pushController:songlist];
 		[songlist autorelease];
 	}
-	else if ([@"movie" isEqualToString:type]) {
-		[self showGridListControl:[pmo contents]];
-	}
-	else if (pmo.hasMedia || [@"Video" isEqualToString:type] || [@"Track" isEqualToString:type]){
+	else if (pmo.hasMedia || [@"Video" isEqualToString:pmo.containerType] || [@"Track" isEqualToString:pmo.containerType]){
 #if LOCAL_DEBUG_ENABLED
 		DLog(@"got some media, switching to PlexPlaybackController");
 #endif
@@ -241,7 +239,11 @@
 		[player startPlaying];
 		[player autorelease];
 	}
-	else {
+  else if ([@"movie" isEqualToString:type]) {
+		[self showGridListControl:[pmo contents]];
+	}
+	else 
+  {
 		HWPlexDir* menuController = [[HWPlexDir alloc] initWithRootContainer:[pmo contents]];
 		[[[BRApplicationStackManager singleton] stack] pushController:menuController];
 		
