@@ -1,0 +1,7 @@
+#!/bin/bash
+export COPYFILE_DISABLE=1
+export COPY_EXTENDED_ATTRIBUTES_DISABLE=1
+cd REPO
+./dpkg-scanpackages.pl -m . /dev/null /downloads/PLEX/ >Packages
+rm Packages.bz2
+bzip2 Packages

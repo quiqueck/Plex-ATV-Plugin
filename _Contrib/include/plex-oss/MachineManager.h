@@ -49,6 +49,9 @@ extern const MachineRole MachineRoleClientServer;
 	
   NSTimeInterval stateMonitorInterval;
 	NSTimer* stateMonitorTimer;
+  NSTimer* connectedMonitorTimer;
+    
+  Machine* connectedMachine;
 }
 
 @property (readwrite, assign) id<MachineManagerDelegate> delegate;
@@ -80,5 +83,6 @@ SINGLETON_INTERFACE(MachineManager)
 -(void)updateMachineStatesNow;
 -(void)startMonitoringMachineState;
 -(void)setMachineStateMonitorPriority:(BOOL)high;
+-(void)setConnectedMachine:(Machine*)m;
 -(void)stopMonitoringMachineState;
 @end
