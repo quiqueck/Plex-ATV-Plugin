@@ -18,6 +18,7 @@ extern const ConnectionInfoType ConnectionInfoTypeOnline;
 extern const ConnectionInfoType ConnectionInfoTypeCanConnect;
 extern const ConnectionInfoType ConnectionInfoTypeAuthenticationNeeded;
 extern const ConnectionInfoType ConnectionInfoTypeLocalNetwork;
+extern const ConnectionInfoType ConnectionInfoTypeRecentlyAddedMedia;
 
 @class Machine, ClientConnection;
 

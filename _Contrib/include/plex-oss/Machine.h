@@ -77,6 +77,7 @@ typedef struct _MachineStateRecord{
   //cache for best connection
   PlexMediaContainer* rootLevel;
   PlexMediaContainer* librarySections;
+  PlexMediaContainer* recentlyAddedMedia;
   NSArray* clientConnections;
     
   
@@ -163,6 +164,7 @@ typedef struct _MachineStateRecord{
 
 @property (readonly, assign) PlexMediaContainer* librarySections;
 @property (readonly, assign) PlexMediaContainer* rootLevel;
+@property (readonly, assign) PlexMediaContainer* recentlyAddedMedia;
 @property (readonly, assign) NSArray* clientConnections;
 
 @property (readonly, retain) NSArray* playbackHistory;

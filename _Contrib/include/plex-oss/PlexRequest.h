@@ -13,6 +13,7 @@
 
 extern const NSString* plexSectionsKey;
 extern const NSString* plexClientsKey;
+extern const NSString* plexRecentlyAddedMediaKey;
 extern const NSString* plexServersKey;
 extern const NSString* plexPhotoKey;
 extern const NSString* plexStoreKey;
@@ -104,6 +105,7 @@ extern const NSString* plexClientsKey ;
 -(PlexMediaContainer*)rootLevel;
 -(PlexMediaContainer*)topLevelContainer;
 -(PlexMediaContainer*)librarySections;
+-(PlexMediaContainer*)recentlyAddedMedia;
 -(void)didReceiveMemoryWarning;
 - (NSString *) buildAbsoluteKey: (NSString *) key;
 - (NSString *) buildAbsoluteKey: (NSString *) key  referenceLocalHost:(BOOL)local;

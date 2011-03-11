@@ -17,6 +17,7 @@ extern MachineCapability SERVER_CAP_DIRECT_PLAYBACK;
 extern MachineCapability SERVER_CAP_DECODER_CAPS;
 extern MachineCapability SERVER_CAP_EDIT_METADATA;
 extern MachineCapability SERVER_CAP_TRANSCODER_PING;
+extern MachineCapability SERVER_CAP_GLOBAL_LIST_OF_ADDITIONS;
 
 
 
