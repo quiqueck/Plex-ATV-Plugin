@@ -13,6 +13,26 @@ Description: nitoTV APT Signing Key
 Name: nitoTV Source / secondary awkwardTV Source
 
 Package: com.plex.client-plugin
+Version: 0.0.7.1
+Priority: optional
+Section: Multimedia
+Maintainer: Quiqueck <quiqueck@ambertation.de>
+Depends: beigelist,com.nito,org.tomcool.smframework (>= 0.7.2-2)
+Replaces: plex-client-plugin
+Architecture: iphoneos-arm
+Filename: /downloads/PLEX/.//PLEX.frapplication_0.0.7.1.deb
+Size: 809506
+Installed-Size: 2662
+MD5sum: 799cf5f3440c5a8a3c6e0d9ef8e020ec
+Description: A PLEX Client for Lowtide (experimental)
+ This Lowtide Plugin allows you to browse your local PMS Libraries 
+ and play back videos.
+Name: AppleTV PLEX Plugin
+Author: Quiqueck <quiqueck@ambertation.de>
+Homepage: http://plexapp.com/
+Icon: file:///Applications/Lowtide.app/Appliances/PLEX.frappliance/PlexIcon.png
+
+Package: com.plex.client-plugin
 Version: 0.4.6
 Priority: optional
 Section: Multimedia
@@ -280,26 +300,6 @@ Description: A PLEX Client for Lowtide (experimental)
    - Details-Display while browsing 
    - Music Playback
    - Video Duration (seek and resume)
-Name: AppleTV PLEX Plugin
-Author: Quiqueck <quiqueck@ambertation.de>
-Homepage: http://plexapp.com/
-Icon: file:///Applications/Lowtide.app/Appliances/PLEX.frappliance/PlexIcon.png
-
-Package: com.plex.client-plugin
-Version: 0.7.0
-Priority: optional
-Section: Multimedia
-Maintainer: Quiqueck <quiqueck@ambertation.de>
-Depends: beigelist,com.nito,org.tomcool.smframework (>= 0.7.2-2)
-Replaces: plex-client-plugin
-Architecture: iphoneos-arm
-Filename: /downloads/PLEX/.//PLEX.frapplication_0.7.0.deb
-Size: 786870
-Installed-Size: 2662
-MD5sum: 8e976d5e9c1ed03fbd5b4571fd58aaa8
-Description: A PLEX Client for Lowtide (experimental)
- This Lowtide Plugin allows you to browse your local PMS Libraries 
- and play back videos.
 Name: AppleTV PLEX Plugin
 Author: Quiqueck <quiqueck@ambertation.de>
 Homepage: http://plexapp.com/
