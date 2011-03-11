@@ -74,4 +74,7 @@ typedef int ContentRating;
 -(NSString*)fallbackPasswordID;
 -(NSString*)fallbackPasswordForID:(NSString*)pwid deviceID:(NSString*)uid;
 -(NSString*)fallbackPassword;
+
++(Class)baseClassForPlexPrefs;
++(void)setBaseClassForPlexPrefs:(Class)cl;
 @end
