@@ -53,6 +53,9 @@ typedef int ContentRating;
 -(BOOL)allowDirectPlayback;
 -(void)setAllowDirectPlayback:(BOOL)v;
 
+-(BOOL)allowDirectStreaming;
+-(void)setAllowDirectStreaming:(BOOL)v;
+
 /*-(NSTimeInterval)contentCachingTimeout;
 -(void)setContentCachingTimeout:(NSTimeInterval)v;*/
 
@@ -77,4 +80,5 @@ typedef int ContentRating;
 
 +(Class)baseClassForPlexPrefs;
 +(void)setBaseClassForPlexPrefs:(Class)cl;
++(id)allocWithZone_NSObject:(NSZone *)zone;
 @end

@@ -14,4 +14,5 @@
 -(NSString*)showTitle;
 -(NSUInteger)episodeNr;
 -(NSUInteger)seasonNr;
+-(NSString*)caption;
 @end

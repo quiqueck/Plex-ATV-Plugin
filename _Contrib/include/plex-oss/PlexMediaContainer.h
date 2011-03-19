@@ -147,7 +147,7 @@ typedef struct _PlexMediaContainerFlags PlexMediaContainerFlags;
 @property (readonly) PlexContentType content;
 
 
-
+@property (readonly) BOOL isSectionMainView;
 
 
 -(id)initWithRequest:(PlexRequest*)req baseKey:(NSString*)bk fromObject:(PlexMediaObject*)pmo;

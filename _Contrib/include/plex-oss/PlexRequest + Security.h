@@ -15,6 +15,7 @@
 -(NSString*)timeStamp;
 -(NSString*)getDeviceSessionHeader;
 -(void)addAuthenticationHeadersToRequest:(NSMutableURLRequest*)req;
+-(void)addStreamimngHeadersToRequest:(NSMutableURLRequest*)req forceHeaders:(BOOL)force;
 -(void)addStreamimngHeadersToRequest:(NSMutableURLRequest*)req;
 -(void)renewPasswordHash;
 

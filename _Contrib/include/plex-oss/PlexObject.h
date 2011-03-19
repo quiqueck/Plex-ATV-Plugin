@@ -32,7 +32,7 @@
 @property (readwrite, retain) NSMutableDictionary* attributes;
 @property (readonly) NSString* key;
 @property (readonly) NSString* lastKeyComponent;
-@property (readonly) NSString* sectionKey;
+@property (readonly) NSInteger sectionKey;
 @property (readonly) PlexRequest* request;
 @property (readwrite, retain) NSString* name;
 @property (readonly, retain) NSString* containerType;

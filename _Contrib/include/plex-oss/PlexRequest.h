@@ -81,6 +81,7 @@ extern const NSString* plexClientsKey ;
 -(NSURL*)postMediaProgressRatingKey:(NSString*)rk identifier:(NSString*)ident time:(NSTimeInterval)tm;
 -(NSURL*)postMediaProgressURL:(PlexMediaObject*)pmo time:(NSTimeInterval)tm;
 -(NSMutableURLRequest*)urlRequestWithStreamingHeadersForURL:(NSURL*)url;
+-(NSMutableURLRequest*)urlRequestWithStreamingHeadersForURL:(NSURL*)url forceHeaders:(BOOL)force;
 -(NSMutableURLRequest*)urlRequestWithAuthenticationHeadersForURL:(NSURL*)url;
 
 -(NSURL*)plexPlayFileURL:(NSString*)file mediaContainer:(PlexMediaContainer*)pmc callingObject:(PlexMediaObject*)pmo;
@@ -96,7 +97,7 @@ extern const NSString* plexClientsKey ;
 -(void)pingTranscoder;
 -(void)pingTranscoderSync;
 
--(void)refreshSection:(NSString*)key force:(BOOL)forceRefresh;
+-(void)refreshSection:(NSInteger)key force:(BOOL)forceRefresh;
 -(void)refreshAllSections:(BOOL)force;
 
 +(void)freeCache;

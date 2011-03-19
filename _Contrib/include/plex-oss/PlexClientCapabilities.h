@@ -1,5 +1,5 @@
 //
-//  PlexClientCapabilities + Internal.h
+//  PlexClientCapabilities.h
 //  MachineTest
 //
 //  Created by Frank Bauer on 11.03.11.
@@ -10,10 +10,9 @@
 @class Machine;
 typedef const NSString* PlexClientCapability;
 
-extern const PlexClientCapability CLIENT_CAP_VIDEO;
-extern const PlexClientCapability CLIENT_CAP_HTTP_STREAMING;
-extern const PlexClientCapability CLIENT_CAP_720p_VIDEO;
-extern const PlexClientCapability CLIENT_CAP_720p_HTTP_STREAMING;
+extern const PlexClientCapability CLIENT_CAP_HTTP_LIVE_STREAMING;
+extern const PlexClientCapability CLIENT_CAP_HTTP_MP4_STREAMING;
+extern const PlexClientCapability CLIENT_CAP_720p_PLAYBACK;
 extern const PlexClientCapability CLIENT_CAP_DECODER_CAPS;
 
 typedef NSUInteger PlexClientBitrate;
@@ -92,13 +91,16 @@ extern const PlexClientAudioChannels PlexClientAudioChannels_7_1Surround;
     NSMutableArray* videoDecoders;
     
     NSString* cachedCaps;
+    Machine* cachedForMachine;
 }
 
 @property (readonly) NSMutableArray* caps;
+@property (readonly) BOOL disableDirectCopy;
 
 SINGLETON_INTERFACE(PlexClientCapabilities);
 
 -(BOOL)supports:(PlexClientCapability)capability;
+-(void)resetCaps;
 
 +(NSSet*)availableCapabilities;
 +(NSString*)humanReadableCapability:(PlexClientCapability)mc;
