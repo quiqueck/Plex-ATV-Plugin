@@ -4,7 +4,7 @@ export TARGET_DIR=/Applications/${APP_NAME}/Appliances/PLEX.frappliance
 export NEW_TARGET_DIR=/Applications/AppleTV.app/Appliances/                                                                                                                                  
 
 if [ -d ${NEW_TARGET_DIR} ]; then                                                                                                                                                            
-    rm "${NEW_TARGET_DIR}/PLEX.frappliance" 
+    rm -rf "${NEW_TARGET_DIR}/PLEX.frappliance" 
 	killall AppleTV                                                                                                                                                   
 else
 	killall Lowtide

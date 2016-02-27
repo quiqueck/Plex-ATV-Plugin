@@ -1,26 +1,26 @@
-  //
-  //  PlexMediaAsset.m
-  //  atvTwo
-  //
-  //  Created by Frank Bauer on 27.10.10.
-  //  Permission is hereby granted, free of charge, to any person obtaining a copy
-  //  of this software and associated documentation files (the "Software"), to deal
-  //  in the Software without restriction, including without limitation the rights
-  //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  //  copies of the Software, and to permit persons to whom the Software is
-  //  furnished to do so, subject to the following conditions:
-  //  
-  //  The above copyright notice and this permission notice shall be included in
-  //  all copies or substantial portions of the Software.
-  //  
-  //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  //  THE SOFTWARE.
-  //  
+//
+//  PlexMediaAsset.m
+//  atvTwo
+//
+//  Created by Frank Bauer on 27.10.10.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//  
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//  
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//  
 #import "BackRow/BRBaseMediaAsset.h"
 #import <BackRow/BRImageManager.h>
 #import "BackRow/BRMediaAsset.h"
@@ -36,24 +36,24 @@
 
 - (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
 {
-	pmo = [o retain];
-  self = [super init];
+	self = [super init];
 	if (self != nil) {
+		pmo = [o retain];
 		url = [u retain];
-      NSLog(@"PMO attrs: %@", pmo.attributes);
-      //PlexRequest *req = pmo.request;
-      //NSLog(@"PMO request attrs: %@", req);
-      //NSLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
-      //NSLog(@"Ref = %x", [self mediaItemRef]);
+		NSLog(@"PMO attrs: %@", pmo.attributes);
+		//PlexRequest *req = pmo.request;
+		//NSLog(@"PMO request attrs: %@", req);
+		NSLog(@"SongAsset-PMO MediaContainer attrs: %@", pmo.mediaContainer.attributes);
+		//NSLog(@"Ref = %x", [self mediaItemRef]);
 	}
 	return self;
 }
 
 - (void) dealloc
 {
-  NSLog(@"deallocing song asset for %@", pmo.name);
-  [pmo release];
-  [url release];
+	NSLog(@"deallocing song asset for %@", pmo.name);
+	[pmo release];
+	[url release];
 	[super dealloc];
 }
 
@@ -70,19 +70,24 @@
 -(id)playbackMetadata{
 	NSLog(@"Metadata");
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-          [NSNumber numberWithLong:self.duration], @"duration",
-          self.mediaURL, @"mediaURL",
-          self.assetID, @"id",
-          nil];
+			[NSNumber numberWithLong:self.duration], @"duration",
+			self.mediaURL, @"mediaURL",
+			self.assetID, @"id",
+			nil];
 }
 
 - (id)mediaType{
-  return [BRMediaType song];
+	return [BRMediaType song];
 }
 
 -(long int)duration{
-	NSLog(@"Duration: %d",[pmo.attributes integerForKey:@"duration"]/1000);
-	return [pmo.attributes integerForKey:@"duration"]/1000;
+	NSLog(@"Duration: %d, Totaltime: %d",[pmo.attributes integerForKey:@"duration"]/1000, [pmo.attributes integerForKey:@"totalTime"]/1000);
+
+  int _duration = [pmo.attributes integerForKey:@"duration"]/1000;
+  if (!(_duration > 0))
+    _duration = [pmo.attributes integerForKey:@"totalTime"]/1000;
+  
+  return _duration;
 }
 
 
@@ -92,71 +97,80 @@
 }
 
 - (id)titleForSorting {
-  NSLog(@"titleForSorting");
 	return pmo.name;
 };
 
 -(id)title {
-  return pmo.name;  
+	return pmo.name;  
 }
 
 - (id)mediaDescription {
-  return nil;
+	return nil;
 };
 
 - (id)mediaSummary {
-  return nil;
+	return nil;
 };
 
 - (id)previewURL {
 	[super previewURL];
-  NSLog(@"previewURL");
-  return nil;//[[NSURL fileURLWithPath:[pmo.thumb imagePath]] absoluteString];
+	NSLog(@"previewURL");
+	return nil;//[[NSURL fileURLWithPath:[pmo.thumb imagePath]] absoluteString];
 };
 
 
 - (id)imageProxy {
-  NSLog(@"imageproxy");
-  NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.mediaContainer.attributes valueForKey:@"art"], [pmo.mediaContainer.attributes valueForKey:@"thumb"] );
-  
-  NSString *thumbURL=@"";
-  
-  if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil){
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
-    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-  } 
-  else if ([pmo.mediaContainer.attributes valueForKey:@"art"] != nil){
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
-    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-  } 
-  
-  else
-    return nil;
+	NSLog(@"imageproxy");
+    //NSLog(@"imageProxy. art: %@, thumb: %@",[pmo.attributes valueForKey:@"art"], [pmo.attributes valueForKey:@"thumb"] );
+	
+	NSString *thumbURL=@"";
+	
+    //HACK: need to support both regular music and itunes plugin. thumbs are stored in different objects...
+	if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil){
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
+		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	} 
+	else if ([pmo.attributes valueForKey:@"thumb"] != nil){
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
+		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	}   
+	else if ([pmo.mediaContainer.attributes valueForKey:@"art"] != nil){
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"art"]];
+		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	} 
+	else if ([pmo.attributes valueForKey:@"art"] != nil){
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
+		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	}	
+	else
+		return nil;
 };
 
 - (id)imageProxyWithBookMarkTimeInMS:(unsigned int)fp8 {
-  NSLog(@"imageProxyWithBookMarkTimeInMS");
-  NSString *thumbURL=@"";
-  
-  if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil){
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
-    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-  } 
-  else if ([pmo.mediaContainer.attributes valueForKey:@"art"] != nil){
-    thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
-    return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
-  } 
-  
-  else
-    return nil;
-};
+	NSLog(@"imageProxyWithBookMarkTimeInMS");
+	NSString *thumbURL=@"";
+	
+    //HACK: need to support both regular music and itunes plugin. thumbs are stored in different objects...
+	if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil){
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"thumb"]];
+		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	} 
+	else if ([pmo.attributes valueForKey:@"thumb"] != nil){
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"thumb"]];
+		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	}   
+	else if ([pmo.mediaContainer.attributes valueForKey:@"art"] != nil){
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.mediaContainer.attributes valueForKey:@"art"]];
+		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	} 
+	else if ([pmo.attributes valueForKey:@"art"] != nil){
+		thumbURL = [NSString stringWithFormat:@"%@%@",pmo.request.base, [pmo.attributes valueForKey:@"art"]];
+		return [BRURLImageProxy proxyWithURL:[NSURL URLWithString:thumbURL]];
+	}	
+	else
+		return nil;};
 - (BOOL)hasCoverArt {
-  NSLog(@"art: %@ . thumb: %@",pmo.art,pmo.thumb);
-  
-  if ([pmo.mediaContainer.attributes valueForKey:@"thumb"] != nil || [pmo.mediaContainer.attributes valueForKey:@"art"] != nil)
-  return YES;
-  else
-    return NO;
+		return YES;
 };
 
 - (id)trickPlayURL {
@@ -164,7 +178,7 @@
 };
 
 - (id)artist {
-  NSLog(@"artist");
+	NSLog(@"artist");
 	return [pmo.mediaContainer.attributes valueForKey:@"title1"];
 };
 - (id)artistForSorting {
@@ -270,7 +284,7 @@
 	return nil;
 };
 - (id)dateCreated {
-  NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];  
+	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];  
 	return [dateFormatter dateFromString:[pmo.attributes valueForKey:@"originallyAvailableAt"]];
 };
 - (id)dateCreatedString {
@@ -295,7 +309,7 @@
 	return nil;
 };
 - (void)setLastPlayed:(id)fp8 {
-  
+	
 };
 - (id)resolution {
 	return nil;

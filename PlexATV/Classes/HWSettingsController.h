@@ -13,8 +13,7 @@
 //		Copyright 2010 tomcool.org. All rights reserved.
 //
 
-#import "SMFPreferences.h"
-#import "SMFMediaMenuController.h"
+#import "SMFramework.h"
 
 @interface HWSettingsController : SMFMediaMenuController {
   BRBaseAppliance* topLevelController;

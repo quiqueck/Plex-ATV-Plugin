@@ -24,7 +24,7 @@
 #import "BackRow/BRBaseMediaAsset.h"
 #import <BackRow/BRImageManager.h>
 #import "BackRow/BRMediaAsset.h"
-#import "PlexMediaAsset.h"
+#import "PlexMediaAssetOld.h"
 #import <plex-oss/PlexMediaObject.h>
 #import <plex-oss/PlexMediaContainer.h>
 #import <plex-oss/PlexRequest.h>
@@ -32,12 +32,13 @@
 #import <ambertation-plex/Ambertation.h>
 #import "PlexPreviewAsset.h"
 
-@implementation PlexMediaAsset
+@implementation PlexMediaAssetOld
 @synthesize pmo;
 
-- (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o {
-    //self = [super initWithMediaProvider:mediaProvider];
-    //self = [super streamingMediaAssetWithMediaItem:o];
+- (id) initWithURL:(NSURL*)u mediaProvider:(id)mediaProvider  mediaObject:(PlexMediaObject*)o
+{
+	//self = [super initWithMediaProvider:mediaProvider];
+	//self = [super streamingMediaAssetWithMediaItem:o];
 	self = [super initWithMediaProvider:mediaProvider];
 	if (self != nil) {
 		pmo = [o retain];
@@ -52,8 +53,8 @@
 	return self;
 }
 
-- (void) dealloc {
-	NSLog(@"deallocing media asset for %@", pmo.name);
+- (void) dealloc
+{
 	[pmo release];
 	[url release];
 	[ppa release];
@@ -293,7 +294,7 @@
 
 - (id)mediaType {
 #pragma mark only different one
-	return [BRMediaType streamingVideo];
+	return [BRMediaType movie];
 }
 
 - (NSString *)mediaURL{

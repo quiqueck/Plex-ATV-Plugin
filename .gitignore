@@ -1,0 +1,11 @@
+*.deb
+PlexATV/_deb/REPO/Packages.bz2
+*.orig
+webTranscode2.zip
+webTranscode.zip
+test.htm
+key
+jssha256.js
+base64.js
+PlexATV/_deb/PLEX.frapplication/Applications/Lowtide.app/Appliances/PLEX.frappliance/plex
+PlexATV/_deb/Packages

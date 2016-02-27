@@ -26,10 +26,11 @@
 
 #import <Foundation/Foundation.h>
 #import <plex-oss/PlexMediaContainer.h>
+#import "SMFramework.h"
 
 
 @class PlexMediaObject;
-@interface HWPlexDir: BRMediaMenuController {
+@interface HWPlexDir: SMFMediaMenuController {
 	
 	PlexMediaContainer* rootContainer;
 	NSTimer* playProgressTimer;
@@ -37,8 +38,9 @@
 }
 
 @property (readwrite, retain) PlexMediaContainer* rootContainer;
-
+- (void)log:(NSNotificationCenter *)note;
 -(void)playbackVideoWithMediaObject:(PlexMediaObject*)pmo andOffset:(int)offset; 
+- (void)showModifyViewedStatusViewForRow:(long)row;
 
 //list provider
 - (float)heightForRow:(long)row;

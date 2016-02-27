@@ -12,7 +12,7 @@
 {
 	if((self = [super init]) != nil) {
 		
-		//NSLog(@"%@ %s", self, _cmd);
+		NSLog(@"--- %@ %s", self, _cmd);
 		
 		[self setListTitle:@"Local Servers"];
 		
@@ -40,16 +40,33 @@
 
 -(void)dealloc
 {
+  NSLog(@"--- %@ %s", self, _cmd);
+  
 	[[MachineManager sharedMachineManager] stopAutoDetection];
 	[_names release];
 
 	[super dealloc];
 }
 
+- (void)wasBuried{
+  NSLog(@"--- Did burrie controller %@", self);
+  [super wasBuried];
+}
 
+- (void)wasExhumed{
+  NSLog(@"--- Did exhume controller %@", self);
+  [super wasExhumed];
+}
+
+- (void)wasPushed{
+  NSLog(@"--- Did push controller %@ %@", self, _names);
+  [[ProxyMachineDelegate shared] registerDelegate:self];
+  
+  [super wasPushed];
+}
 
 - (void)wasPopped{
-  NSLog(@"Did pop controller %@", self);
+  NSLog(@"--- Did pop controller %@", self);
   [[ProxyMachineDelegate shared] removeDelegate:self];
   
   [super wasPopped];
@@ -139,17 +156,17 @@
 	[_names addObject:m];
 	NSLog(@"Added %@", m);
 	
-	[m resolveAndNotify:self];
+	//[m resolveAndNotify:self];
 	[self setNeedsUpdate];
 }
 
 -(void)machineStateDidChange:(Machine*)m{
   if (m==nil) return;
   
-  /*if (runsServer(m.role) && ![_names containsObject:m]){
+  if (runsServer(m.role) && ![_names containsObject:m]){
     [self machineWasAdded:m];
     return;
-  } else*/ if (!runsServer(m.role) && [_names containsObject:m]){
+  } else if (!runsServer(m.role) && [_names containsObject:m]){
     [_names removeObject:m];
     NSLog(@"Removed %@", m);
   } else {

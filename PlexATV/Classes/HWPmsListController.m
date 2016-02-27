@@ -2,8 +2,7 @@
 //  HWPmsListController.m
 //  atvTwo
 //
-//  Created by Serendipity on 10/01/2011.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Created by ccjensen on 10/01/2011.
 //
 
 
@@ -12,6 +11,7 @@
 #import <plex-oss/MachineManager.h>
 #import <plex-oss/Machine.h>
 #import <plex-oss/PlexRequest.h>
+#import "HWUserDefaults.h"
 #import "Constants.h"
 
 @implementation HWPmsListController
@@ -27,7 +27,7 @@
 		_names = [[NSMutableArray alloc] init];
 		
 		//make sure we are the delegate
-    [[ProxyMachineDelegate shared] registerDelegate:self];
+		[[ProxyMachineDelegate shared] registerDelegate:self];
 		
 		//start the auto detection
 		[[MachineManager sharedMachineManager] startAutoDetection];
@@ -46,11 +46,18 @@
 	[super dealloc];
 }
 
+- (void)wasPushed{
+	NSLog(@"--- Did push controller %@ %@", self, _names);
+	[[ProxyMachineDelegate shared] registerDelegate:self];
+	
+	[super wasPushed];
+}
+
 - (void)wasPopped{
-  NSLog(@"Did pop controller %@", self);
-  [[ProxyMachineDelegate shared] removeDelegate:self];
-  
-  [super wasPopped];
+	NSLog(@"--- Did pop controller %@", self);
+	[[ProxyMachineDelegate shared] removeDelegate:self];
+	
+	[super wasPopped];
 }
 
 
@@ -59,14 +66,9 @@
 
 {
 	BRImage *theImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[HWPmsListController class]] pathForResource:@"PlexLogo" ofType:@"png"]];
-	
-	
 	BRImageAndSyncingPreviewController *obj = [[BRImageAndSyncingPreviewController alloc] init];
-	
 	[obj setImage:theImage];
-	
 	return [obj autorelease];
-	
 }
 
 - (BOOL)shouldRefreshForUpdateToObject:(id)object{
@@ -74,12 +76,12 @@
 }
 
 - (void)itemSelected:(long)selected {
-	if (selected<0 || selected>=_names.count) return;
 	Machine* m = [_names objectAtIndex:selected];
 	NSLog(@"machine selected: %@", m);
-
-	[[SMFPreferences preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
-	[[SMFPreferences preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];
+	
+	[[HWUserDefaults preferences] setObject:m.serverName forKey:PreferencesDefaultServerName];
+	[[HWUserDefaults preferences] setObject:m.uid forKey:PreferencesDefaultServerUid];
+	
 	[self setNeedsUpdate];
 }
 
@@ -92,19 +94,16 @@
 }
 
 - (id)itemForRow:(long)row {
-	if (row >= [_names count] || row<0)
-		return nil;
-	
 	BRMenuItem * result = [[BRMenuItem alloc] init];
+	
 	Machine *m = [_names objectAtIndex:row];
-  NSString* name = [NSString stringWithFormat:@"%@", m.serverName, m];
+	NSString* name = [NSString stringWithFormat:@"%@", m.serverName, m];
 	[result setText:name withAttributes:[[BRThemeInfo sharedTheme] menuItemTextAttributes]];
 	
-	NSString *defaultServerUid = [[SMFPreferences preferences] objectForKey:PreferencesDefaultServerUid];
+	NSString *defaultServerUid = [[HWUserDefaults preferences] objectForKey:PreferencesDefaultServerUid];
 	if ([m.uid isEqualToString:defaultServerUid]) {
 		[result addAccessoryOfType:17]; //checkmark
 	}
-	
 	
 	return [result autorelease];
 }
@@ -122,16 +121,17 @@
 
 -(void)setNeedsUpdate{
 	NSLog(@"Updating UI");
-	//  [self updatePreviewController];
-	//	[self refreshControllerForModelUpdate];
+    //  [self updatePreviewController];
+    //	[self refreshControllerForModelUpdate];
 	[self.list reload];
 }
+
 
 #pragma mark
 #pragma mark Machine Manager Delegate
 -(void)machineWasRemoved:(Machine*)m{
-  NSLog(@"Removed %@", m);
-  [_names removeObject:m];
+	NSLog(@"Removed %@", m);
+	[_names removeObject:m];
 }
 
 -(void)machineWasAdded:(Machine*)m{
@@ -140,17 +140,17 @@
 	[_names addObject:m];
 	NSLog(@"Added %@", m);
 	
-	[m resolveAndNotify:self];
+    //[m resolveAndNotify:self];
 	[self setNeedsUpdate];
 }
 
 -(void)machineStateDidChange:(Machine*)m{
 	if (m==nil) return;
 	
-	/*if (runsServer(m.role) && ![_names containsObject:m]){
+	if (runsServer(m.role) && ![_names containsObject:m]){
 		[self machineWasAdded:m];
 		return;
-	} else*/ if (!runsServer(m.role) && [_names containsObject:m]){
+	} else if (!runsServer(m.role) && [_names containsObject:m]){
 		[_names removeObject:m];
 		NSLog(@"Removed %@", m);
 	} else {
@@ -162,6 +162,7 @@
 
 -(void)machineResolved:(Machine*)m{
 	NSLog(@"Resolved %@", m);
+	[[MachineManager sharedMachineManager] addMachine:m];
 }
 
 -(void)machineDidNotResolve:(Machine*)m{

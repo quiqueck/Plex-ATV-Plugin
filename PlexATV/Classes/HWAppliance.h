@@ -14,13 +14,19 @@
 	TopShelfController *_topShelfController;
 	NSMutableArray *_applianceCategories;
 	NSMutableArray *_machines;
+	
+	BRApplianceCategory *otherServersApplianceCategory;
+	BRApplianceCategory *settingsApplianceCategory;
 }
 @property(nonatomic, readonly, retain) id topShelfController;
 @property(retain) NSMutableArray *applianceCat;
 @property(nonatomic, retain) NSMutableArray *machines;
 
+- (void)loadInPersistentMachines;
+- (Machine *)machineFromUid:(NSString *)uid;
+
 - (void)retrieveNewPlexCategories:(Machine *)m;
 - (void)addNewApplianceWithDict:(NSDictionary *)dict;
-- (void)addNewApplianceWithName:(NSString *)name identifier:(id)ident;
-- (void)removeAppliancesWithIdentifier:(id)ident;
+- (void)addNewApplianceWithCompoundIdentifier:(NSDictionary *)compoundIdentifier;
+- (void)removeAppliancesBelongingToMachineWithUid:(NSString *)uid;
 @end

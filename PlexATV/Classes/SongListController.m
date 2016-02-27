@@ -110,8 +110,6 @@
   
 }
 
-
-
 #pragma mark BRMediaMenuControllerDatasource
 - (float)heightForRow:(long)row{
 	return 0.0f;
@@ -153,7 +151,7 @@
 		[self playAtIndex:0 withArray:self.songs];
 	} else if (selected == 1) {
       // Shuffle
-		[self playAtIndex:0 withArray:[self.songs shuffledArray]];
+      [self playAtIndex:0 withArray:[self.songs shuffledArray]];
 	} else {
     PlexMediaObject *mediaObj = [rootContainer.directories objectAtIndex:selected-2];
     if ([@"album" isEqualToString:mediaObj.type]) {
@@ -185,7 +183,7 @@
 } 
 - (id)previewControlForItem:(long)item {	
 #if DEBUG  
-    //NSLog(@"previewControlForItem - SongListController");
+    NSLog(@"previewControlForItem - SongListController");
 #endif
   
   if(item == 0) {
@@ -195,24 +193,26 @@
 		return nil;
 	} 
   else {
-    NSLog(@"rootContainer: %@, dirs: %@", rootContainer, rootContainer.directories);
+
     PlexMediaObject *mediaObj = [rootContainer.directories objectAtIndex:item -2];
-    if ([@"album" isEqualToString:mediaObj.type]) {
-      PlexPreviewAsset *album = [[PlexPreviewAsset alloc] initWithURL:mediaObj.mediaStreamURL mediaProvider:nil mediaObject:mediaObj];
-      BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
-      [preview setShowsMetadataImmediately:YES];
-      [preview setAsset:album];	
-      
-      return [preview autorelease];	
-    }
-    else {
+      //NSLog(@"_song_list_previewControlForItem type: %@", mediaObj.type);
+      //NSLog(@"viewgroup: %@, content:%@",mediaObj.mediaContainer.viewGroup, mediaObj.mediaContainer.content );
+    if ([@"track" isEqualToString:mediaObj.type] || [@"songs" isEqualToString:mediaObj.mediaContainer.content]) {
       PlexSongAsset *song = [self.songs objectAtIndex:item -2];
       BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
       [preview setShowsMetadataImmediately:YES];
       [preview setAsset:song];	
       
       return [preview autorelease];	
-    }    
+    }
+    else {
+      PlexPreviewAsset *album = [[PlexPreviewAsset alloc] initWithURL:mediaObj.mediaStreamURL mediaProvider:nil mediaObject:mediaObj];
+      BRMetadataPreviewControl *preview =[[BRMetadataPreviewControl alloc] init];
+      [preview setShowsMetadataImmediately:YES];
+      [preview setAsset:album];	
+      
+      return [preview autorelease];      
+    }
   }
 }
 - (BOOL)rowSelectable:(long)selectable {

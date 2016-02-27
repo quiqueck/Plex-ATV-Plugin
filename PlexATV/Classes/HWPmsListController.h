@@ -2,13 +2,11 @@
 //  HWPmsListController.h
 //  atvTwo
 //
-//  Created by Serendipity on 10/01/2011.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Created by ccjensen on 10/01/2011.
 //
 
 
 #import <plex-oss/MachineManager.h>
-#import "SMFPreferences.h"
 
 @interface HWPmsListController : BRMediaMenuController<MachineManagerDelegate> {
 	NSMutableArray		*_names;
